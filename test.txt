@@ -1,0 +1,20 @@
+{
+   "machine":"6",
+   "id":"6",
+   "ip":"192.168.43.6",
+   "backRollerDia":"1200",
+   "backRollerRpm":"1200",
+   "backRollerPpr":"1200",
+   "tinRollerRpm":"1200",
+   "tinRollerPpr":"1200",
+   "middleRollerDia":"1200",
+   "middleRollerRpm":"1200",
+   "middleRollerPpr":"1200",
+   "deliveryRollerDia":"1200",
+   "deliveryRollerRpm":"1200",
+   "deliveryRollerPpr":"1200",
+   "shed":"1",
+   "spindles":"1200",
+   "department":"dept-X",
+   "model":"model-B"
+}
