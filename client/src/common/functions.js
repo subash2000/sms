@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getTypes = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/machines/types")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/types")
     .then((res) => {
       cb(null, res.data);
     })
@@ -12,7 +12,7 @@ const getTypes = (cb) => {
 };
 const getMachines = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/machines/all")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
     .then((res) => {
       cb(null, res.data);
     })
@@ -21,9 +21,9 @@ const getMachines = (cb) => {
     });
 };
 
-const getNames = (cb) => {
+const getModels = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/machines/names")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/models")
     .then((res) => {
       cb(null, res.data);
     })
@@ -33,7 +33,7 @@ const getNames = (cb) => {
 };
 const getSheds = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/machines/sheds")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/sheds")
     .then((res) => {
       cb(null, res.data);
     })
@@ -87,7 +87,7 @@ const overAll = (cb) => {
 const modules = {
   getTypes,
   getMachines,
-  getNames,
+  getModels,
   getSheds,
   overAll,
 };

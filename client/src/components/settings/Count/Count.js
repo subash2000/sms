@@ -6,6 +6,7 @@ import Alert from "../../utilities/Alert";
 import FormText from "../../utilities/TextField";
 import SubmitBtn from "../../utilities/SubmitBtn";
 import AvailableCounts from "./AvailableCount";
+import PageTitle from "../../utilities/PageTitle";
 import CircularProgress from "../../utilities/CircularProgress";
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -159,9 +160,7 @@ export default function Count() {
   };
   return (
     <div className={classes.container}>
-      <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
-        Count Settings
-      </h2>
+      <PageTitle text="Count Settings" />
       <form onSubmit={handleSubmit}>
         <FormText
           type="text"

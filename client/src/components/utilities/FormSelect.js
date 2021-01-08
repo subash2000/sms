@@ -90,9 +90,9 @@ export default function FormText(props) {
             return (
               <MenuItem
                 key={i}
-                value={JSON.stringify({ count: item.count, unit: item.unit })}
+                value={JSON.stringify({ value: item.value, unit: item.unit })}
               >
-                {item.count + item.unit}
+                {item.value + " " + item.unit}
               </MenuItem>
             );
           })}

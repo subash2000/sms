@@ -37,7 +37,7 @@ export default function Count(props) {
   const [menuItems, setMenuItems] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get(process.env.REACT_APP_BACKEND + "/api/settings/count")
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/count")
       .then((res) => {
         setMenuItems([...res.data.data]);
       })
@@ -54,8 +54,8 @@ export default function Count(props) {
     let countobj = JSON.parse(count);
 
     axios
-      .post(process.env.REACT_APP_BACKEND + "/api/machines/setcount", {
-        count: countobj.count,
+      .post(process.env.REACT_APP_BACKEND + "/api/settings/machines/setcount", {
+        value: countobj.value,
         unit: countobj.unit,
         filter: props.selected.map((item) => JSON.parse(item)),
       })

@@ -5,6 +5,7 @@ import Table from "./Table";
 import Axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import FilterOpt from "./FilterOptions";
+import PageTitle from "../../utilities/PageTitle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,7 @@ export default function CountAssign() {
 
   const updateMachines = () => {
     setResult([]);
-    Axios.get(process.env.REACT_APP_BACKEND + "/api/machines/all")
+    Axios.get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
       .then((res) => {
         setProgress(undefined);
         res.data.machines.map((item) => {
@@ -49,10 +50,13 @@ export default function CountAssign() {
             ...prev,
             {
               machine: item.machine,
-              machinename: item.name,
-              type: item.type,
-              currcount: item.count ? item.count : "Not assingned",
-              unit: item.unit ? item.unit : null,
+              model: item.model,
+              department: item.department,
+              currcount:
+                item.count && item.count.value
+                  ? item.count.value
+                  : "Not assingned",
+              unit: item.count && item.count.unit ? item.count.unit : "",
               shed: item.shed,
             },
           ]);
@@ -82,7 +86,7 @@ export default function CountAssign() {
 
   return (
     <div className={classes.root}>
-      <h2 className={classes.heading}>Count Assingment</h2>
+      <PageTitle text="Count Assingment" />
       <div className={classes.container}>
         <Modal
           title="Filter Machines"

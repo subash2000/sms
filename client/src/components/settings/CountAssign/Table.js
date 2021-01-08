@@ -56,12 +56,17 @@ const headCells = [
     label: "Machine No",
   },
   {
-    id: "machinename",
+    id: "model",
     numeric: false,
     disablePadding: false,
-    label: "Name",
+    label: "Model",
   },
-  { id: "type", numeric: false, disablePadding: false, label: "Type" },
+  {
+    id: "department",
+    numeric: false,
+    disablePadding: false,
+    label: "Department",
+  },
   {
     id: "currcount",
     numeric: true,
@@ -277,7 +282,7 @@ export default function EnhancedTable(props) {
   const [snackMsg, setSnackMsg] = React.useState("");
   const [sheds, setSheds] = React.useState([]);
   const [names, setNames] = React.useState([]);
-  const [types, setTypes] = React.useState([]);
+  const [departments, setDepartments] = React.useState([]);
   let rows = props.machineData;
   console.log(rows);
   React.useEffect(() => {
@@ -286,7 +291,7 @@ export default function EnhancedTable(props) {
       let filters = JSON.parse(cache);
       setNames(filters.names);
       setSheds(filters.sheds);
-      setTypes(filters.types);
+      setDepartments(filters.departments);
     }
   }, []);
   if (rows.length < 1) {
@@ -302,7 +307,7 @@ export default function EnhancedTable(props) {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) =>
-        JSON.stringify({ machine: n.machine, type: n.type })
+        JSON.stringify({ machine: n.machine, department: n.department })
       );
       setSelected(newSelecteds);
       return;
@@ -310,8 +315,8 @@ export default function EnhancedTable(props) {
     setSelected([]);
   };
 
-  const handleClick = (event, machine, type) => {
-    let string = JSON.stringify({ machine, type });
+  const handleClick = (event, machine, department) => {
+    let string = JSON.stringify({ machine, department });
 
     const selectedIndex = selected.indexOf(string);
     let newSelected = [];
@@ -341,16 +346,16 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const isSelected = (machine, type) =>
-    selected.indexOf(JSON.stringify({ machine, type })) !== -1;
+  const isSelected = (machine, department) =>
+    selected.indexOf(JSON.stringify({ machine, department })) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   let arr = [...rows].filter((item) => {
     return (
       sheds.indexOf(item.shed) !== -1 &&
-      names.indexOf(item.machinename) !== -1 &&
-      types.indexOf(item.type) !== -1
+      names.indexOf(item.model) !== -1 &&
+      departments.indexOf(item.department) !== -1
     );
   });
   rows = arr.length > 0 ? arr : rows;
@@ -395,14 +400,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.machine, row.type);
+                  const isItemSelected = isSelected(
+                    row.machine,
+                    row.department
+                  );
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
                       onClick={(event) =>
-                        handleClick(event, row.machine, row.type)
+                        handleClick(event, row.machine, row.department)
                       }
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -426,13 +434,13 @@ export default function EnhancedTable(props) {
                       >
                         {row.machine}
                       </TableCell>
-                      <TableCell align="center">{row.machinename}</TableCell>
-                      <TableCell align="center">{row.type}</TableCell>
+                      <TableCell align="center">{row.model}</TableCell>
+                      <TableCell align="center">{row.department}</TableCell>
                       <TableCell align="center">
                         {row.currcount === "Not assingned" ? (
                           <i>{row.currcount}</i>
                         ) : (
-                          row.currcount + row.unit
+                          row.currcount + " " + row.unit
                         )}
                       </TableCell>
                     </TableRow>
