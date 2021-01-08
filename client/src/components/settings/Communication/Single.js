@@ -10,8 +10,10 @@ export default function Single() {
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
   const handleSubmit = (e) => {
+    setAlert(undefined);
     e.preventDefault();
     setSubmitProgress(true);
+
     axios
       .post(
         process.env.REACT_APP_BACKEND + "/api/settings/communication/single",

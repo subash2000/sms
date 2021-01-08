@@ -5,40 +5,14 @@ import FormText from "../../utilities/TextField";
 import CircularProgress from "../../utilities/CircularProgress";
 import SubmitBtn from "../../utilities/SubmitBtn";
 
-function _objectWithoutProperties(obj, keys) {
-  var target = {};
-  for (var i in obj) {
-    if (keys.indexOf(i) >= 0) continue;
-    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-    target[i] = obj[i];
-  }
-  return target;
-}
-
-async function toArr(from, to, obj) {
-  console.log(from, to, obj);
-  let machinesArr = [];
-  for (let i = from; i <= to; i++) {
-    machinesArr.push({
-      ...obj,
-      machine: i,
-    });
-  }
-  return machinesArr;
-}
-
 export default function Single() {
   const [inputs, setInputs] = React.useState({});
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
   const handleSubmit = async (e) => {
+    setAlert(undefined);
     e.preventDefault();
     setSubmitProgress(true);
-    let result = await toArr(
-      inputs.from,
-      inputs.to,
-      _objectWithoutProperties(inputs, ["from", "to"])
-    );
     axios
       .post(
         process.env.REACT_APP_BACKEND + "/api/settings/communication/multiple",
@@ -47,6 +21,7 @@ export default function Single() {
         }
       )
       .then((res) => {
+        console.log(res.data);
         setSubmitProgress(false);
         setAlert(<Alert type="success" msg="Updated Successfully" />);
         setInputs({});

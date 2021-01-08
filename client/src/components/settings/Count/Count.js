@@ -9,7 +9,7 @@ import AvailableCounts from "./AvailableCount";
 import CircularProgress from "../../utilities/CircularProgress";
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: "70%",
+    width: "100%",
   },
   textField: {
     margin: "1rem 0",
@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2rem",
     padding: "2rem",
     color: "red",
+  },
+  available: {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -90,8 +96,12 @@ export default function Count() {
     let stringified = JSON.stringify(obj);
     let duplicate = false;
     let p1 = arr.map((item) => {
-      if (JSON.stringify(item) === stringified) duplicate = true;
-
+      if (
+        JSON.stringify({ value: parseInt(item.value), unit: item.unit }) ===
+        stringified
+      ) {
+        duplicate = true;
+      }
       return item;
     });
     Promise.all([p1]).then(() => {
@@ -123,8 +133,8 @@ export default function Count() {
           setValue("");
           setUnit("Nec");
         })
-        .catch((err) => {
-          if (err.response) console.log(err.response.data);
+        .catch((error) => {
+          if (error.response) console.log(error.response.data);
           setAlert(
             <Alert
               msg="Cannot update count settings.Try again later"
@@ -141,7 +151,7 @@ export default function Count() {
     checkAlreadyExists(
       counts,
       {
-        value,
+        value: parseInt(value),
         unit,
       },
       existHandler
@@ -162,14 +172,16 @@ export default function Count() {
           setVal={setUnit}
         />
         <FormText
-          type="text"
+          type="number"
           label="Count"
           value={value}
           variant="outlined"
           required={true}
           setVal={setValue}
         />
-        {progress ? <CircularProgress /> : content}
+        <div className={classes.available}>
+          {progress ? <CircularProgress /> : content}
+        </div>
         {alert}
 
         <SubmitBtn type="submit">

@@ -21,7 +21,6 @@ const combineAsArr = (obj, ipArray, cb) => {
 };
 
 router.post("/single", (req, res) => {
-  console.log(req.body.id);
   getIp(req.body.id, (err, ip) => {
     Machines.findOne({
       ip: ip,
@@ -66,45 +65,74 @@ router.post("/single", (req, res) => {
 });
 
 router.post("/multiple", (req, res) => {
-  getIps(parseInt(req.body.fromId), parseInt(req.body.toId), (err, ipArray) => {
+  getIps(req.body, (err, ipArray) => {
     if (err) res.status(400).send({ err });
     else {
-      Machines.find({
-        ip: { $in: [...ipArray] },
-      }).then((result) => {
-        if (result.length) {
-          res.status(400).send({
-            msg: "ID/IP already exists",
-          });
-        } else {
-          let machinesArr = [];
-          combineAsArr(req.body, ipArray, (arr) => {
-            machinesArr = [...arr];
-            Machines.bulkWrite(
-              machinesArr.map((machine) => ({
-                updateOne: {
-                  filter: {
-                    machine: machine.machine,
-                    department: machine.department,
-                  },
-                  update: { $set: machine },
+      Machines.bulkWrite(
+        ipArray.map((machine) => {
+          return {
+            updateOne: {
+              filter: {
+                machine: machine.machine,
+                department: machine.department,
+              },
+              update: {
+                $set: {
+                  ip: machine.ip,
+                  id: machine.id,
                 },
-              }))
-            )
-              .then((response) => {
-                res.send({
-                  response: response,
-                });
-              })
-              .catch((error) => {
-                res.status(400).send({
-                  msg: "error",
-                  error,
-                });
-              });
+              },
+            },
+          };
+        })
+      )
+        .then((response) => {
+          res.send({
+            response,
           });
-        }
-      });
+        })
+        .catch((error) => {
+          res.status(400).send({
+            error,
+          });
+        });
+
+      // Machines.find({
+      //   ip: { $in: [...ipArray] },
+      // }).then((result) => {
+      //   if (result.length) {
+      //     res.status(400).send({
+      //       msg: "ID/IP already exists",
+      //     });
+      //   } else {
+      //     let machinesArr = [];
+      //     combineAsArr(req.body, ipArray, (arr) => {
+      //       machinesArr = [...arr];
+      //       Machines.bulkWrite(
+      //         machinesArr.map((machine) => ({
+      //           updateOne: {
+      //             filter: {
+      //               machine: machine.machine,
+      //               department: machine.department,
+      //             },
+      //             update: { $set: machine },
+      //           },
+      //         }))
+      //       )
+      //         .then((response) => {
+      //           res.send({
+      //             response: response,
+      //           });
+      //         })
+      //         .catch((error) => {
+      //           res.status(400).send({
+      //             msg: "error",
+      //             error,
+      //           });
+      //         });
+      //     });
+      //   }
+      // });
     }
   });
 });

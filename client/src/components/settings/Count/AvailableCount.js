@@ -13,8 +13,15 @@ import Alert from "../../utilities/Alert";
 import { BackDropContext } from "../../../contexts/BackdropContext";
 
 const useStyles = makeStyles({
+  container: {
+    // width: "90%",
+    // maxWidth: 650,
+
+    maxWidth: 650,
+  },
   table: {
-    minWidth: 650,
+    width: "100%",
+    maxWidth: 650,
   },
   err: {
     textAlign: "center",
@@ -53,7 +60,7 @@ export default function BasicTable(props) {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className={classes.container}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
