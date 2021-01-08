@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const machineSchema = new Schema({
   machine: String,
   id: Number,
-  ip: String,
+  ip: {
+    type: String,
+  },
   backRollerDia: Number,
   backRollerRpm: Number,
   backRollerPpr: Number,

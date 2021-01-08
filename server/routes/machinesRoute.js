@@ -83,7 +83,7 @@ router.post("/multiple/insert", (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(200).send({
+      res.status(400).send({
         msg: "error",
         err,
       });

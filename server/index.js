@@ -3,14 +3,14 @@ const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const port = 5000;
-let { start } = require("./Socket");
-const { Socket } = require("./SocketClass");
+const { start } = require("./Socket");
 const mongoose = require("mongoose");
 
 mongoose
   .connect("mongodb://localhost:27017/spindleMonitoring", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => {
     console.log("DB connected(mongoose)");

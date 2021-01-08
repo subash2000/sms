@@ -40,9 +40,12 @@ export default function Single() {
       _objectWithoutProperties(inputs, ["from", "to"])
     );
     axios
-      .post(process.env.REACT_APP_BACKEND + "/api/communication/multiple", {
-        machinesArr: result,
-      })
+      .post(
+        process.env.REACT_APP_BACKEND + "/api/settings/communication/multiple",
+        {
+          ...inputs,
+        }
+      )
       .then((res) => {
         setSubmitProgress(false);
         setAlert(<Alert type="success" msg="Updated Successfully" />);
@@ -85,16 +88,16 @@ export default function Single() {
           label="Module ID(From)"
           variant="outlined"
           type="number"
-          value={inputs.modFrom ? inputs.modFrom : ""}
-          onChange={(e) => setInputs({ ...inputs, modFrom: e.target.value })}
+          value={inputs.fromId ? inputs.fromId : ""}
+          onChange={(e) => setInputs({ ...inputs, fromId: e.target.value })}
         />
         <FormText
           required={true}
           label="Module ID(To)"
           variant="outlined"
           type="number"
-          value={inputs.modTo ? inputs.modTo : ""}
-          onChange={(e) => setInputs({ ...inputs, modTo: e.target.value })}
+          value={inputs.toId ? inputs.toId : ""}
+          onChange={(e) => setInputs({ ...inputs, toId: e.target.value })}
         />
 
         {alert}

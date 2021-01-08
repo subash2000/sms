@@ -37,6 +37,13 @@ const settingsPacket = (ip, cb) => {
           ip,
         })
           .then((obj) => {
+            if (!obj) {
+              cb(null, {
+                msg: "Ip not in DB",
+              });
+              return;
+            }
+
             milldetails.push(obj);
             let date = new Date();
 

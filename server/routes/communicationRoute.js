@@ -1,15 +1,33 @@
 var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
-const { getIp } = require("../common/findIp");
-const { restartServer } = require("../Socket");
+const { getIp, getIps } = require("../common/findIp");
+
+const combineAsArr = (obj, ipArray, cb) => {
+  let machinesArr = [];
+  for (
+    let i = 0, j = obj.from, k = obj.fromId;
+    i < ipArray.length;
+    i++, j++, k++
+  ) {
+    machinesArr.push({
+      machine: j,
+      id: k,
+      ip: ipArray[i],
+      department: obj.department,
+    });
+    if (i == ipArray.length - 1) cb(machinesArr);
+  }
+};
+
 router.post("/single", (req, res) => {
+  console.log(req.body.id);
   getIp(req.body.id, (err, ip) => {
     Machines.findOne({
       ip: ip,
     })
       .then((machine) => {
-        if (!machine) {
+        if (!machine || machine.id === req.body.id) {
           Machines.updateOne(
             {
               machine: req.body.machine,
@@ -23,7 +41,6 @@ router.post("/single", (req, res) => {
             }
           )
             .then((response) => {
-              restartServer();
               res.send({
                 msg: "Communication Details Updated",
                 response,
@@ -36,7 +53,7 @@ router.post("/single", (req, res) => {
             );
         } else {
           res.status(400).send({
-            msg: "Id/Ip already exists",
+            msg: "Id/Ip already taken",
           });
         }
       })
@@ -45,6 +62,50 @@ router.post("/single", (req, res) => {
           msg: "Update Failed",
         });
       });
+  });
+});
+
+router.post("/multiple", (req, res) => {
+  getIps(parseInt(req.body.fromId), parseInt(req.body.toId), (err, ipArray) => {
+    if (err) res.status(400).send({ err });
+    else {
+      Machines.find({
+        ip: { $in: [...ipArray] },
+      }).then((result) => {
+        if (result.length) {
+          res.status(400).send({
+            msg: "ID/IP already exists",
+          });
+        } else {
+          let machinesArr = [];
+          combineAsArr(req.body, ipArray, (arr) => {
+            machinesArr = [...arr];
+            Machines.bulkWrite(
+              machinesArr.map((machine) => ({
+                updateOne: {
+                  filter: {
+                    machine: machine.machine,
+                    department: machine.department,
+                  },
+                  update: { $set: machine },
+                },
+              }))
+            )
+              .then((response) => {
+                res.send({
+                  response: response,
+                });
+              })
+              .catch((error) => {
+                res.status(400).send({
+                  msg: "error",
+                  error,
+                });
+              });
+          });
+        }
+      });
+    }
   });
 });
 
