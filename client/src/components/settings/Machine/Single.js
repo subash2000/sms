@@ -4,11 +4,37 @@ import Alert from "../../utilities/Alert";
 import FormText from "../../utilities/TextField";
 import CircularProgress from "../../utilities/CircularProgress";
 import SubmitBtn from "../../utilities/SubmitBtn";
+import FormSelect from "../../utilities/FormSelect";
 
-export default function Single() {
+export default function Single(props) {
   const [inputs, setInputs] = React.useState({});
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
+  const [models, setModels] = React.useState([]);
+  const [departments, setDepartments] = React.useState([]);
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/models")
+      .then((res) => {
+        setModels([...res.data.data]);
+      })
+      .catch((err) => {
+        if (err.response) console.log(err.response.data);
+      });
+    // eslint-disable-next-line
+  }, []);
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/departments")
+      .then((res) => {
+        setDepartments([...res.data.data]);
+      })
+      .catch((err) => {
+        if (err.response) console.log(err.response.data);
+      });
+    // eslint-disable-next-line
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitProgress(true);
@@ -27,9 +53,12 @@ export default function Single() {
         if (err.response) console.log(err.response.data);
       });
   };
+  React.useEffect(() => {
+    console.log(props);
+  }, [props]);
   return (
     <>
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit}>
         <FormText
           required={true}
           label="Machine Number"
@@ -38,13 +67,7 @@ export default function Single() {
           value={inputs.machine ? inputs.machine : ""}
           onChange={(e) => setInputs({ ...inputs, machine: e.target.value })}
         />
-        <FormText
-          required={true}
-          label="Department"
-          variant="outlined"
-          value={inputs.department ? inputs.department : ""}
-          onChange={(e) => setInputs({ ...inputs, department: e.target.value })}
-        />
+
         <FormText
           required={true}
           label="Shed Number"
@@ -53,14 +76,22 @@ export default function Single() {
           value={inputs.shed ? inputs.shed : ""}
           onChange={(e) => setInputs({ ...inputs, shed: e.target.value })}
         />
-        <FormText
-          required={true}
-          label="Machine Model"
+        <FormSelect
+          label=" Machine Model"
           variant="outlined"
+          required={true}
           value={inputs.model ? inputs.model : ""}
           onChange={(e) => setInputs({ ...inputs, model: e.target.value })}
+          menuItems={models}
         />
-
+        <FormSelect
+          label="Department"
+          variant="outlined"
+          required={true}
+          value={inputs.department ? inputs.department : ""}
+          onChange={(e) => setInputs({ ...inputs, department: e.target.value })}
+          menuItems={departments}
+        />
         <FormText
           required={true}
           label="No of Spindles/Delivery"

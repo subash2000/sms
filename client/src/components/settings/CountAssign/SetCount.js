@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import FormSelect from "../../utilities/FormSelect";
+import FormSelect from "./FormSelect";
 import SubmitBtn from "../../utilities/SubmitBtn";
 
 const useStyles = makeStyles((theme) => ({

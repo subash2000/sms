@@ -2,7 +2,7 @@ import axios from "axios";
 
 const getTypes = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/types")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/types")
     .then((res) => {
       cb(null, res.data);
     })
@@ -12,7 +12,7 @@ const getTypes = (cb) => {
 };
 const getMachines = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/all")
     .then((res) => {
       cb(null, res.data);
     })
@@ -23,7 +23,7 @@ const getMachines = (cb) => {
 
 const getModels = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/models")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/models")
     .then((res) => {
       cb(null, res.data);
     })
@@ -33,7 +33,7 @@ const getModels = (cb) => {
 };
 const getSheds = (cb) => {
   axios
-    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/sheds")
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/sheds")
     .then((res) => {
       cb(null, res.data);
     })

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     fontSize: "1.1rem",
-    margin: "1rem",
+
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       alignItems: "flex-start",
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     display: "flex",
-    width: "50%",
+    width: "100%",
 
     justifyContent: "flex-end",
     [theme.breakpoints.down("xs")]: {
@@ -36,21 +36,22 @@ const useStyles = makeStyles((theme) => ({
   },
   labelText: {
     textAlign: "right",
-    marginRight: "6rem",
+    marginRight: "2rem",
     [theme.breakpoints.down("xs")]: {
       marginRight: "2rem",
     },
   },
   textField: {
-    // width: "50%",
+    width: "100%",
+
     minWidth: "100px",
   },
   numField: {
-    //width: "20%",
+    width: "20%",
     minWidth: "100px",
   },
   field: {
-    width: "50%",
+    width: "100%",
   },
   time: {
     width: "50%",
@@ -81,15 +82,19 @@ export default function FormText(props) {
           value={props.value}
           onChange={props.onChange}
           className={classes.textField}
-          required={true}
         >
-          <MenuItem value="">
+          <MenuItem
+            value={JSON.stringify({ value: undefined, unit: undefined })}
+          >
             <i>None</i>
           </MenuItem>
           {props.menuItems.map((item, i) => {
             return (
-              <MenuItem key={i} value={item}>
-                {item}
+              <MenuItem
+                key={i}
+                value={JSON.stringify({ value: item.value, unit: item.unit })}
+              >
+                {item.value + " " + item.unit}
               </MenuItem>
             );
           })}

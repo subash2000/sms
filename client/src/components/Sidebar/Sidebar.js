@@ -23,6 +23,8 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Count from "../settings/Count/Count";
 import CountAssign from "../settings/CountAssign/CountAssign";
 import Machines from "../Machines/Machines";
+import Department from "../settings/Department/Department";
+import Modal from "../settings/Modal/Modal";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -129,6 +131,8 @@ export default function PersistentDrawerLeft() {
       <Route exact path="/countsettings" component={Count} />
       <Route exact path="/countassignment" component={CountAssign} />
       <Route exact path="/machines" component={Machines} />
+      <Route exact path="/departments" component={Department} />
+      <Route exact path="/machinemodals" component={Modal} />
     </Switch>
   );
 
@@ -192,6 +196,8 @@ export default function PersistentDrawerLeft() {
               "Communication Settings",
               "Count Settings",
               "Count Assignment",
+              "Departments",
+              "Machine Modals",
             ]}
           />
         </List>

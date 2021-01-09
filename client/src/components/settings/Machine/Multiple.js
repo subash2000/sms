@@ -4,6 +4,7 @@ import Alert from "../../utilities/Alert";
 import FormText from "../../utilities/TextField";
 import CircularProgress from "../../utilities/CircularProgress";
 import SubmitBtn from "../../utilities/SubmitBtn";
+import FormSelect from "../../utilities/FormSelect";
 
 function _objectWithoutProperties(obj, keys) {
   var target = {};
@@ -31,6 +32,31 @@ export default function Single() {
   const [inputs, setInputs] = React.useState({});
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
+  const [models, setModels] = React.useState([]);
+  const [departments, setDepartments] = React.useState([]);
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/models")
+      .then((res) => {
+        setModels([...res.data.data]);
+      })
+      .catch((err) => {
+        if (err.response) console.log(err.response.data);
+      });
+    // eslint-disable-next-line
+  }, []);
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/departments")
+      .then((res) => {
+        setDepartments([...res.data.data]);
+      })
+      .catch((err) => {
+        if (err.response) console.log(err.response.data);
+      });
+    // eslint-disable-next-line
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitProgress(true);
@@ -73,13 +99,7 @@ export default function Single() {
           value={inputs.to ? inputs.to : ""}
           onChange={(e) => setInputs({ ...inputs, to: e.target.value })}
         />
-        <FormText
-          required={true}
-          label="Department"
-          variant="outlined"
-          value={inputs.department ? inputs.department : ""}
-          onChange={(e) => setInputs({ ...inputs, department: e.target.value })}
-        />
+
         <FormText
           required={true}
           label="Shed Number"
@@ -88,12 +108,21 @@ export default function Single() {
           value={inputs.shed ? inputs.shed : ""}
           onChange={(e) => setInputs({ ...inputs, shed: e.target.value })}
         />
-        <FormText
-          required={true}
-          label="Machine Model "
+        <FormSelect
+          label=" Machine Model"
           variant="outlined"
+          required={true}
           value={inputs.model ? inputs.model : ""}
           onChange={(e) => setInputs({ ...inputs, model: e.target.value })}
+          menuItems={models}
+        />
+        <FormSelect
+          label="Department"
+          variant="outlined"
+          required={true}
+          value={inputs.department ? inputs.department : ""}
+          onChange={(e) => setInputs({ ...inputs, department: e.target.value })}
+          menuItems={departments}
         />
 
         <FormText
