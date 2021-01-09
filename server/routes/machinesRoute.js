@@ -31,6 +31,7 @@ router.post("/setcount", (req, res) => {
     }
   )
     .then((result) => {
+      console.log(result);
       res.send({
         result,
       });

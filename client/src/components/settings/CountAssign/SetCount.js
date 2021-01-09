@@ -52,6 +52,7 @@ export default function Count(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let countobj = JSON.parse(count);
+    console.log(props.selected);
 
     axios
       .post(process.env.REACT_APP_BACKEND + "/api/settings/machines/setcount", {

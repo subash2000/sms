@@ -33,9 +33,9 @@ export default function ResponsiveDialog(props) {
           {props.children}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.successHandler} color="primary">
+          {/* <Button autoFocus onClick={props.successHandler} color="primary">
             {props.success}
-          </Button>
+          </Button> */}
           <Button onClick={props.failureHandler} color="primary" autoFocus>
             {props.failure}
           </Button>

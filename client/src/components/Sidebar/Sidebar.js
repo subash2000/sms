@@ -187,17 +187,18 @@ export default function PersistentDrawerLeft() {
           <Link className={classes.link} to="/machines">
             <Typography variant="body1">Machines</Typography>
           </Link>
+
           <Divider />
           <Menu
             title="Settings"
             content={[
               "Mill settings",
+              "Machine Modals",
+              "Departments",
+              "Count Settings",
               "Machine Settings",
               "Communication Settings",
-              "Count Settings",
               "Count Assignment",
-              "Departments",
-              "Machine Modals",
             ]}
           />
         </List>

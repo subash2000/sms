@@ -35,9 +35,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CountAssign() {
-  const [model, setModel] = React.useState(false);
+  const [modal, setModal] = React.useState(false);
   const [progress, setProgress] = React.useState(<CircularProgress />);
   const [result, setResult] = React.useState([]);
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
+  const [model, setModel] = React.useState("All");
   const classes = useStyles();
 
   const updateMachines = () => {
@@ -74,12 +77,21 @@ export default function CountAssign() {
     // eslint-disable-next-line
   }, []);
   const closeHandler = () => {
-    setModel(false);
+    setModal(false);
   };
   const openHandler = () => {
-    setModel(true);
+    setModal(true);
   };
-  const applyHandler = () => {
+  const applyHandler = (e, inputs) => {
+    e.preventDefault();
+    localStorage.setItem(
+      "countFilter",
+      JSON.stringify({
+        department,
+        count,
+        model,
+      })
+    );
     closeHandler();
     window.location.reload();
   };
@@ -90,14 +102,21 @@ export default function CountAssign() {
       <div className={classes.container}>
         <Modal
           title="Filter Machines"
-          open={model}
-          setOpen={setModel}
+          open={modal}
+          setOpen={setModal}
           success="Apply"
           failure="Cancel"
           successHandler={applyHandler}
           failureHandler={closeHandler}
         >
-          <FilterOpt />
+          <FilterOpt
+            department={department}
+            model={model}
+            count={count}
+            setCount={setCount}
+            setModel={setModel}
+            setDepartment={setDepartment}
+          />
         </Modal>
       </div>
       {progress ? (

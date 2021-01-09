@@ -17,7 +17,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import Modal from "../../utilities/Modal";
+import Modal from "./Modal";
 import { Button } from "@material-ui/core";
 import SetCount from "./SetCount";
 import SnackBar from "../../utilities/SnackBar";
@@ -280,18 +280,19 @@ export default function EnhancedTable(props) {
   const [alert, setAlert] = React.useState(undefined);
   const [snack, setSnack] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState("");
-  const [sheds, setSheds] = React.useState([]);
-  const [names, setNames] = React.useState([]);
-  const [departments, setDepartments] = React.useState([]);
+
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
+  const [model, setModel] = React.useState("All");
   let rows = props.machineData;
   console.log(rows);
   React.useEffect(() => {
     let cache = localStorage.getItem("countFilter");
     if (cache) {
       let filters = JSON.parse(cache);
-      setNames(filters.names);
-      setSheds(filters.sheds);
-      setDepartments(filters.departments);
+      setDepartment(filters.department);
+      setCount(filters.count);
+      setModel(filters.model);
     }
   }, []);
   if (rows.length < 1) {
@@ -315,8 +316,8 @@ export default function EnhancedTable(props) {
     setSelected([]);
   };
 
-  const handleClick = (event, machine, department) => {
-    let string = JSON.stringify({ machine, department });
+  const handleClick = (event, machine, dept) => {
+    let string = JSON.stringify({ machine, department: dept });
 
     const selectedIndex = selected.indexOf(string);
     let newSelected = [];
@@ -346,19 +347,21 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const isSelected = (machine, department) =>
-    selected.indexOf(JSON.stringify({ machine, department })) !== -1;
+  const isSelected = (machine, dept) =>
+    selected.indexOf(JSON.stringify({ machine, department: dept })) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-  let arr = [...rows].filter((item) => {
-    return (
-      sheds.indexOf(item.shed) !== -1 &&
-      names.indexOf(item.model) !== -1 &&
-      departments.indexOf(item.department) !== -1
-    );
+
+  rows = rows.filter((machine) => {
+    let validModel = model === "All" || model === machine.model;
+    let validDept = department === "All" || department === machine.department;
+    let validCount =
+      count === "All" || count === machine.currcount + machine.unit;
+
+    console.log(count + " " + machine.currcount + machine.unit);
+    return validCount && validDept && validModel;
   });
-  rows = arr.length > 0 ? arr : rows;
   console.log(rows);
   return (
     <div className={classes.root}>
