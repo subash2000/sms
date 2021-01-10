@@ -4,11 +4,7 @@ import Table from "./Table";
 import PageTitle from "../utilities/PageTitle";
 import ToolBar from "./ToolBar";
 import { makeStyles } from "@material-ui/styles";
-import modules from "../../common/functions";
 import { Divider } from "@material-ui/core";
-
-const { getMachines } = modules;
-
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -54,17 +50,19 @@ export default function Live() {
         })
         .catch((err) => {
           if (err.response) {
-            // console.log(err.response.data);
+            console.log(err.response.data);
           }
         });
-      getMachines((err, d) => {
-        if (err) {
-          console.log(err);
-        } else {
-          //console.log(d.machines);
-          setMachines(d.machines);
-        }
-      });
+      axios
+        .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
+        .then((res) => {
+          setMachines([...res.data.machines]);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.data);
+          }
+        });
     }, 1000);
 
     return () => {

@@ -38,7 +38,16 @@ export default function CustomizedBreadcrumbs(props) {
         setSelected={props.setSelected}
       />
     ),
-    options: <FilterOpt />,
+    options: (
+      <FilterOpt
+        department={props.department}
+        model={props.model}
+        count={props.count}
+        setDepartment={props.setDepartment}
+        setCount={props.setCount}
+        setModel={props.setModel}
+      />
+    ),
   };
   function handleClick(event, type) {
     event.preventDefault();

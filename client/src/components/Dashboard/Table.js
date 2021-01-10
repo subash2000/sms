@@ -53,29 +53,29 @@ export default function BasicTable(props) {
     setSelected,
     setMachines,
   } = props;
-  const [names, setNames] = React.useState([]);
-  const [sheds, setSheds] = React.useState([]);
-  const [types, setTypes] = React.useState([]);
+  const [model, setModel] = React.useState("All");
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
 
   React.useEffect(() => {
     let cache = localStorage.getItem("dashboardFilterOptions");
     if (cache) {
       let filters = JSON.parse(cache);
-      setNames(filters.names);
-      setSheds(filters.sheds);
-      setTypes(filters.types);
+      setModel(filters.model);
+      setDepartment(filters.department);
+      setCount(filters.count);
     }
   }, []);
 
-  let arr = [...machines].filter((item) => {
-    return (
-      sheds.indexOf(item.shed) !== -1 ||
-      names.indexOf(item.name) !== -1 ||
-      types.indexOf(item.type) !== -1
-    );
+  let result = machines.filter((machine) => {
+    let validModel = model === "All" || model === machine.model;
+    let validDept = department === "All" || department === machine.department;
+    let validCount =
+      count === "All" ||
+      (machine.count && count === machine.count.value + machine.count.unit);
+    return validCount && validDept && validModel;
   });
-
-  let result = arr.length > 0 ? arr : machines;
+  console.log(result);
 
   return (
     <TableContainer>
@@ -95,6 +95,12 @@ export default function BasicTable(props) {
           selected={selected}
           setSelected={setSelected}
           setMachines={setMachines}
+          department={department}
+          model={model}
+          count={count}
+          setDepartment={setDepartment}
+          setCount={setCount}
+          setModel={setModel}
         />
       </div>
 

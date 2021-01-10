@@ -14,24 +14,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function ToolBar(props) {
   const classes = useStyles();
-  const [model, setModel] = React.useState(false);
-  const { selected, setSelected } = props;
+  const [modal, setModal] = React.useState(false);
+  const {
+    selected,
+    setSelected,
+    department,
+    model,
+    count,
+    setDepartment,
+    setCount,
+    setModel,
+  } = props;
   const applyHandler = () => {
     let paramArr = Object.keys(selected).filter(
       (item) => selected[item] === true
     );
     props.setParameters(paramArr);
     localStorage.setItem("liveParameters", JSON.stringify(selected));
-    setModel(false);
-    window.location.reload();
+    localStorage.setItem(
+      "dashboardFilterOptions",
+      JSON.stringify({
+        department,
+        count,
+        model,
+      })
+    );
+    setModal(false);
+    // /window.location.reload();
   };
 
   const closeHandler = () => {
-    setModel(false);
+    setModal(false);
   };
 
   const filterBtnHandler = () => {
-    setModel(true);
+    setModal(true);
   };
   React.useEffect(() => {
     let cachedSelected = localStorage.getItem("liveParameters");
@@ -52,8 +69,8 @@ export default function ToolBar(props) {
       <div className={classes.filter}>
         <Modal
           title="Filter Machines"
-          open={model}
-          setOpen={setModel}
+          open={modal}
+          setOpen={setModal}
           success="Apply"
           failure="Cancel"
           successHandler={applyHandler}
@@ -65,6 +82,12 @@ export default function ToolBar(props) {
             selected={selected}
             setSelected={setSelected}
             setMachines={props.setMachines}
+            department={department}
+            model={model}
+            count={count}
+            setDepartment={setDepartment}
+            setCount={setCount}
+            setModel={setModel}
           />
         </Modal>
         <div className={classes.options}>
