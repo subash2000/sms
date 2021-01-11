@@ -53,14 +53,6 @@ export default function FilterOptions(props) {
       .catch((err) => {
         if (err.response) console.log(err.response.data);
       });
-    // let cache = localStorage.getItem("dashboardFilterOptions");
-    // if (cache) {
-    //   let cachedObj = JSON.parse(cache);
-    //   props.setCount(cachedObj.count);
-    //   props.setDepartment(cachedObj.department);
-    //   props.setModel(cachedObj.model);
-    // }
-
     // eslint-disable-next-line
   }, []);
   return (

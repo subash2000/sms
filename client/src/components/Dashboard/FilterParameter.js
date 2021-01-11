@@ -14,13 +14,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const paramArr = [
+  "Model",
+  "Count",
   "Kg",
   "m/min",
   "tpi",
   "spindle rpm",
   "AEF %",
   "PEF %",
+  "Stops",
   "Stop min",
+  "Doffs",
   "Doff min",
   "Ukg",
 ];

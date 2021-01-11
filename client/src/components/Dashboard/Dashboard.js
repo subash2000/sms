@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
-import Table from "./Table";
-import PageTitle from "../utilities/PageTitle";
+import TableContainer from "./TableContainer";
 import ToolBar from "./ToolBar";
 import { makeStyles } from "@material-ui/styles";
 import { Divider } from "@material-ui/core";
@@ -18,24 +17,32 @@ export default function Live() {
   const [machines, setMachines] = React.useState([]);
 
   const [parameters, setParameters] = React.useState([
+    "Model",
+    "Count",
     "Kg",
     "m/min",
     "tpi",
     "spindle rpm",
     "AEF %",
     "PEF %",
+    "Stops",
     "Stop min",
+    "Doffs",
     "Doff min",
     "Ukg",
   ]);
   const [selected, setSelected] = React.useState({
+    Model: true,
+    Count: true,
     Kg: true,
     "m/min": true,
     tpi: true,
     "spindle rpm": true,
     "AEF %": true,
     "PEF %": true,
+    Stops: true,
     "Stop min": true,
+    Doffs: true,
     "Doff min": true,
     Ukg: true,
   });
@@ -71,7 +78,7 @@ export default function Live() {
   }, []);
   return (
     <div className={classes.container}>
-      <PageTitle text="Dashboard" />
+      <h1>Dashboard</h1>
       <Divider />
       <ToolBar
         parameters={parameters}
@@ -80,7 +87,7 @@ export default function Live() {
         setSelected={setSelected}
         setMachines={setMachines}
       />
-      <Table
+      <TableContainer
         data={data}
         selected={selected}
         parameters={parameters}
