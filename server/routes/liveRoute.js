@@ -24,14 +24,15 @@ router.get("/", (req, res) => {
                 msg: "connection/communication",
               });
             } else {
-              Machine.find({}).then((result) => {
-                res.send({ ...currVal, machinesArr: result });
+              Machine.find({}).then((machines) => {
+                res.send({ ...currVal, machinesArr: machines });
               });
             }
           })
           .catch((err) => {
             res.status(400).send({
               msg: "machine",
+              err,
             });
           });
       }
@@ -39,8 +40,42 @@ router.get("/", (req, res) => {
     .catch((err) => {
       res.status(400).send({
         msg: "mill",
+        err,
       });
     });
+});
+
+router.get("/currshift", (req, res) => {
+  Mill.findOne({}).then((mill) => {
+    if (!mill) {
+      res.status(400).send({
+        msg: "Mill Details not found",
+      });
+    } else {
+      let date = new Date();
+      let hr = date.getHours();
+      let min = date.getMinutes();
+      if (
+        (mill.shift1Hr == hr && mill.shift1Min == min) ||
+        (mill.shift1Hr <= hr && mill.shift2Hr > hr)
+      ) {
+        res.send({
+          shift: 1,
+        });
+      } else if (
+        (mill.shift2Hr == hr && mill.shift2Min == min) ||
+        (mill.shift2Hr <= hr && mill.shift3Hr > hr)
+      ) {
+        res.send({
+          shift: 2,
+        });
+      } else {
+        res.send({
+          shift: 3,
+        });
+      }
+    }
+  });
 });
 
 module.exports = router;

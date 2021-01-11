@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
   stop: {},
   toolbar: {
     display: "flex",
-    justifyContent: "space-between",
+
+    justifyContent: "flex-end",
   },
   toolBarContent: {},
   tableCell: {},
@@ -26,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 export default function BasicTable(props) {
   const classes = useStyles();
   const {
-    data,
     parameters,
     selected,
     machines,
@@ -61,15 +61,6 @@ export default function BasicTable(props) {
   return (
     <TableContainer>
       <div className={classes.toolbar}>
-        <div className={classes.toolBarContent}>
-          <h3>
-            {data[Object.keys(data)[0]] &&
-            data[Object.keys(data)[0]].data &&
-            data[Object.keys(data)[0]].data.data
-              ? "Shift No : " + data[Object.keys(data)[0]].data.data[9]
-              : "Machines not connected"}
-          </h3>
-        </div>
         <FilterBtn
           parameters={parameters}
           setParameters={setParameters}

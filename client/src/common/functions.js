@@ -1,5 +1,15 @@
 import axios from "axios";
 
+const getCurrShift = (cb) => {
+  axios
+    .get(process.env.REACT_APP_BACKEND + "/api/live/currshift")
+    .then((res) => {
+      cb(null, res.data.shift.toString());
+    })
+    .catch((err) => {
+      cb(err, null);
+    });
+};
 const getTypes = (cb) => {
   axios
     .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/types")
@@ -90,6 +100,7 @@ const modules = {
   getModels,
   getSheds,
   overAll,
+  getCurrShift,
 };
 
 export default modules;
