@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    //width: "100%",
   },
 }));
 
@@ -53,7 +53,7 @@ export default function Live() {
         .get(process.env.REACT_APP_BACKEND + "/api/live")
         .then((res) => {
           setData({ ...res.data });
-          console.log({ ...res.data });
+          // console.log({ ...res.data });
         })
         .catch((err) => {
           if (err.response) {
@@ -76,9 +76,9 @@ export default function Live() {
       clearInterval(interval);
     };
   }, []);
-  return (
-    <div className={classes.container}>
-      <h1>Dashboard</h1>
+
+  const content = (
+    <div>
       <Divider />
       <ToolBar
         parameters={parameters}
@@ -86,6 +86,7 @@ export default function Live() {
         selected={selected}
         setSelected={setSelected}
         setMachines={setMachines}
+        machines={machines}
       />
       <TableContainer
         data={data}
@@ -96,6 +97,13 @@ export default function Live() {
         setSelected={setSelected}
         setMachines={setMachines}
       />
+    </div>
+  );
+  return (
+    <div className={classes.container}>
+      <h2 align="center">Dashboard</h2>
+
+      {machines.length > 1 ? <div>{content}</div> : <h2>No machines Found</h2>}
     </div>
   );
 }

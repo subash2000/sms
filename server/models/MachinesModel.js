@@ -30,6 +30,9 @@ const machineSchema = new Schema(
       value: Number,
       unit: String,
     },
+    data: Array,
+    recieved: String,
+    shift: Number,
   },
   { strict: true }
 );

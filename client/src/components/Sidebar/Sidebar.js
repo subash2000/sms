@@ -96,10 +96,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem",
   },
   innerContent: {
-    padding: "3rem 2rem",
+    padding: "3rem 0",
     display: "flex",
-    // justifyContent: "center",
-    // alignItems: "center",
+    justifyContent: "center",
+    alignItems: "center",
     background: "#fff",
     width: "100%",
   },

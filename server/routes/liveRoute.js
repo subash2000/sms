@@ -13,20 +13,14 @@ router.get("/", (req, res) => {
           msg: "mill",
         });
       } else {
-        Machine.findOne({})
+        Machine.find({})
           .then((doc) => {
-            if (!doc) {
+            if (!doc || !doc.length) {
               res.status(400).send({
                 msg: "machine",
               });
-            } else if (!Object.keys(currVal).length) {
-              res.status(400).send({
-                msg: "connection/communication",
-              });
             } else {
-              Machine.find({}).then((machines) => {
-                res.send({ ...currVal, machinesArr: machines });
-              });
+              res.send({ ...currVal, machinesArr: doc });
             }
           })
           .catch((err) => {

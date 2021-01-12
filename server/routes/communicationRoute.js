@@ -2,23 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
 const { getIp, getIps } = require("../common/findIp");
-
-const combineAsArr = (obj, ipArray, cb) => {
-  let machinesArr = [];
-  for (
-    let i = 0, j = obj.from, k = obj.fromId;
-    i < ipArray.length;
-    i++, j++, k++
-  ) {
-    machinesArr.push({
-      machine: j,
-      id: k,
-      ip: ipArray[i],
-      department: obj.department,
-    });
-    if (i == ipArray.length - 1) cb(machinesArr);
-  }
-};
+const { route } = require("./liveRoute");
 
 router.post("/single", (req, res) => {
   getIp(req.body.id, (err, ip) => {
@@ -96,43 +80,6 @@ router.post("/multiple", (req, res) => {
             error,
           });
         });
-
-      // Machines.find({
-      //   ip: { $in: [...ipArray] },
-      // }).then((result) => {
-      //   if (result.length) {
-      //     res.status(400).send({
-      //       msg: "ID/IP already exists",
-      //     });
-      //   } else {
-      //     let machinesArr = [];
-      //     combineAsArr(req.body, ipArray, (arr) => {
-      //       machinesArr = [...arr];
-      //       Machines.bulkWrite(
-      //         machinesArr.map((machine) => ({
-      //           updateOne: {
-      //             filter: {
-      //               machine: machine.machine,
-      //               department: machine.department,
-      //             },
-      //             update: { $set: machine },
-      //           },
-      //         }))
-      //       )
-      //         .then((response) => {
-      //           res.send({
-      //             response: response,
-      //           });
-      //         })
-      //         .catch((error) => {
-      //           res.status(400).send({
-      //             msg: "error",
-      //             error,
-      //           });
-      //         });
-      //     });
-      //   }
-      // });
     }
   });
 });

@@ -77,7 +77,24 @@ const socketFunc = (socket, address, packet) => {
         }
       )
         .then(() => {
-          console.log("updated");
+          Machine.updateOne(
+            {
+              ip: address,
+            },
+            {
+              $set: {
+                recieved: Date.now(),
+                data: data.data,
+                shift,
+              },
+            }
+          )
+            .then(() => {
+              console.log("updated");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => console.log(err));
     } else if (!check_recieved_crc(d.toString("hex"))) {
