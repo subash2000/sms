@@ -11,6 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import Decode from "../../common/packetDecode";
+import "./styles.css";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -238,6 +239,7 @@ export default function EnhancedTable(props) {
                       tabIndex={-1}
                       key={row._id}
                       selected={isItemSelected}
+                      className={Decode.status(row.data, row.recieved)}
                     >
                       <StyledTableCell
                         component="th"
@@ -324,7 +326,7 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

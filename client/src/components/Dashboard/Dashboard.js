@@ -3,7 +3,7 @@ import axios from "axios";
 import TableContainer from "./TableContainer";
 import ToolBar from "./ToolBar";
 import { makeStyles } from "@material-ui/styles";
-import { Divider } from "@material-ui/core";
+import { Divider, CircularProgress } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Live() {
   const [data, setData] = React.useState({});
   const [machines, setMachines] = React.useState([]);
+  const [noMachines, setNoMachines] = React.useState(undefined);
 
   const [parameters, setParameters] = React.useState([
     "Model",
@@ -48,6 +49,7 @@ export default function Live() {
   });
   const classes = useStyles();
   React.useEffect(() => {
+    setNoMachines(<CircularProgress />);
     let interval = setInterval(() => {
       axios
         .get(process.env.REACT_APP_BACKEND + "/api/live")
@@ -68,6 +70,7 @@ export default function Live() {
         .catch((err) => {
           if (err.response) {
             console.log(err.response.data);
+            setNoMachines(<h2>No Machines Found</h2>);
           }
         });
     }, 1000);
@@ -101,9 +104,10 @@ export default function Live() {
   );
   return (
     <div className={classes.container}>
-      <h2 align="center">Dashboard</h2>
-
-      {machines.length > 1 ? <div>{content}</div> : <h2>No machines Found</h2>}
+      <h2 align="center" style={{ marginBottom: "2rem" }}>
+        Dashboard
+      </h2>
+      {machines.length > 1 ? <div>{content}</div> : noMachines}
     </div>
   );
 }

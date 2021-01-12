@@ -1,0 +1,51 @@
+@keyframes powerFailure {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: red;
+  }
+}
+
+.powerFailure {
+  animation-name: powerFailure;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes doff {
+  0% {
+    background-color: rgb(131, 131, 226);
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: rgb(130, 130, 248);
+  }
+}
+
+.doff {
+  animation-name: doff;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes comm {
+  0% {
+    background-color: orange;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: orange;
+  }
+}
+
+.comm {
+  background-color: orange;
+}

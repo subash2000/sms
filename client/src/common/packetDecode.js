@@ -93,4 +93,12 @@ export default {
 
     return "No Data Found";
   },
+
+  status: (packetData, date) => {
+    if (packetData && packetData.length && packetData.length > 12 && date) {
+      console.log(parseInt(date));
+    } else {
+      return "comm";
+    }
+  },
 };
