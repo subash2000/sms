@@ -68,7 +68,7 @@ export default function Mill(props) {
           required={true}
           label="Customer Name"
           variant="outlined"
-          value={inputs.name ? inputs.name : ""}
+          value={inputs.customer ? inputs.customer : ""}
           onChange={(e) => setInputs({ ...inputs, customer: e.target.value })}
         />
         <FormText

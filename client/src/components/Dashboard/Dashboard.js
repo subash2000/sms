@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Live() {
-  const [data, setData] = React.useState({});
   const [machines, setMachines] = React.useState([]);
   const [noMachines, setNoMachines] = React.useState(undefined);
 
@@ -49,19 +48,13 @@ export default function Live() {
   });
   const classes = useStyles();
   React.useEffect(() => {
-    setNoMachines(<CircularProgress />);
+    setNoMachines(
+      <div style={{ textAlign: "center" }}>
+        <CircularProgress />
+        <h3>Make sure you updated the settings</h3>
+      </div>
+    );
     let interval = setInterval(() => {
-      axios
-        .get(process.env.REACT_APP_BACKEND + "/api/live")
-        .then((res) => {
-          setData({ ...res.data });
-          // console.log({ ...res.data });
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.data);
-          }
-        });
       axios
         .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
         .then((res) => {
@@ -92,7 +85,6 @@ export default function Live() {
         machines={machines}
       />
       <TableContainer
-        data={data}
         selected={selected}
         parameters={parameters}
         machines={machines}

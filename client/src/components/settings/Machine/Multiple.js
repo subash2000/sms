@@ -66,9 +66,13 @@ export default function Single() {
       _objectWithoutProperties(inputs, ["from", "to"])
     );
     axios
-      .post(process.env.REACT_APP_BACKEND + "/api/machines/multiple/insert", {
-        machinesArr: result,
-      })
+      .post(
+        process.env.REACT_APP_BACKEND +
+          "/api/settings/machines/multiple/insert",
+        {
+          machinesArr: result,
+        }
+      )
       .then((res) => {
         setSubmitProgress(false);
         setAlert(<Alert type="success" msg="Updated Successfully" />);

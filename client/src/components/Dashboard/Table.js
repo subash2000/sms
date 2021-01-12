@@ -11,8 +11,22 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import Decode from "../../common/packetDecode";
-import "./styles.css";
+//import "./styles.css";
+const timeFormat = (s) => {
+  var ms = s % 1000;
+  s = (s - ms) / 1000;
+  var secs = s % 60;
+  s = (s - secs) / 60;
+  var mins = s % 60;
+  var hrs = (s - mins) / 60;
+  if (hrs >= 24) {
+    var day = parseInt(hrs / 24);
+    hrs = hrs % 24;
+    return day + "days:" + hrs + "hrs:" + mins + "mins";
+  }
 
+  return hrs + "hrs:" + mins + "mins:" + secs + "secs";
+};
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: "#dcdede",
@@ -24,7 +38,6 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 14,
     border: "1px solid #dcdede",
-    maxHeight: "1px",
   },
 }))(TableCell);
 
@@ -120,6 +133,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    borderCollapse: "collapse",
   },
   visuallyHidden: {
     border: 0,
@@ -140,6 +154,22 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "70vh",
     //maxWidth: "650",
     //border: "1px solid " + theme.palette.primary.main,
+  },
+
+  running: {
+    border: "2px solid green",
+  },
+  stop: {
+    border: "5px solid orange",
+  },
+  doff: {
+    border: "5px solid blue",
+  },
+  powerFailure: {
+    border: "2px solid red",
+  },
+  comm: {
+    border: "2px solid orange",
   },
 }));
 
@@ -239,78 +269,155 @@ export default function EnhancedTable(props) {
                       tabIndex={-1}
                       key={row._id}
                       selected={isItemSelected}
-                      className={Decode.status(row.data, row.recieved)}
+                      className={classes[Decode.status(row.data, row.recieved)]}
                     >
                       <StyledTableCell
+                        className={
+                          classes[Decode.status(row.data, row.recieved)]
+                        }
                         component="th"
                         id={labelId}
                         scope="row"
                         padding="none"
                         align="center"
                       >
-                        {row.machine}
+                        <p>{row.machine}</p>
+                        {Decode.status(row.data, row.recieved) ===
+                        "powerFailure" ? (
+                          <p style={{ color: "red" }}>
+                            {"[" +
+                              timeFormat(
+                                new Date() - new Date(parseInt(row.recieved))
+                              ) +
+                              "]"}
+                          </p>
+                        ) : undefined}
                       </StyledTableCell>
-                      <StyledTableCell>{row.department}</StyledTableCell>
+                      <StyledTableCell
+                        className={
+                          classes[Decode.status(row.data, row.recieved)]
+                        }
+                      >
+                        {row.department}
+                      </StyledTableCell>
                       {parameters.includes("Model") ? (
-                        <StyledTableCell>{row.model}</StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
+                          {row.model}
+                        </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Count") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {row.count && row.count.value && row.count.unit
                             ? row.count.value + " " + row.count.unit
                             : "Not assigned"}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Kg") ? (
-                        <StyledTableCell>{Decode.kg(row.data)}</StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
+                          {Decode.kg(row.data)}
+                        </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("m/min") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.mMin(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("tpi") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.tpi(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("spindle rpm") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.spindleRpm(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("AEF %") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.aef(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("PEF %") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.pef(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Stops") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.stops(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Stop min") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.stoppMin(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Doffs") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.doffs(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Doff min") ? (
-                        <StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
                           {Decode.doffMin(row.data)}
                         </StyledTableCell>
                       ) : undefined}
                       {parameters.includes("Ukg") ? (
-                        <StyledTableCell>{"Dont know"}</StyledTableCell>
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
+                          {"Dont know"}
+                        </StyledTableCell>
                       ) : undefined}
                     </StyledTableRow>
                   );
@@ -326,7 +433,7 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 100]}
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

@@ -24,6 +24,25 @@ const useStyles = makeStyles((theme) => ({
   },
   toolBarContent: {},
   tableCell: {},
+  statusContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "2rem",
+  },
+  status: {
+    display: "flex",
+
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "0.5rem",
+  },
+  dot: {
+    height: "25px",
+    width: "25px",
+
+    borderRadius: "50%",
+    display: "inline-block",
+  },
 }));
 
 export default function BasicTable(props) {
@@ -81,6 +100,29 @@ export default function BasicTable(props) {
       <TableContainer>
         <div className={classes.toolbar}>
           <h3 className={classes.shift}>Shift No : {shift}</h3>
+          <div className={classes.statusContainer}>
+            <div className={classes.status}>
+              <span
+                className={classes.dot}
+                style={{ backgroundColor: "orange" }}
+              ></span>
+              <p className={classes.text}>Communication</p>
+            </div>
+            <div className={classes.status}>
+              <span
+                className={classes.dot}
+                style={{ backgroundColor: "red" }}
+              ></span>
+              <p className={classes.text}>Power Failure</p>
+            </div>
+            <div className={classes.status}>
+              <span
+                className={classes.dot}
+                style={{ backgroundColor: "blue" }}
+              ></span>
+              <p className={classes.text}>Doff</p>
+            </div>
+          </div>
           <FilterBtn
             parameters={parameters}
             setParameters={setParameters}

@@ -39,9 +39,12 @@ export default function Single(props) {
     e.preventDefault();
     setSubmitProgress(true);
     axios
-      .post(process.env.REACT_APP_BACKEND + "/api/machines/single/insert", {
-        ...inputs,
-      })
+      .post(
+        process.env.REACT_APP_BACKEND + "/api/settings/machines/single/insert",
+        {
+          ...inputs,
+        }
+      )
       .then((res) => {
         setSubmitProgress(false);
         setAlert(<Alert type="success" msg="Updated Successfully" />);

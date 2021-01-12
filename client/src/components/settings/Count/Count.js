@@ -178,11 +178,6 @@ export default function Count() {
           required={true}
           setVal={setValue}
         />
-        <div className={classes.available}>
-          {progress ? <CircularProgress /> : content}
-        </div>
-        {alert}
-
         <SubmitBtn type="submit">
           {submitProgress ? (
             <CircularProgress size={30} color="secondary" />
@@ -190,6 +185,10 @@ export default function Count() {
             "Submit"
           )}
         </SubmitBtn>
+        <div className={classes.available}>
+          {progress ? <CircularProgress /> : content}
+        </div>
+        {alert}
       </form>
     </div>
   );

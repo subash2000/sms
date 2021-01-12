@@ -4,11 +4,26 @@ import Alert from "../../utilities/Alert";
 import FormText from "../../utilities/TextField";
 import CircularProgress from "../../utilities/CircularProgress";
 import SubmitBtn from "../../utilities/SubmitBtn";
+import FormSelect from "../../utilities/FormSelect";
 
 export default function Single() {
   const [inputs, setInputs] = React.useState({});
   const [alert, setAlert] = React.useState(undefined);
+  const [departments, setDepartments] = React.useState([]);
   const [submitProgress, setSubmitProgress] = React.useState(false);
+
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/departments")
+      .then((res) => {
+        setDepartments([...res.data.data]);
+      })
+      .catch((err) => {
+        if (err.response) console.log(err.response.data);
+      });
+    // eslint-disable-next-line
+  }, []);
+
   const handleSubmit = async (e) => {
     setAlert(undefined);
     e.preventDefault();
@@ -51,12 +66,13 @@ export default function Single() {
           value={inputs.to ? inputs.to : ""}
           onChange={(e) => setInputs({ ...inputs, to: e.target.value })}
         />
-        <FormText
-          required={true}
+        <FormSelect
           label="Department"
           variant="outlined"
+          required={true}
           value={inputs.department ? inputs.department : ""}
           onChange={(e) => setInputs({ ...inputs, department: e.target.value })}
+          menuItems={departments}
         />
         <FormText
           required={true}
