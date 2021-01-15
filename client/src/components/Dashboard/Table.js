@@ -29,11 +29,13 @@ const timeFormat = (s) => {
 };
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: "#dcdede",
+    backgroundColor: theme.palette.primary.main,
     //border: "1px solid black",
+    // "#dcdede"
 
     padding: "10px",
     border: "1px solid #fff",
+    whiteSpace: "nowrap",
   },
   body: {
     fontSize: 14,
@@ -43,12 +45,12 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
-    // "&:nth-of-type(odd)": {
-    //   backgroundColor: theme.palette.action.hover,
-    // },
-    // "&:nth-of-type(even)": {
-    //   backgroundColor: "#fbedff",
-    // },
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+    "&:nth-of-type(even)": {
+      // backgroundColor: "#fbedff",
+    },
   },
 }))(TableRow);
 
@@ -98,6 +100,7 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              style={{ color: "white" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -125,14 +128,15 @@ EnhancedTableHead.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    // width: "100%",
+    maxWidth: "80vw",
   },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+    maxWidth: "500px",
     borderCollapse: "collapse",
   },
   visuallyHidden: {
@@ -145,6 +149,10 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
+    color: "white",
+    "&:hover": {
+      color: "white",
+    },
   },
   tbody: {
     overflowY: "auto",
@@ -152,24 +160,43 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     maxHeight: "70vh",
+
     //maxWidth: "650",
     //border: "1px solid " + theme.palette.primary.main,
   },
 
   running: {
-    border: "2px solid green",
+    // border: "2px solid green",
+    color: "green",
+    fontSize: "15px",
+    fontWeight: "600",
   },
   stop: {
-    border: "5px solid orange",
+    // border: "5px solid orange",
+    color: "red",
+    fontSize: "15px",
+    fontWeight: "600",
   },
   doff: {
-    border: "5px solid blue",
+    // border: "5px solid blue",
+    color: "blue",
+    fontSize: "15px",
+    fontWeight: "600",
   },
   powerFailure: {
-    border: "2px solid red",
+    // border: "2px solid red",
+    color: "red",
+    //fontWeight: "700",
+    fontSize: "15px",
+    fontWeight: "600",
+    whiteSpace: "nowrap",
   },
   comm: {
-    border: "2px solid orange",
+    // border: "2px solid orange",
+    color: "brown",
+    fontWeight: "600",
+    fontSize: "15px",
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -282,7 +309,7 @@ export default function EnhancedTable(props) {
                         align="center"
                       >
                         <p>{row.machine}</p>
-                        {Decode.status(row.data, row.recieved) ===
+                        {/* {Decode.status(row.data, row.recieved) ===
                         "powerFailure" ? (
                           <p style={{ color: "red" }}>
                             {"[" +
@@ -291,7 +318,7 @@ export default function EnhancedTable(props) {
                               ) +
                               "]"}
                           </p>
-                        ) : undefined}
+                        ) : undefined} */}
                       </StyledTableCell>
                       <StyledTableCell
                         className={

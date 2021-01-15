@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
     gap: "0.5rem",
   },
   dot: {
-    height: "25px",
-    width: "25px",
+    height: "15px",
+    width: "15px",
 
     borderRadius: "50%",
     display: "inline-block",
@@ -104,9 +104,16 @@ export default function BasicTable(props) {
             <div className={classes.status}>
               <span
                 className={classes.dot}
-                style={{ backgroundColor: "orange" }}
+                style={{ backgroundColor: "green" }}
               ></span>
-              <p className={classes.text}>Communication</p>
+              <p className={classes.text}>Running</p>
+            </div>
+            <div className={classes.status}>
+              <span
+                className={classes.dot}
+                style={{ backgroundColor: "brown" }}
+              ></span>
+              <p className={classes.text}>No Communication</p>
             </div>
             <div className={classes.status}>
               <span
