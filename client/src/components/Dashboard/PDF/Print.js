@@ -98,6 +98,7 @@ export default function Print(props) {
           <p className={classes.text}>Doff</p>
         </div>
       </div> */}
+      <h1>Company Name</h1>
       <Table parameters={parameters} result={result} />
       <div className={classes.summary}>
         <Summary machines={result} />

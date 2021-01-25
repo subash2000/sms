@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "./Table";
-import FilterBtn from "../Filter/FilterBtn";
+import FilterBtn from "./Filter/FilterBtn";
 import func from "../../../common/functions";
 import { Paper } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
@@ -61,6 +61,8 @@ export default function BasicTable(props) {
     setParameters,
     setSelected,
     setMachines,
+    cacheParam,
+    cacheOpt,
   } = props;
   const [model, setModel] = React.useState("All");
   const [department, setDepartment] = React.useState("All");
@@ -68,13 +70,14 @@ export default function BasicTable(props) {
   const [shift, setShift] = React.useState("");
 
   React.useEffect(() => {
-    let cache = localStorage.getItem("dashboardFilterOptions");
+    let cache = localStorage.getItem(cacheOpt);
     if (cache) {
       let filters = JSON.parse(cache);
       setModel(filters.model);
       setDepartment(filters.department);
       setCount(filters.count);
     }
+    // eslint-disable-next-line
   }, []);
 
   React.useEffect(() => {
@@ -158,6 +161,8 @@ export default function BasicTable(props) {
               setDepartment={setDepartment}
               setCount={setCount}
               setModel={setModel}
+              cacheParam={cacheParam}
+              cacheOpt={cacheOpt}
             />
           </div>
         </div>

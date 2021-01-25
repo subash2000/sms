@@ -41,6 +41,7 @@ app.use("/api/live", require("./routes/liveRoute"));
 app.use("/api/settings/machines", require("./routes/machinesRoute"));
 app.use("/api/settings/mill", require("./routes/millRoute"));
 app.use("/api/settings/communication", require("./routes/communicationRoute"));
+app.use("/api/report", require("./routes/reportRoute"));
 //app listening
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

@@ -114,6 +114,7 @@ export default function FormText(props) {
           variant={props.variant}
           required={props.required}
           disabled={props.disabled ? props.disabled : false}
+          inputProps={props.inputProps ? props.inputProps : {}}
         />
       </div>
     );

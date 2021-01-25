@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
-import Checkbox from "../utilities/CheckBox";
+import Checkbox from "../../utilities/CheckBox";
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: "1rem",

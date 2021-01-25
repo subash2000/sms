@@ -11,8 +11,25 @@ const getCurrShift = (cb) => {
     });
 };
 
+const parameters = [
+  "Model",
+  "Count",
+  "Kg",
+  "m/min",
+  "tpi",
+  "spindle rpm",
+  "AEF %",
+  "PEF %",
+  "Stops",
+  "Stop min",
+  "Doffs",
+  "Doff min",
+  "Ukg",
+];
+
 const modules = {
   getCurrShift,
+  parameters,
 };
 
 export default modules;

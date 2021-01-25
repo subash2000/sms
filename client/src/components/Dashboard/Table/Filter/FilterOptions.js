@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
-import TextSelct from "../utilities/TextSelect";
-import CountSelect from "../utilities/CountSelect";
+import TextSelct from "../../utilities/TextSelect";
+import CountSelect from "../../utilities/CountSelect";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({

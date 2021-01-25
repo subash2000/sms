@@ -1,7 +1,7 @@
 import React from "react";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { IconButton, Tooltip } from "@material-ui/core";
-import Modal from "../../utilities/Modal";
+import Modal from "../../../utilities/Modal";
 import Filter from "./Filter";
 import { makeStyles } from "@material-ui/styles";
 const useStyles = makeStyles((theme) => ({
@@ -24,15 +24,17 @@ export default function ToolBar(props) {
     setDepartment,
     setCount,
     setModel,
+    cacheParam,
+    cacheOpt,
   } = props;
   const applyHandler = () => {
     let paramArr = Object.keys(selected).filter(
       (item) => selected[item] === true
     );
     props.setParameters(paramArr);
-    localStorage.setItem("liveParameters", JSON.stringify(selected));
+    localStorage.setItem(cacheParam, JSON.stringify(selected));
     localStorage.setItem(
-      "dashboardFilterOptions",
+      cacheOpt,
       JSON.stringify({
         department,
         count,
@@ -51,7 +53,7 @@ export default function ToolBar(props) {
     setModal(true);
   };
   React.useEffect(() => {
-    let cachedSelected = localStorage.getItem("liveParameters");
+    let cachedSelected = localStorage.getItem(cacheParam);
     if (cachedSelected) {
       setSelected(JSON.parse(cachedSelected));
     }

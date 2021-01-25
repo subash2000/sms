@@ -83,7 +83,7 @@ export default function Mill(props) {
         <FormText
           required={true}
           type="number"
-          InputProps={{ inputProps: { min: 1, max: 3 } }}
+          inputProps={{ min: 1, max: 3 }}
           label="Number of Shifts"
           variant="outlined"
           value={inputs.shifts ? inputs.shifts : ""}
