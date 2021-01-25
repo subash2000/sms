@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { lighten, makeStyles, withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -21,6 +21,33 @@ import Modal from "./Modal";
 import { Button } from "@material-ui/core";
 import SetCount from "./SetCount";
 import SnackBar from "../../utilities/SnackBar";
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.primary.main,
+    //border: "1px solid black",
+    // "#dcdede"
+
+    padding: "10px",
+    // border: "1px solid #fff",
+    whiteSpace: "nowrap",
+  },
+  body: {
+    fontSize: 14,
+    border: "1px solid #dcdede",
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+    "&:nth-of-type(even)": {
+      // backgroundColor: "#fbedff",
+    },
+  },
+}))(TableRow);
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -91,18 +118,20 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
+      <StyledTableRow>
+        <StyledTableCell padding="checkbox" style={{ color: "white" }}>
           <Checkbox
+            style={{ color: "white" }}
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all desserts" }}
           />
-        </TableCell>
+        </StyledTableCell>
         {headCells.map((headCell) => (
-          <TableCell
+          <StyledTableCell
+            style={{ color: "white" }}
             key={headCell.id}
             align="center"
             padding={headCell.disablePadding ? "none" : "default"}
@@ -112,17 +141,21 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              style={{ color: "white" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
+                <span
+                  className={classes.visuallyHidden}
+                  style={{ color: "white" }}
+                >
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
               ) : null}
             </TableSortLabel>
-          </TableCell>
+          </StyledTableCell>
         ))}
-      </TableRow>
+      </StyledTableRow>
     </TableHead>
   );
 }
@@ -253,6 +286,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
+    padding: "1rem",
   },
   table: {
     minWidth: 750,
@@ -410,7 +444,7 @@ export default function EnhancedTable(props) {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
+                    <StyledTableRow
                       hover
                       onClick={(event) =>
                         handleClick(event, row.machine, row.department)
@@ -421,14 +455,14 @@ export default function EnhancedTable(props) {
                       key={index}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      <StyledTableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
                         />
-                      </TableCell>
-                      <TableCell
+                      </StyledTableCell>
+                      <StyledTableCell
                         align="center"
                         component="th"
                         id={labelId}
@@ -436,23 +470,27 @@ export default function EnhancedTable(props) {
                         padding="none"
                       >
                         {row.machine}
-                      </TableCell>
-                      <TableCell align="center">{row.model}</TableCell>
-                      <TableCell align="center">{row.department}</TableCell>
-                      <TableCell align="center">
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.model}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {row.department}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
                         {row.currcount === "Not assingned" ? (
                           <i>{row.currcount}</i>
                         ) : (
                           row.currcount + " " + row.unit
                         )}
-                      </TableCell>
-                    </TableRow>
+                      </StyledTableCell>
+                    </StyledTableRow>
                   );
                 })}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
+                <StyledTableRow style={{ height: 53 * emptyRows }}>
+                  <StyledTableCell colSpan={6} />
+                </StyledTableRow>
               )}
             </TableBody>
           </Table>

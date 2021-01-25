@@ -2,9 +2,13 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TableContainer from "@material-ui/core/TableContainer";
 import Table from "./Table";
-import FilterBtn from "./FilterBtn";
-import func from "../../common/functions";
+import FilterBtn from "../Filter/FilterBtn";
+import func from "../../../common/functions";
 import { Paper } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
+import PrintIcon from "@material-ui/icons/Print";
+import Tooltip from "@material-ui/core/Tooltip";
+
 const { getCurrShift } = func;
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -42,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
 
     borderRadius: "50%",
     display: "inline-block",
+  },
+  rightSide: {
+    display: "flex",
   },
 }));
 
@@ -94,6 +101,9 @@ export default function BasicTable(props) {
   });
 
   // console.log(result);
+  const printPdf = () => {
+    window.print();
+  };
 
   return (
     <Paper elevation={3} style={{ padding: "1rem" }}>
@@ -130,19 +140,26 @@ export default function BasicTable(props) {
               <p className={classes.text}>Doff</p>
             </div>
           </div>
-          <FilterBtn
-            parameters={parameters}
-            setParameters={setParameters}
-            selected={selected}
-            setSelected={setSelected}
-            setMachines={setMachines}
-            department={department}
-            model={model}
-            count={count}
-            setDepartment={setDepartment}
-            setCount={setCount}
-            setModel={setModel}
-          />
+          <div className={classes.rightSide}>
+            <Tooltip title="Print" placement="top">
+              <IconButton color="primary" component="span" onClick={printPdf}>
+                <PrintIcon />
+              </IconButton>
+            </Tooltip>
+            <FilterBtn
+              parameters={parameters}
+              setParameters={setParameters}
+              selected={selected}
+              setSelected={setSelected}
+              setMachines={setMachines}
+              department={department}
+              model={model}
+              count={count}
+              setDepartment={setDepartment}
+              setCount={setCount}
+              setModel={setModel}
+            />
+          </div>
         </div>
         <Table parameters={parameters} result={result} />
       </TableContainer>

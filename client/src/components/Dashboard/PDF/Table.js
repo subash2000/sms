@@ -6,36 +6,20 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
-import Decode from "../../common/packetDecode";
-//import "./styles.css";
-const timeFormat = (s) => {
-  var ms = s % 1000;
-  s = (s - ms) / 1000;
-  var secs = s % 60;
-  s = (s - secs) / 60;
-  var mins = s % 60;
-  var hrs = (s - mins) / 60;
-  if (hrs >= 24) {
-    var day = parseInt(hrs / 24);
-    hrs = hrs % 24;
-    return day + "days:" + hrs + "hrs:" + mins + "mins";
-  }
+import Decode from "../../../common/packetDecode";
 
-  return hrs + "hrs:" + mins + "mins:" + secs + "secs";
-};
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.primary.main,
-    //border: "1px solid black",
-    // "#dcdede"
-
+    border: "1px solid #dcdede",
     padding: "10px",
-    border: "1px solid #fff",
-    whiteSpace: "nowrap",
+
+    color: "black",
+    fontSize: "15px",
+    fontWeight: "550",
+    //background: "black",
   },
   body: {
     fontSize: 14,
@@ -45,12 +29,12 @@ const StyledTableCell = withStyles((theme) => ({
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
+    whiteSpace: "break-spaces",
+    wordWrap: "break-word",
     "&:nth-of-type(odd)": {
       backgroundColor: theme.palette.action.hover,
     },
-    "&:nth-of-type(even)": {
-      // backgroundColor: "#fbedff",
-    },
+    "&:nth-of-type(even)": {},
   },
 }))(TableRow);
 
@@ -81,10 +65,7 @@ function stableSort(array, comparator) {
 }
 
 function EnhancedTableHead(props) {
-  const { classes, order, orderBy, onRequestSort, headCells } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+  const { headCells } = props;
 
   return (
     <TableHead>
@@ -94,21 +75,8 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align="center"
             padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-              style={{ color: "white" }}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
+            <TableSortLabel>{headCell.label}</TableSortLabel>
           </StyledTableCell>
         ))}
       </StyledTableRow>
@@ -129,15 +97,16 @@ EnhancedTableHead.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     // width: "100%",
-    maxWidth: "80vw",
+    // maxWidth: "90vw",
+    marginTop: "5rem",
   },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
   },
   table: {
-    maxWidth: "500px",
-    borderCollapse: "collapse",
+    //maxWidth: "500px",
+    //borderCollapse: "collapse",
   },
   visuallyHidden: {
     border: 0,
@@ -155,12 +124,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tbody: {
-    overflowY: "auto",
-    overflowX: "auto",
+    // overflowY: "auto",
+    // overflowX: "auto",
   },
   tableContainer: {
-    maxHeight: "70vh",
-
+    // maxHeight: "70vh",
     //maxWidth: "650",
     //border: "1px solid " + theme.palette.primary.main,
   },
@@ -169,34 +137,34 @@ const useStyles = makeStyles((theme) => ({
     // border: "2px solid green",
     color: "green",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "550",
   },
   stop: {
     // border: "5px solid orange",
     color: "red",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "550",
   },
   doff: {
     // border: "5px solid blue",
     color: "blue",
     fontSize: "15px",
-    fontWeight: "600",
+    fontWeight: "550",
   },
   powerFailure: {
     // border: "2px solid red",
     color: "red",
     //fontWeight: "700",
     fontSize: "15px",
-    fontWeight: "600",
-    whiteSpace: "nowrap",
+    fontWeight: "550",
+    // whiteSpace: "nowrap",
   },
   comm: {
     // border: "2px solid orange",
     color: "brown",
-    fontWeight: "600",
+    fontWeight: "550",
     fontSize: "15px",
-    whiteSpace: "nowrap",
+    //whiteSpace: "nowrap",
   },
 }));
 
@@ -206,8 +174,6 @@ export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const headCells = [
     {
       id: "machine",
@@ -246,20 +212,8 @@ export default function EnhancedTable(props) {
     setSelected([]);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-  console.log(result);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
@@ -282,9 +236,8 @@ export default function EnhancedTable(props) {
               headCells={headCells}
             />
             <TableBody className={classes.tbody}>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+              {stableSort(rows, getComparator(order, orderBy)).map(
+                (row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -309,16 +262,6 @@ export default function EnhancedTable(props) {
                         align="center"
                       >
                         <p>{row.machine}</p>
-                        {/* {Decode.status(row.data, row.recieved) ===
-                        "powerFailure" ? (
-                          <p style={{ color: "red" }}>
-                            {"[" +
-                              timeFormat(
-                                new Date() - new Date(parseInt(row.recieved))
-                              ) +
-                              "]"}
-                          </p>
-                        ) : undefined} */}
                       </StyledTableCell>
                       <StyledTableCell
                         className={
@@ -448,26 +391,11 @@ export default function EnhancedTable(props) {
                       ) : undefined}
                     </StyledTableRow>
                   );
-                })}
-              {emptyRows > 0 && (
-                <StyledTableRow
-                  style={{ height: 53 * emptyRows, border: "none" }}
-                >
-                  <StyledTableCell style={{ border: "none" }} colSpan={6} />
-                </StyledTableRow>
+                }
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
       </Paper>
     </div>
   );

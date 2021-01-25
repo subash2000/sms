@@ -32,6 +32,11 @@ app.use(
 //routes
 //app.use("/api/settings", require("./routes/settingsRoute"));
 //app.use("/api/settings", require("./routes/countSettings.js"));
+app.get("/", (req, res) => {
+  res.send({
+    msg: "pong",
+  });
+});
 app.use("/api/live", require("./routes/liveRoute"));
 app.use("/api/settings/machines", require("./routes/machinesRoute"));
 app.use("/api/settings/mill", require("./routes/millRoute"));

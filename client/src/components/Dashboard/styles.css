@@ -1,50 +1,24 @@
-@keyframes powerFailure {
-  0% {
-    background-color: red;
+@media print {
+  body * {
+    visibility: hidden;
   }
-  50% {
-    background-color: white;
+  .section-to-print,
+  .section-to-print * {
+    visibility: visible;
   }
-  100% {
-    background-color: red;
+  .section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
-}
-
-.powerFailure {
-  animation-name: powerFailure;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes doff {
-  0% {
-    background-color: rgb(131, 131, 226);
-  }
-  50% {
-    background-color: white;
-  }
-  100% {
-    background-color: rgb(130, 130, 248);
+  @page {
+    size: landscape;
   }
 }
 
-.doff {
-  animation-name: doff;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes comm {
-  0% {
-    background-color: orange;
+@media screen {
+  .section-to-print {
+    visibility: hidden;
+    display: none;
   }
-  50% {
-    background-color: white;
-  }
-  100% {
-    background-color: orange;
-  }
-}
-
-.comm {
 }

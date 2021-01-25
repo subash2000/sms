@@ -62,10 +62,6 @@ export default function OverAll(props) {
   };
 
   React.useEffect(() => {
-    setKg(0);
-    setDoff(0);
-    setEff(0);
-
     if (props.machines && props.machines.length) {
       let kgArr = props.machines.map((item) => {
         return Decode.kg(item.data);
@@ -84,8 +80,7 @@ export default function OverAll(props) {
       });
       setEff(sumArray(effArr));
     }
-    // eslint-disable-next-line
-  });
+  }, [props]);
 
   return (
     <div className={classes.wrapper}>

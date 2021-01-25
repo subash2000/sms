@@ -1,9 +1,11 @@
 import React from "react";
 import axios from "axios";
-import TableContainer from "./TableContainer";
+import TableContainer from "./Table/TableContainer";
 import ToolBar from "./ToolBar";
 import { makeStyles } from "@material-ui/styles";
 import { Divider, CircularProgress } from "@material-ui/core";
+import Print from "./PDF/Print";
+import "./styles.css";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
@@ -54,36 +56,37 @@ export default function Live() {
         <h3>Make sure you updated the settings</h3>
       </div>
     );
-    let interval = setInterval(() => {
-      axios
-        .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
-        .then((res) => {
-          setMachines([...res.data.machines]);
-        })
-        .catch((err) => {
-          if (err.response) {
-            console.log(err.response.data);
-            setNoMachines(<h2>No Machines Found</h2>);
-          }
-        });
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    axios
+      .get(process.env.REACT_APP_BACKEND)
+      .then((response) => {
+        if (response.data.msg === "pong") {
+          let interval = setInterval(() => {
+            axios
+              .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
+              .then((res) => {
+                setMachines([...res.data.machines]);
+              })
+              .catch((err) => {
+                if (err.response) {
+                  console.log(err.response.data);
+                  setNoMachines(<h2>No Machines Found</h2>);
+                }
+              });
+          }, 1000);
+          return () => {
+            clearInterval(interval);
+          };
+        }
+      })
+      .catch((err) => {
+        setNoMachines(<h2>Can't Connect to server</h2>);
+      });
   }, []);
 
   const content = (
     <div>
       <Divider />
-      <ToolBar
-        parameters={parameters}
-        setParameters={setParameters}
-        selected={selected}
-        setSelected={setSelected}
-        setMachines={setMachines}
-        machines={machines}
-      />
+      <ToolBar machines={machines} />
       <TableContainer
         selected={selected}
         parameters={parameters}
@@ -92,6 +95,9 @@ export default function Live() {
         setSelected={setSelected}
         setMachines={setMachines}
       />
+      <div className="section-to-print">
+        <Print parameters={parameters} machines={machines} />
+      </div>
     </div>
   );
   return (

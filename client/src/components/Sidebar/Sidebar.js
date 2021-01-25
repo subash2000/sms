@@ -25,6 +25,7 @@ import CountAssign from "../settings/CountAssign/CountAssign";
 import Machines from "../Machines/Machines";
 import Department from "../settings/Department/Department";
 import Modal from "../settings/Modal/Modal";
+import Report from "../Report/Report";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -71,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    //padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -108,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -133,6 +134,7 @@ export default function PersistentDrawerLeft() {
       <Route exact path="/machines" component={Machines} />
       <Route exact path="/departments" component={Department} />
       <Route exact path="/machinemodals" component={Modal} />
+      <Route exact path="/report" component={Report} />
     </Switch>
   );
 
@@ -186,6 +188,9 @@ export default function PersistentDrawerLeft() {
           </Link>
           <Link className={classes.link} to="/machines">
             <Typography variant="body1">Machines</Typography>
+          </Link>
+          <Link className={classes.link} to="/report">
+            <Typography variant="body1">Report</Typography>
           </Link>
 
           <Divider />

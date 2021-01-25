@@ -1,7 +1,7 @@
 import React from "react";
 import FilterListIcon from "@material-ui/icons/FilterList";
-import { IconButton } from "@material-ui/core";
-import Modal from "../utilities/Modal";
+import { IconButton, Tooltip } from "@material-ui/core";
+import Modal from "../../utilities/Modal";
 import Filter from "./Filter";
 import { makeStyles } from "@material-ui/styles";
 const useStyles = makeStyles((theme) => ({
@@ -91,13 +91,15 @@ export default function ToolBar(props) {
           />
         </Modal>
         <div className={classes.options}>
-          <IconButton
-            onClick={filterBtnHandler}
-            color="primary"
-            component="span"
-          >
-            <FilterListIcon />
-          </IconButton>
+          <Tooltip title="Filter" placement="top">
+            <IconButton
+              onClick={filterBtnHandler}
+              color="primary"
+              component="span"
+            >
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       </div>
     </div>

@@ -22,11 +22,13 @@ const StyledBreadcrumb = withStyles((theme) => ({
 
 export default function CustomizedBreadcrumbs(props) {
   const [content, setContent] = React.useState(
-    <FilterParam
-      parameters={props.parameters}
-      setParameters={props.setParameters}
-      selected={props.selected}
-      setSelected={props.setSelected}
+    <FilterOpt
+      department={props.department}
+      model={props.model}
+      count={props.count}
+      setDepartment={props.setDepartment}
+      setCount={props.setCount}
+      setModel={props.setModel}
     />
   );
   const options = {
@@ -58,12 +60,12 @@ export default function CustomizedBreadcrumbs(props) {
     <div>
       <Breadcrumbs aria-label="breadcrumb">
         <StyledBreadcrumb
-          label="Parameter"
-          onClick={(e) => handleClick(e, "parameter")}
-        />
-        <StyledBreadcrumb
           label="Machine attributes"
           onClick={(e) => handleClick(e, "options")}
+        />
+        <StyledBreadcrumb
+          label="Parameter"
+          onClick={(e) => handleClick(e, "parameter")}
         />
       </Breadcrumbs>
       {content}
