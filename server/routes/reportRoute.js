@@ -18,6 +18,7 @@ router.post("/", (req, res) => {
         Machines.find({
           ip: { $in: [...ipArr] },
         })
+          .sort({ machine: 1 })
           .then((machinesArr) => {
             if (!machinesArr || !machinesArr.length)
               res.status(400).send({

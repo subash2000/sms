@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
-import TableContainer from "./Table/TableContainer";
-import ToolBar from "./ToolBar";
 import { makeStyles } from "@material-ui/styles";
+import ToolBar from "./ToolBar";
+import TableContainer from "./Table/TableContainer";
 import { Divider, CircularProgress } from "@material-ui/core";
 import Print from "./PDF/Print";
 import func from "../../common/functions";
@@ -20,7 +20,6 @@ export default function Live() {
   const [noMachines, setNoMachines] = React.useState(undefined);
   const [machines, setMachines] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
-
   const [selected, setSelected] = React.useState({});
   const classes = useStyles();
   React.useState(() => {

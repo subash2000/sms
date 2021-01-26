@@ -4,6 +4,10 @@ import React from "react";
 import DateField from "../utilities/DateField";
 import Alert from "../utilities/Alert";
 import FormSelect from "../utilities/FormSelect";
+import ToolBar from "./ToolBar";
+import TableContainer from "./Table/TableContainer";
+import { Divider } from "@material-ui/core";
+import func from "../../common/functions";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -22,9 +26,33 @@ export default function Report() {
   const [shift, setShift] = React.useState("2");
   const [load, setLoad] = React.useState(false);
   const [content, setContent] = React.useState(undefined);
+  const [machines, setMachines] = React.useState([]);
+  const [parameters, setParameters] = React.useState([...func.parameters]);
+
+  const [selected, setSelected] = React.useState({});
 
   const classes = useStyles();
 
+  React.useEffect(() => {
+    if (machines.length > 0) {
+      console.log(parameters);
+      setContent(
+        <div>
+          <Divider />
+          <ToolBar machines={machines} setMachines={setMachines} />
+          <TableContainer
+            selected={selected}
+            parameters={parameters}
+            machines={machines}
+            setParameters={setParameters}
+            setSelected={setSelected}
+            setMachines={setMachines}
+          />
+        </div>
+      );
+    }
+    // eslint-disable-next-line
+  }, [machines]);
   const viewHandler = (e) => {
     e.preventDefault();
     setContent(undefined);
@@ -36,11 +64,15 @@ export default function Report() {
       // .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
       .then((res) => {
         setLoad(false);
-        setContent(<h2>Boom see the content</h2>);
+        console.log(res.data);
+        if (res.data.machines && res.data.machines.length) {
+          setMachines([...res.data.machines]);
+        }
       })
       .catch((err) => {
         if (err.response) {
           setContent(<Alert type="warning" msg={err.response.data.msg} />);
+          setParameters([...func.parameters]);
         }
         setLoad(false);
       });
