@@ -30,7 +30,7 @@ const StyledTableCell = withStyles((theme) => ({
 
     padding: "10px",
     // border: "1px solid #fff",
-    whiteSpace: "nowrap",
+    //whiteSpace: "nowrap",
   },
   body: {
     fontSize: 14,
@@ -281,7 +281,9 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      width: "80vw",
+    },
   },
   paper: {
     width: "100%",

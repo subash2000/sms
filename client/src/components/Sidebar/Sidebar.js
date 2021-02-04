@@ -22,7 +22,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Count from "../settings/Count/Count";
 import CountAssign from "../settings/CountAssign/CountAssign";
-import Machines from "../Machines/Machines";
 import Department from "../settings/Department/Department";
 import Modal from "../settings/Modal/Modal";
 import Report from "../Report/Report";
@@ -131,7 +130,6 @@ export default function PersistentDrawerLeft() {
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/countsettings" component={Count} />
       <Route exact path="/countassignment" component={CountAssign} />
-      <Route exact path="/machines" component={Machines} />
       <Route exact path="/departments" component={Department} />
       <Route exact path="/machinemodals" component={Modal} />
       <Route exact path="/report" component={Report} />
@@ -186,9 +184,7 @@ export default function PersistentDrawerLeft() {
           <Link className={classes.link} to="/dashboard">
             <Typography variant="body1">Dashboard</Typography>
           </Link>
-          <Link className={classes.link} to="/machines">
-            <Typography variant="body1">Machines</Typography>
-          </Link>
+
           <Link className={classes.link} to="/report">
             <Typography variant="body1">Report</Typography>
           </Link>

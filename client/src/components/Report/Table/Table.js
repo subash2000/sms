@@ -144,39 +144,39 @@ const useStyles = makeStyles((theme) => ({
     //border: "1px solid " + theme.palette.primary.main,
   },
 
-  running: {
-    // border: "2px solid green",
-    color: "green",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
-  stop: {
-    // border: "5px solid orange",
-    color: "red",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
-  doff: {
-    // border: "5px solid blue",
-    color: "blue",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
-  powerFailure: {
-    // border: "2px solid red",
-    color: "red",
-    //fontWeight: "700",
-    fontSize: "15px",
-    fontWeight: "550",
-    whiteSpace: "nowrap",
-  },
-  comm: {
-    // border: "2px solid orange",
-    color: "brown",
-    fontWeight: "550",
-    fontSize: "15px",
-    whiteSpace: "nowrap",
-  },
+  // running: {
+  //   // border: "2px solid green",
+  //   color: "green",
+  //   fontSize: "15px",
+  //   fontWeight: "550",
+  // },
+  // stop: {
+  //   // border: "5px solid orange",
+  //   color: "red",
+  //   fontSize: "15px",
+  //   fontWeight: "550",
+  // },
+  // doff: {
+  //   // border: "5px solid blue",
+  //   color: "blue",
+  //   fontSize: "15px",
+  //   fontWeight: "550",
+  // },
+  // powerFailure: {
+  //   // border: "2px solid red",
+  //   color: "red",
+  //   //fontWeight: "700",
+  //   fontSize: "15px",
+  //   fontWeight: "550",
+  //   whiteSpace: "nowrap",
+  // },
+  // comm: {
+  //   // border: "2px solid orange",
+  //   color: "brown",
+  //   fontWeight: "550",
+  //   fontSize: "15px",
+  //   whiteSpace: "nowrap",
+  // },
 }));
 
 export default function EnhancedTable(props) {

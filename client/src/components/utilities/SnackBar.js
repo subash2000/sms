@@ -16,7 +16,7 @@ export default function SimpleSnackbar(props) {
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "left",
+          horizontal: "center",
         }}
         open={props.open}
         autoHideDuration={6000}

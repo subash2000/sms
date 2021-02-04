@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
 
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
   },
   toolBarContent: {},
   tableCell: {},
@@ -100,7 +100,7 @@ export default function BasicTable(props) {
     <Paper elevation={3} style={{ padding: "1rem" }}>
       <TableContainer>
         <div className={classes.toolbar}>
-          <h3 className={classes.shift}>Shift No : {shift}</h3>
+          {/* <h3 className={classes.shift}>Shift No : {shift}</h3>
           <div className={classes.statusContainer}>
             <div className={classes.status}>
               <span
@@ -130,7 +130,7 @@ export default function BasicTable(props) {
               ></span>
               <p className={classes.text}>Doff</p>
             </div>
-          </div>
+          </div> */}
           <div className={classes.rightSide}>
             <Tooltip title="Print" placement="top">
               <IconButton color="primary" component="span" onClick={printPdf}>

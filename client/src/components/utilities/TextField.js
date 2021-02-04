@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     [theme.breakpoints.down("xs")]: {
       justifyContent: "flex-start",
+      width: "100%",
     },
   },
   colon: {
@@ -43,17 +44,30 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     // width: "50%",
     minWidth: "100px",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   numField: {
     //width: "20%",
     minWidth: "100px",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   field: {
     width: "50%",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   time: {
     width: "50%",
     display: "flex",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      justifyContent: "space-evenly",
+    },
   },
   timeField: {
     width: "20%",

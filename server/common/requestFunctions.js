@@ -55,15 +55,15 @@ const settingsPacket = (ip, cb) => {
               pad(date.getDate(), 2) +
               pad(date.getMonth() + 1, 2) +
               pad(date.getFullYear().toString().substr(-2), 2) +
-              pad(calcHr(date.getHours(), milldetails[0].shift1Hr), 2) +
-              pad(calcMin(date.getMinutes(), milldetails[0].shift1Min), 2) +
+              pad(date.getHours(), 2) +
+              pad(date.getMinutes(), 2) +
               pad(date.getSeconds(), 2) +
-              pad(milldetails[0].shift1Hr, 2) +
-              pad(milldetails[0].shift1Min, 2) +
-              pad(milldetails[0].shift2Hr, 2) +
-              pad(milldetails[0].shift2Min, 2) +
-              pad(milldetails[0].shift3Hr, 2) +
-              pad(milldetails[0].shift3Min, 2) +
+              pad("00", 2) +
+              pad("00", 2) +
+              pad(milldetails[0].shift2Hr - milldetails[0].shift1Hr, 2) +
+              pad(milldetails[0].shift2Min - milldetails[0].shift1Min, 2) +
+              pad(milldetails[0].shift3Hr - milldetails[0].shift1Hr, 2) +
+              pad(milldetails[0].shift3Min - milldetails[0].shift1Min, 2) +
               pad(milldetails[1].spindles, 4) +
               pad(milldetails[1].deliveryRollerDia, 2) +
               pad(milldetails[1].middleRollerDia, 2) +
