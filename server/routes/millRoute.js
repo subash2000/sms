@@ -240,4 +240,24 @@ router.post("/model/delete", (req, res) => {
     });
 });
 
+router.get("/", (req, res) => {
+  Mill.findOne({})
+    .then((result) => {
+      if (!result) {
+        res.status(400).send({
+          msg: "No mill details",
+        });
+      } else {
+        res.send({
+          result,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(400).send({
+        err,
+      });
+    });
+});
+
 module.exports = router;

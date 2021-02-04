@@ -23,6 +23,23 @@ export default function Mill(props) {
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
   const classes = useStyles();
+
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/mill")
+      .then((res) => {
+        setInputs({
+          ...res.data.result,
+        });
+        setShift1Hr(res.data.result.shift1Hr.toString());
+        setShift1Min(res.data.result.shift1Min.toString());
+        setShift2Hr(res.data.result.shift2Hr.toString());
+        setShift2Min(res.data.result.shift2Min.toString());
+        setShift3Hr(res.data.result.shift3Hr.toString());
+        setShift3Min(res.data.result.shift3Min.toString());
+        console.log(res);
+      });
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -40,13 +57,6 @@ export default function Mill(props) {
       .then((res) => {
         setAlert(<Alert type="success" msg={res.data.msg} />);
         setSubmitProgress(false);
-        setInputs({});
-        setShift1Hr("");
-        setShift2Hr("");
-        setShift3Hr("");
-        setShift1Min("");
-        setShift2Min("");
-        setShift3Min("");
       })
       .catch((err) => {
         if (err.response) console.log(err.response.data);
@@ -129,7 +139,7 @@ export default function Mill(props) {
           {submitProgress ? (
             <CircularProgress size={25} color="secondary" />
           ) : (
-            "Submit"
+            "Save"
           )}
         </SubmitBtn>
       </form>

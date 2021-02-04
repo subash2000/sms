@@ -66,7 +66,7 @@ export default function BasicTable(props) {
   const [model, setModel] = React.useState("All");
   const [department, setDepartment] = React.useState("All");
   const [count, setCount] = React.useState("All");
-  const [shift, setShift] = React.useState("");
+  const [, setShift] = React.useState("");
 
   React.useEffect(() => {
     getCurrShift((err, res) => {
