@@ -9,11 +9,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     fontSize: "1.1rem",
-    margin: "1rem",
+
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
       alignItems: "flex-start",
     },
+    margin: "1rem",
   },
   label: {
     display: "flex",
@@ -22,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     [theme.breakpoints.down("xs")]: {
       justifyContent: "flex-start",
-      width: "100%",
     },
   },
   colon: {
@@ -37,29 +37,22 @@ const useStyles = makeStyles((theme) => ({
   },
   labelText: {
     textAlign: "right",
-    marginRight: "6rem",
+    marginRight: "2rem",
     [theme.breakpoints.down("xs")]: {
       marginRight: "2rem",
-
-      textAlign: "left",
     },
   },
   textField: {
-    // width: "50%",
+    width: "100%",
+
     minWidth: "100px",
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-    },
   },
   numField: {
-    //width: "20%",
+    width: "20%",
     minWidth: "100px",
   },
   field: {
     width: "50%",
-    [theme.breakpoints.down("xs")]: {
-      width: "100%",
-    },
   },
   time: {
     width: "50%",
@@ -90,12 +83,8 @@ export default function FormText(props) {
           value={props.value}
           onChange={props.onChange}
           className={classes.textField}
-          required={true}
-          disabled={props.disabled ? props.disabled : false}
         >
-          <MenuItem value="">
-            <i>None</i>
-          </MenuItem>
+          <MenuItem value="All">All</MenuItem>
           {props.menuItems.map((item, i) => {
             return (
               <MenuItem key={i} value={item}>

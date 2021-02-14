@@ -394,16 +394,12 @@ export default function EnhancedTable(props) {
     let validDept = department === "All" || department === machine.department;
     let validCount =
       count === "All" || count === machine.currcount + machine.unit;
-
-    console.log(count + " " + machine.currcount + machine.unit);
     return validCount && validDept && validModel;
   });
-  console.log(rows);
   return (
     <div className={classes.root}>
       {alert}
       <SnackBar open={snack} setOpen={setSnack} msg={snackMsg} />
-
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
           machineData={rows}

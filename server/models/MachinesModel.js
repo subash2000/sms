@@ -3,13 +3,10 @@ const Schema = mongoose.Schema;
 
 const machineSchema = new Schema(
   {
-    machine: String,
+    machine: Number,
     id: Number,
     ip: {
       type: String,
-      // index: {
-      //   unique: true,
-      // },
     },
     backRollerDia: Number,
     backRollerRpm: Number,

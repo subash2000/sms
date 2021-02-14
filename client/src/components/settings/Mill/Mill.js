@@ -22,6 +22,7 @@ export default function Mill(props) {
   const [inputs, setInputs] = React.useState({});
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
+  const [load, setLoad] = React.useState(true);
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -37,7 +38,12 @@ export default function Mill(props) {
         setShift2Min(res.data.result.shift2Min.toString());
         setShift3Hr(res.data.result.shift3Hr.toString());
         setShift3Min(res.data.result.shift3Min.toString());
-        console.log(res);
+        setLoad(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoad(false);
+        setAlert(<Alert type="warning" msg="Can't connect to server" />);
       });
   }, []);
   const handleSubmit = (e) => {
@@ -73,76 +79,80 @@ export default function Mill(props) {
   return (
     <div className={classes.container}>
       <PageTitle text="Mill Settings" />
-      <form onSubmit={handleSubmit}>
-        <FormText
-          required={true}
-          label="Customer Name"
-          variant="outlined"
-          value={inputs.customer ? inputs.customer : ""}
-          onChange={(e) => setInputs({ ...inputs, customer: e.target.value })}
-        />
-        <FormText
-          required={true}
-          type="email"
-          label="Email"
-          variant="outlined"
-          value={inputs.email ? inputs.email : ""}
-          onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
-        />
+      {load ? (
+        <CircularProgress />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <FormText
+            required={true}
+            label="Customer Name"
+            variant="outlined"
+            value={inputs.customer ? inputs.customer : ""}
+            onChange={(e) => setInputs({ ...inputs, customer: e.target.value })}
+          />
+          <FormText
+            required={true}
+            type="email"
+            label="Email"
+            variant="outlined"
+            value={inputs.email ? inputs.email : ""}
+            onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+          />
 
-        <FormText
-          required={true}
-          type="number"
-          inputProps={{ min: 1, max: 3 }}
-          label="Number of Shifts"
-          variant="outlined"
-          value={inputs.shifts ? inputs.shifts : ""}
-          onChange={(e) => setInputs({ ...inputs, shifts: e.target.value })}
-        />
+          <FormText
+            required={true}
+            type="number"
+            inputProps={{ min: 1, max: 3 }}
+            label="Number of Shifts"
+            variant="outlined"
+            value={inputs.shifts ? inputs.shifts : ""}
+            onChange={(e) => setInputs({ ...inputs, shifts: e.target.value })}
+          />
 
-        <FormText
-          required={true}
-          disabled={inputs.shifts && inputs.shifts < 1}
-          type="time"
-          variant="outlined"
-          label="Shift-1 Start Time"
-          hr={shift1Hr}
-          min={shift1Min}
-          setHr={setShift1Hr}
-          setMin={setShift1Min}
-        />
-        <FormText
-          required={true}
-          disabled={inputs.shifts && inputs.shifts < 2}
-          type="time"
-          variant="outlined"
-          label="Shift-2 Start Time"
-          hr={shift2Hr}
-          min={shift2Min}
-          setHr={setShift2Hr}
-          setMin={setShift2Min}
-        />
-        <FormText
-          required={true}
-          disabled={inputs.shifts && inputs.shifts < 3}
-          type="time"
-          variant="outlined"
-          label="Shift-3 Start Time"
-          hr={shift3Hr}
-          min={shift3Min}
-          setHr={setShift3Hr}
-          setMin={setShift3Min}
-        />
+          <FormText
+            required={true}
+            disabled={inputs.shifts && inputs.shifts < 1}
+            type="time"
+            variant="outlined"
+            label="Shift-1 Start Time"
+            hr={shift1Hr}
+            min={shift1Min}
+            setHr={setShift1Hr}
+            setMin={setShift1Min}
+          />
+          <FormText
+            required={true}
+            disabled={inputs.shifts && inputs.shifts < 2}
+            type="time"
+            variant="outlined"
+            label="Shift-2 Start Time"
+            hr={shift2Hr}
+            min={shift2Min}
+            setHr={setShift2Hr}
+            setMin={setShift2Min}
+          />
+          <FormText
+            required={true}
+            disabled={inputs.shifts && inputs.shifts < 3}
+            type="time"
+            variant="outlined"
+            label="Shift-3 Start Time"
+            hr={shift3Hr}
+            min={shift3Min}
+            setHr={setShift3Hr}
+            setMin={setShift3Min}
+          />
 
-        {alert}
-        <SubmitBtn type="submit">
-          {submitProgress ? (
-            <CircularProgress size={25} color="secondary" />
-          ) : (
-            "Save"
-          )}
-        </SubmitBtn>
-      </form>
+          {alert}
+          <SubmitBtn type="submit">
+            {submitProgress ? (
+              <CircularProgress size={25} color="secondary" />
+            ) : (
+              "Save"
+            )}
+          </SubmitBtn>
+        </form>
+      )}
     </div>
   );
 }

@@ -1,9 +1,10 @@
 var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
-
+const { restartAll } = require("../Socket");
 router.get("/all", (req, res) => {
   Machines.find({})
+    .sort({ machine: 1 })
     .then((data) => {
       res.send({
         machines: data,
@@ -78,6 +79,7 @@ router.post("/multiple/insert", (req, res) => {
     }))
   )
     .then((result) => {
+      restartAll();
       res.send({
         response: result,
       });

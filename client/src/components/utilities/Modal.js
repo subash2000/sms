@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,14 +34,25 @@ export default function ResponsiveDialog(props) {
           {props.children}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.successHandler} color="primary">
-            {props.success}
-          </Button>
-          <Button onClick={props.failureHandler} color="primary" autoFocus>
-            {props.failure}
-          </Button>
+          {props.success ? (
+            <Button autoFocus onClick={props.successHandler} color="primary">
+              {props.success}
+            </Button>
+          ) : undefined}
+          {props.failure ? (
+            <Button autoFocus onClick={props.failureHandler} color="primary">
+              {props.failure}
+            </Button>
+          ) : undefined}
         </DialogActions>
       </Dialog>
     </div>
   );
 }
+
+ResponsiveDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  failureHandler: PropTypes.func.isRequired,
+  successHandler: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+};
