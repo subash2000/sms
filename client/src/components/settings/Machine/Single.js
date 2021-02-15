@@ -7,7 +7,7 @@ import SubmitBtn from "../../utilities/SubmitBtn";
 import FormSelect from "../../utilities/FormSelect";
 
 export default function Single(props) {
-  const [inputs, setInputs] = React.useState({});
+  const { inputs, setInputs } = props;
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
   const [models, setModels] = React.useState([]);

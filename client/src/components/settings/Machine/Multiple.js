@@ -28,12 +28,16 @@ async function toArr(from, to, obj) {
   return machinesArr;
 }
 
-export default function Single() {
-  const [inputs, setInputs] = React.useState({});
+export default function Single(props) {
+  const { inputs, setInputs } = props;
   const [alert, setAlert] = React.useState(undefined);
   const [submitProgress, setSubmitProgress] = React.useState(false);
   const [models, setModels] = React.useState([]);
   const [departments, setDepartments] = React.useState([]);
+
+  React.useEffect(() => {
+    console.log(props);
+  }, [props]);
   React.useEffect(() => {
     axios
       .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/models")

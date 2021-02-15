@@ -13,6 +13,11 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleBreadcrumbs(props) {
   const classes = useStyles();
   const [curr, setCurr] = React.useState(0);
+
+  React.useEffect(() => {
+    props.setMain(props.items[0].component);
+    // eslint-disable-next-line
+  }, []);
   return (
     <Breadcrumbs className={classes.container} aria-label="breadcrumb">
       {props.items.map((item, i) => {

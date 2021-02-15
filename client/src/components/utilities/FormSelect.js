@@ -92,6 +92,7 @@ export default function FormText(props) {
           className={classes.textField}
           required={true}
           disabled={props.disabled ? props.disabled : false}
+          defaultValue=""
         >
           <MenuItem value="">
             <i>None</i>

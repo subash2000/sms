@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/styles";
 import Breadcrumb from "../../utilities/Breadcrumb";
 import PageTitle from "../../utilities/PageTitle";
 import Modal from "../../utilities/Modal";
-import Details from "./Details";
+import Table from "./Table";
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
@@ -18,8 +18,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Machine() {
-  const [main, setMain] = React.useState(<Single />);
   const [open, setOpen] = React.useState(false);
+  const [inputs, setInputs] = React.useState({});
+  const [inputsMultiple, setInputsMultiple] = React.useState({});
+  const [main, setMain] = React.useState(undefined);
+
+  React.useEffect(() => {
+    setMain(<Multiple inputs={inputsMultiple} setInputs={setInputsMultiple} />);
+  }, [inputsMultiple]);
+  React.useEffect(() => {
+    setMain(<Single inputs={inputs} setInputs={setInputs} />);
+  }, [inputs]);
 
   const successHandler = () => {
     setOpen(false);
@@ -34,18 +43,20 @@ export default function Machine() {
   const classes = useStyles();
   const items = [
     {
-      component: <Single />,
+      component: <Single inputs={inputs} setInputs={setInputs} />,
       title: "Single",
     },
     {
-      component: <Multiple />,
+      component: (
+        <Multiple inputs={inputsMultiple} setInputs={setInputsMultiple} />
+      ),
       title: "Multiple",
     },
   ];
   return (
     <div className={classes.wrap}>
       <PageTitle text="Machine Settings" />
-      <Details onClick={addHandler} />
+      <Table onClick={addHandler} />
       <Modal
         title="Add Machines"
         successHandler={successHandler}

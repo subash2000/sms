@@ -4,6 +4,8 @@ import Multiple from "./Multiple";
 import { makeStyles } from "@material-ui/styles";
 import Breadcrumb from "../../utilities/Breadcrumb";
 import PageTitle from "../../utilities/PageTitle";
+import Modal from "../../utilities/Modal";
+import Table from "./Table";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -12,9 +14,25 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "2rem",
   },
+  wrap: {
+    width: "100%",
+  },
 }));
 export default function Machine() {
   const [main, setMain] = React.useState(<Single />);
+  const [open, setOpen] = React.useState(false);
+
+  const successHandler = () => {
+    setOpen(false);
+  };
+  const failureHandler = () => {
+    setOpen(false);
+  };
+
+  const addHandler = () => {
+    setOpen(true);
+  };
+
   const classes = useStyles();
   const items = [
     {
@@ -27,10 +45,21 @@ export default function Machine() {
     },
   ];
   return (
-    <div className={classes.container}>
+    <div className={classes.wrap}>
       <PageTitle text="Communication Settings" />
-      <Breadcrumb setMain={setMain} items={items} />
-      {main}
+      <Table onClick={addHandler} />
+      <Modal
+        title="Add Machines"
+        successHandler={successHandler}
+        failureHandler={failureHandler}
+        open={open}
+        failure="Close"
+      >
+        <div className={classes.container}>
+          <Breadcrumb setMain={setMain} items={items} />
+          {main}
+        </div>
+      </Modal>
     </div>
   );
 }

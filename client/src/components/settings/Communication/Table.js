@@ -12,33 +12,18 @@ import Paper from "@material-ui/core/Paper";
 import Tool from "./ToolBar";
 import Axios from "axios";
 import Filter from "../../Filter/Filter";
-import { Button, CircularProgress } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Snackbar,
+  IconButton,
+} from "@material-ui/core";
 import Modal from "../../utilities/Modal";
 import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
+import CloseIcon from "@material-ui/icons/Close";
 import Edit from "./Edit";
 
-const headCells = [
-  "Machine",
-  "Shed",
-  "Model",
-  "Department",
-  "Spindles",
-  "Delivery Roller Dia",
-  "Middle Roller Dia",
-  "Back Roller Dia",
-  "No of teeth(Delivery Roller)",
-  "No of teeth(Middle Roller)",
-  "No of teeth(Back Roller)",
-  "No of teeth(Tin Roller)",
-  "Delivery Roller RPM Correction",
-  "Middle Roller RPM Correction",
-  "Back Roller RPM Correction",
-  "Tin Roller RPM Correction",
-  "Ip address",
-  "Count",
-  "Module Id",
-];
+const headCells = ["Machine", "Department", "Module ID", "IP Address"];
 
 function EnhancedTableHead(props) {
   const { classes } = props;
@@ -128,6 +113,11 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     margin: "0 2px",
   },
+  deleteModal: {
+    color: theme.palette.error.main,
+    fontSize: "20px",
+    fontStyle: "italic",
+  },
 }));
 
 export default function EnhancedTable(props) {
@@ -139,6 +129,8 @@ export default function EnhancedTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [load, setLoad] = React.useState(false);
+  const [snack, setSnack] = React.useState(false);
+  const [snackMsg] = React.useState("Updated Sucessfully");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -189,17 +181,43 @@ export default function EnhancedTable(props) {
     ).then((res) => {
       if (res.data && res.data.machines) {
         setMachines([...res.data.machines]);
+        setSnack(true);
       }
     });
   };
 
-  const deleteHandler = () => {};
+  const closeSnack = () => {
+    setSnack(false);
+  };
+
   return (
     <div className={classes.root}>
       {load ? (
         <CircularProgress />
       ) : (
         <Paper className={classes.paper}>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            open={snack}
+            autoHideDuration={6000}
+            onClose={closeSnack}
+            message={snackMsg}
+            action={
+              <React.Fragment>
+                <IconButton
+                  size="small"
+                  aria-label="close"
+                  color="inherit"
+                  onClick={closeSnack}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </React.Fragment>
+            }
+          />
           <div className={classes.tool}>
             <EnhancedTableToolbar
               onClick={props.onClick}
@@ -215,17 +233,6 @@ export default function EnhancedTable(props) {
               >
                 Edit
                 <EditIcon color="secondary" />
-              </Button>
-            ) : undefined}
-            {Object.keys(selected).length ? (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={deleteHandler}
-                className={classes.btn}
-              >
-                Delete
-                <DeleteIcon color="secondary" />
               </Button>
             ) : undefined}
           </div>
@@ -260,54 +267,16 @@ export default function EnhancedTable(props) {
                         >
                           {row.machine}
                         </TableCell>
+                        <TableCell align="center">{row.department}</TableCell>
                         <TableCell
                           component="th"
                           scope="row"
                           padding="none"
                           align="center"
                         >
-                          {row.shed}
+                          {row.id}
                         </TableCell>
-                        <TableCell align="center">{row.model}</TableCell>
-                        <TableCell align="center">{row.department}</TableCell>
-                        <TableCell align="center">{row.spindles}</TableCell>
-                        <TableCell align="center">
-                          {row.deliveryRollerDia}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.middleRollerDia}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.backRollerDia}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.deliveryRollerPpr}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.middleRollerPpr}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.backRollerPpr}
-                        </TableCell>
-                        <TableCell align="center">{row.tinRollerPpr}</TableCell>
-                        <TableCell align="center">
-                          {row.deliveryRollerRpm}
-                        </TableCell>
-                        <TableCell align="center">
-                          {row.middleRollerRpm}
-                        </TableCell>
-
-                        <TableCell align="center">
-                          {row.backRollerRpm}
-                        </TableCell>
-                        <TableCell align="center">{row.tinRollerRpm}</TableCell>
                         <TableCell align="center">{row.ip}</TableCell>
-                        <TableCell align="center">
-                          {row.count
-                            ? row.count.value + " " + row.count.unit
-                            : "Not Assigned"}
-                        </TableCell>
-                        <TableCell align="center">{row.id}</TableCell>
                       </TableRow>
                     );
                   })}

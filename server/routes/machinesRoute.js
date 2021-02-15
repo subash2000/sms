@@ -40,6 +40,53 @@ router.post("/setcount", (req, res) => {
       res.status(400).send({ err });
     });
 });
+router.post("/single/update", (req, res) => {
+  Machines.updateOne(
+    {
+      machine: req.body.machine,
+      department: req.body.department,
+    },
+    {
+      $set: {
+        ...req.body,
+      },
+    }
+  )
+    .then(() => {
+      res.send({
+        msg: "updated",
+      });
+    })
+    .catch((err) =>
+      res.status(400).send({
+        msg: "update failed " + err,
+      })
+    );
+});
+router.post("/single/delete", (req, res) => {
+  Machines.deleteOne({
+    machine: req.body.machine,
+    department: req.body.department,
+  })
+    .then((result) => {
+      if (result.deletedCount == 0) {
+        res.status(400).send({
+          msg: "Delete failed ",
+          result,
+        });
+      } else {
+        res.send({
+          msg: "deleted",
+        });
+      }
+    })
+    .catch((err) =>
+      res.status(400).send({
+        msg: "Delete failed ",
+        err,
+      })
+    );
+});
 
 router.post("/single/insert", (req, res) => {
   Machines.updateOne(
