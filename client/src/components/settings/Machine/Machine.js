@@ -26,6 +26,7 @@ export default function Machine() {
   React.useEffect(() => {
     setMain(<Multiple inputs={inputsMultiple} setInputs={setInputsMultiple} />);
   }, [inputsMultiple]);
+
   React.useEffect(() => {
     setMain(<Single inputs={inputs} setInputs={setInputs} />);
   }, [inputs]);
@@ -35,6 +36,7 @@ export default function Machine() {
   };
   const failureHandler = () => {
     setOpen(false);
+    window.location.reload();
   };
 
   const addHandler = () => {

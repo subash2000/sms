@@ -58,7 +58,7 @@ export default function Single() {
   };
   return (
     <>
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit}>
         <FormText
           required={true}
           label="Machine Number"

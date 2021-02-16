@@ -27,6 +27,7 @@ export default function Machine() {
   };
   const failureHandler = () => {
     setOpen(false);
+    window.location.reload();
   };
 
   const addHandler = () => {

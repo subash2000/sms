@@ -9,7 +9,6 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
-import Tool from "./ToolBar";
 import Axios from "axios";
 import Filter from "../../Filter/Filter";
 import {
@@ -23,7 +22,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import CloseIcon from "@material-ui/icons/Close";
 import Edit from "./Edit";
 
-const headCells = ["Machine", "Department", "Module ID", "IP Address"];
+const headCells = ["Machine", "Department", "Module Id", "IP Address"];
 
 function EnhancedTableHead(props) {
   const { classes } = props;
@@ -68,8 +67,6 @@ const EnhancedTableToolbar = (props) => {
   return (
     <Toolbar className={classes.root}>
       <Filter machines={props.machines} setMachines={props.setMachines} />
-
-      <Tool onClick={props.onClick} />
     </Toolbar>
   );
 };
@@ -112,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     margin: "0 2px",
+    minWidth: "100px",
   },
   deleteModal: {
     color: theme.palette.error.main,
@@ -171,6 +169,7 @@ export default function EnhancedTable(props) {
   };
   const modalFailure = () => {
     setOpen(false);
+    updateHandler();
   };
 
   const updateHandler = () => {
@@ -181,7 +180,6 @@ export default function EnhancedTable(props) {
     ).then((res) => {
       if (res.data && res.data.machines) {
         setMachines([...res.data.machines]);
-        setSnack(true);
       }
     });
   };
@@ -224,6 +222,17 @@ export default function EnhancedTable(props) {
               machines={machines}
               setMachines={setFiltered}
             />
+            {Object.keys(selected).length ? undefined : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={props.onClick}
+                className={classes.btn}
+              >
+                Set ID
+              </Button>
+            )}
+
             {Object.keys(selected).length ? (
               <Button
                 variant="contained"
@@ -274,9 +283,12 @@ export default function EnhancedTable(props) {
                           padding="none"
                           align="center"
                         >
-                          {row.id}
+                          {row.id ? row.id : "Not Assigned"}
                         </TableCell>
-                        <TableCell align="center">{row.ip}</TableCell>
+                        <TableCell align="center">
+                          {" "}
+                          {row.ip ? row.ip : "Not Assigned"}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
