@@ -8,6 +8,7 @@ import ToolBar from "./ToolBar";
 import TableContainer from "./Table/TableContainer";
 import { Divider } from "@material-ui/core";
 import func from "../../common/functions";
+import Print from "./PDF/Print";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -23,23 +24,51 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Report() {
   const [date, setDate] = React.useState(Date.now());
-  const [shift, setShift] = React.useState("2");
+  const [shift, setShift] = React.useState("3");
   const [load, setLoad] = React.useState(false);
   const [content, setContent] = React.useState(undefined);
   const [machines, setMachines] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
-
   const [selected, setSelected] = React.useState({});
 
   const classes = useStyles();
 
+  React.useState(() => {
+    let isMounted = true;
+    let resObj = {};
+    let p = parameters.map((val) => (resObj[val] = true));
+    Promise.all([p]).then(() => {
+      if (isMounted) setSelected(resObj);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // React.useEffect(() => {
+  //   console.log(parameters);
+  // }, [parameters]);
+
+  // React.useState(() => {
+  //   console.log(parameters);
+  //   let resObj = {};
+  //   let p = parameters.map((val) => {
+  //     resObj[val] = true;
+  //     return val;
+  //   });
+  //   Promise.all([p]).then(() => {
+  //     setSelected(resObj);
+  //     console.log(resObj);
+  //   });
+  // }, [parameters]);
+
   React.useEffect(() => {
     if (machines.length > 0) {
-      console.log(parameters);
       setContent(
         <div>
           <Divider />
-          <ToolBar machines={machines} setMachines={setMachines} />
+          <ToolBar machines={machines} />
           <TableContainer
             selected={selected}
             parameters={parameters}
@@ -47,13 +76,25 @@ export default function Report() {
             setParameters={setParameters}
             setSelected={setSelected}
             setMachines={setMachines}
+            cacheParam="liveParameters"
+            cacheOpt="dashboardFilterOptions"
+            shift={shift}
           />
+          <div className="section-to-print">
+            <Print
+              parameters={parameters}
+              machines={machines}
+              shift={shift}
+              date={date}
+            />
+          </div>
         </div>
       );
     }
     // eslint-disable-next-line
   }, [machines]);
   const viewHandler = (e) => {
+    console.log(parameters);
     e.preventDefault();
     setContent(undefined);
     setLoad(true);
@@ -61,20 +102,18 @@ export default function Report() {
       date: new Date(date).toDateString(),
       shift: parseInt(shift),
     })
-      // .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
       .then((res) => {
         setLoad(false);
-        console.log(res.data);
         if (res.data.machines && res.data.machines.length) {
           setMachines([...res.data.machines]);
+          console.log(parameters);
         }
       })
       .catch((err) => {
         if (err.response) {
           setContent(<Alert type="warning" msg={err.response.data.msg} />);
-          setParameters([...func.parameters]);
+          setLoad(false);
         }
-        setLoad(false);
       });
   };
 

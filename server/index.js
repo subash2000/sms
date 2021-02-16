@@ -5,6 +5,7 @@ const cors = require("cors");
 const port = 5000;
 const { start } = require("./Socket");
 const mongoose = require("mongoose");
+const { shift } = require("./common/getShift");
 
 mongoose
   .connect("mongodb://localhost:27017/spindleMonitoring", {

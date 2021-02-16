@@ -2,8 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Paper } from "@material-ui/core";
 import Decode from "../../../common/packetDecode";
-import func from "../../../common/functions";
-const { getCurrShift } = func;
 
 const useStyles = makeStyles((theme) => ({
   value: {
@@ -38,19 +36,12 @@ export default function OverAll(props) {
   const [kg, setKg] = React.useState(0);
   const [eff, setEff] = React.useState(0);
   const [doff, setDoff] = React.useState(0);
-  const [shift, setShift] = React.useState(" - ");
 
   const sumArray = (arr) => {
     let sum = arr.reduce((acc, val) => acc + val);
     return sum;
   };
-  React.useEffect(() => {
-    getCurrShift((err, currShift) => {
-      if (!err) {
-        setShift(currShift);
-      }
-    });
-  });
+
   React.useEffect(() => {
     if (props.machines && props.machines.length) {
       let kgArr = props.machines.map((item) => {
@@ -68,7 +59,7 @@ export default function OverAll(props) {
       let effArr = props.machines.map((item) => {
         return Decode.aef(item.data);
       });
-      setEff(sumArray(effArr));
+      setEff(sumArray(effArr) / props.machines.length);
     }
   }, [props]);
 
@@ -77,17 +68,12 @@ export default function OverAll(props) {
       <h1 style={{ color: "#222838" }}>Summary</h1>
       <div className={classes.container}>
         <p className={classes.label}>Date</p>
-        <p className={classes.value}>{new Date().toDateString()}</p>
+        <p className={classes.value}>{new Date(props.date).toDateString()}</p>
       </div>
-      <div className={classes.container}>
-        <p className={classes.label}>Time</p>
-        <p className={classes.value}>
-          {new Date().toTimeString().substr(0, 8)}
-        </p>
-      </div>
+
       <div className={classes.container}>
         <p className={classes.label}>Shift no</p>
-        <p className={classes.value}>{shift}</p>
+        <p className={classes.value}>{props.shift}</p>
       </div>
 
       <div className={classes.container}>

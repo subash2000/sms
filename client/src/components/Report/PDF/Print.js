@@ -31,13 +31,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Print(props) {
+  const [model, setModel] = React.useState("All");
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
   const classes = useStyles();
 
   React.useEffect(() => {
     document.title = "Dashboard";
+    let cache = localStorage.getItem("dashboardFilterOptions");
+    if (cache) {
+      let filters = JSON.parse(cache);
+      setModel(filters.model);
+      setDepartment(filters.department);
+      setCount(filters.count);
+    }
   }, []);
 
   const { machines, parameters } = props;
+  let result = machines.filter((machine) => {
+    let validModel = model === "All" || model === machine.model;
+    let validDept = department === "All" || department === machine.department;
+    let validCount =
+      count === "All" ||
+      (machine.count && count === machine.count.value + machine.count.unit);
+    return validCount && validDept && validModel;
+  });
 
   return (
     <div
@@ -51,9 +69,9 @@ export default function Print(props) {
       className="section-to-print"
     >
       <h1>Company Name</h1>
-      <Table parameters={parameters} result={machines} />
+      <Table parameters={parameters} result={result} />
       <div className={classes.summary}>
-        <Summary machines={machines} />
+        <Summary machines={result} shift={props.shift} date={props.date} />
       </div>
     </div>
   );

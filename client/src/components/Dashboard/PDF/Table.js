@@ -147,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
   },
   powerFailure: {
     // border: "2px solid red",
-    color: "#fb8c00",
+    color: "brown",
     //fontWeight: "700",
     fontSize: "15px",
     fontWeight: "550",

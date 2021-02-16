@@ -17,9 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   normal: {},
   doff: {},
-  powerFailure: {
-    border: "1px solid red",
-  },
+
   stop: {},
   toolbar: {
     display: "flex",
@@ -135,13 +133,7 @@ export default function BasicTable(props) {
               ></span>
               <p className={classes.text}>Stop</p>
             </div>
-            <div className={classes.status}>
-              <span
-                className={classes.dot}
-                style={{ backgroundColor: "#fb8c00" }}
-              ></span>
-              <p className={classes.text}>Power Failure</p>
-            </div>
+
             <div className={classes.status}>
               <span
                 className={classes.dot}

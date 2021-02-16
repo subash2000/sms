@@ -2,13 +2,42 @@ var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
 const { restartAll } = require("../Socket");
+const { shift } = require("../common/getShift");
 router.get("/all", (req, res) => {
   Machines.find({})
     .sort({ machine: 1 })
     .then((data) => {
-      res.send({
-        machines: data,
+      let date = new Date();
+      shift((err, currshift) => {
+        let filtered = data.map((machine) => {
+          if (!machine.data) return machine._doc;
+          else {
+            if (
+              machine._doc.data &&
+              machine._doc.data.length &&
+              machine._doc.data.length > 9 &&
+              machine._doc.data[6] === date.getDate() &&
+              machine._doc.data[7] === date.getMonth() + 1 &&
+              machine._doc.data[8] === date.getFullYear() - 2000 &&
+              machine._doc.data[9] === currshift
+            )
+              return machine._doc;
+            else
+              return {
+                ...machine._doc,
+                data: undefined,
+              };
+          }
+        });
+        Promise.all([filtered]).then(() => {
+          res.send({
+            machines: filtered,
+          });
+        });
       });
+      // res.send({
+      //   machines: data,
+      // });
     })
     .catch((err) => {
       console.log(err);

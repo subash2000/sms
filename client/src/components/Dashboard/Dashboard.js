@@ -53,7 +53,10 @@ export default function Live() {
             axios
               .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
               .then((res) => {
-                if (isMounted) setMachines([...res.data.machines]);
+                if (isMounted) {
+                  console.log(res.data);
+                  setMachines([...res.data.machines]);
+                }
               })
               .catch((err) => {
                 if (err.response) {

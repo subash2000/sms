@@ -24,15 +24,25 @@ export default function ToolBar(props) {
     setDepartment,
     setCount,
     setModel,
+    cacheParam,
+    cacheOpt,
   } = props;
   const applyHandler = () => {
     let paramArr = Object.keys(selected).filter(
       (item) => selected[item] === true
     );
     props.setParameters(paramArr);
-
+    localStorage.setItem(cacheParam, JSON.stringify(selected));
+    localStorage.setItem(
+      cacheOpt,
+      JSON.stringify({
+        department,
+        count,
+        model,
+      })
+    );
     setModal(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   const closeHandler = () => {
@@ -42,13 +52,18 @@ export default function ToolBar(props) {
   const filterBtnHandler = () => {
     setModal(true);
   };
-
+  React.useEffect(() => {
+    let cachedSelected = localStorage.getItem(cacheParam);
+    if (cachedSelected) {
+      setSelected(JSON.parse(cachedSelected));
+    }
+    // eslint-disable-next-line
+  }, []);
   React.useEffect(() => {
     let paramArr = Object.keys(selected).filter(
       (item) => selected[item] === true
     );
     props.setParameters(paramArr);
-
     // eslint-disable-next-line
   }, [selected]);
   return (
