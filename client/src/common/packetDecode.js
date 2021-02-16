@@ -2,6 +2,24 @@ const findIndexOfStop = (data, doffIndex) => {
   return doffIndex + data[doffIndex] * 6 + 1;
 };
 
+const calcTime = (arr, n, i) => {
+  let diff = 0;
+
+  for (let j = i; j < i + n * 6; j += 6) {
+    let hr1 = arr[i + 1] * 3600,
+      hr2 = 0;
+    if (arr[i + 1] > arr[i + 4]) {
+      hr2 = (24 + arr[i + 4]) * 3600;
+    } else hr2 = arr[i + 4] * 3600;
+    let min1 = hr1 + arr[i + 2] * 60;
+    let min2 = hr2 + arr[i + 5] * 60;
+    let sec1 = hr1 + min1 + arr[i + 3];
+    let sec2 = hr1 + min2 + arr[i + 6];
+
+    diff = diff + (sec2 - sec1);
+  }
+  return diff;
+};
 const doffMin = (arr, n, i) => {
   let hr = 0;
   let min = 0;
@@ -16,11 +34,17 @@ const doffMin = (arr, n, i) => {
       sec.toString().padStart(2, "0")
     );
   else {
-    for (let j = i; j < i + n * 6; j += 6) {
-      hr = hr + (arr[j + 4] - arr[j + 1]);
-      min = min + (arr[j + 5] - arr[j + 2]);
-      sec = sec + (arr[j + 6] - arr[j + 3]);
-    }
+    // for (let j = i; j < i + n * 6; j += 6) {
+    //   hr = hr + (arr[j + 4] - arr[j + 1]);
+    //   min = min + (arr[j + 5] - arr[j + 2]);
+    //   sec = sec + (arr[j + 6] - arr[j + 3]);
+    // }
+    let diff = calcTime(arr, n, i);
+    hr = Math.floor(diff / 3600);
+    let rem = diff % 3600;
+    min = Math.floor(rem / 60);
+    sec = rem % 60;
+
     return (
       hr.toString().padStart(2, "0") +
       " : " +

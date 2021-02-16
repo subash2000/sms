@@ -150,12 +150,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "15px",
     fontWeight: "550",
   },
-  stop: {
-    // border: "5px solid orange",
-    color: "red",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
   doff: {
     // border: "5px solid blue",
     color: "blue",
@@ -164,7 +158,7 @@ const useStyles = makeStyles((theme) => ({
   },
   powerFailure: {
     // border: "2px solid red",
-    color: "red",
+    color: "#fb8c00",
     //fontWeight: "700",
     fontSize: "15px",
     fontWeight: "550",
@@ -175,6 +169,14 @@ const useStyles = makeStyles((theme) => ({
     color: "brown",
     fontWeight: "550",
     fontSize: "15px",
+    whiteSpace: "nowrap",
+  },
+  stop: {
+    // border: "2px solid red",
+    color: "red",
+    //fontWeight: "700",
+    fontSize: "15px",
+    fontWeight: "550",
     whiteSpace: "nowrap",
   },
 }));

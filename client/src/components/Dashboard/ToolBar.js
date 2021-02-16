@@ -37,9 +37,6 @@ export default function ToolBar(props) {
 
   return (
     <div className={classes.container}>
-      {/* <div className={classes.form}>
-        <ShiftForm />
-      </div> */}
       <div className={classes.overall}>
         <OverAll machines={props.machines} shift={shift} />
       </div>

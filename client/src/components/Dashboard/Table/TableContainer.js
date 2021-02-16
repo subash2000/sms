@@ -133,6 +133,13 @@ export default function BasicTable(props) {
                 className={classes.dot}
                 style={{ backgroundColor: "red" }}
               ></span>
+              <p className={classes.text}>Stop</p>
+            </div>
+            <div className={classes.status}>
+              <span
+                className={classes.dot}
+                style={{ backgroundColor: "#fb8c00" }}
+              ></span>
               <p className={classes.text}>Power Failure</p>
             </div>
             <div className={classes.status}>

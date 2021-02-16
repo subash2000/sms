@@ -68,7 +68,7 @@ export default function OverAll(props) {
       let effArr = props.machines.map((item) => {
         return Decode.aef(item.data);
       });
-      setEff(sumArray(effArr));
+      setEff(sumArray(effArr) / props.machines.length);
     }
   }, [props]);
 
