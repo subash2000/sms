@@ -139,46 +139,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     maxHeight: "70vh",
-
-    //maxWidth: "650",
-    //border: "1px solid " + theme.palette.primary.main,
   },
-
-  // running: {
-  //   // border: "2px solid green",
-  //   color: "green",
-  //   fontSize: "15px",
-  //   fontWeight: "550",
-  // },
-  // doff: {
-  //   // border: "5px solid blue",
-  //   color: "blue",
-  //   fontSize: "15px",
-  //   fontWeight: "550",
-  // },
-  // powerFailure: {
-  //   // border: "2px solid red",
-  //   color: "brown",
-  //   //fontWeight: "700",
-  //   fontSize: "15px",
-  //   fontWeight: "550",
-  //   whiteSpace: "nowrap",
-  // },
-  // comm: {
-  //   // border: "2px solid orange",
-  //   color: "brown",
-  //   fontWeight: "550",
-  //   fontSize: "15px",
-  //   whiteSpace: "nowrap",
-  // },
-  // stop: {
-  //   // border: "2px solid red",
-  //   color: "red",
-  //   //fontWeight: "700",
-  //   fontSize: "15px",
-  //   fontWeight: "550",
-  //   whiteSpace: "nowrap",
-  // },
 }));
 
 export default function EnhancedTable(props) {
@@ -210,8 +171,6 @@ export default function EnhancedTable(props) {
     })),
   ];
 
-  const rows = [...result];
-  // console.log(result);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -220,7 +179,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = result.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -239,8 +198,7 @@ export default function EnhancedTable(props) {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-  console.log(rows);
+    rowsPerPage - Math.min(rowsPerPage, result.length - page * rowsPerPage);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
@@ -259,11 +217,11 @@ export default function EnhancedTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={result.length}
               headCells={headCells}
             />
             <TableBody className={classes.tbody}>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(result, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
@@ -437,7 +395,7 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={result.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}

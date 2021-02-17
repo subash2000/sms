@@ -64,6 +64,11 @@ export default function BasicTable(props) {
   const [model, setModel] = React.useState("All");
   const [department, setDepartment] = React.useState("All");
   const [count, setCount] = React.useState("All");
+  const [rows, setRows] = React.useState([]);
+
+  React.useState(() => {
+    setRows(machines);
+  }, [machines]);
 
   React.useEffect(() => {
     let cache = localStorage.getItem(cacheOpt);
@@ -76,14 +81,31 @@ export default function BasicTable(props) {
     // eslint-disable-next-line
   }, []);
 
-  let result = machines.filter((machine) => {
-    let validModel = model === "All" || model === machine.model;
-    let validDept = department === "All" || department === machine.department;
-    let validCount =
-      count === "All" ||
-      (machine.count && count === machine.count.value + machine.count.unit);
-    return validCount && validDept && validModel;
-  });
+  React.useEffect(() => {
+    setRows([
+      ...machines.filter((machine) => {
+        let validModel = model === "All" || model === machine.model;
+        let validDept =
+          department === "All" || department === machine.department;
+        let validCount =
+          count === "All" ||
+          (machine.count && count === machine.count.value + machine.count.unit);
+        return validCount && validDept && validModel;
+      }),
+    ]);
+    setMachines([
+      ...machines.filter((machine) => {
+        let validModel = model === "All" || model === machine.model;
+        let validDept =
+          department === "All" || department === machine.department;
+        let validCount =
+          count === "All" ||
+          (machine.count && count === machine.count.value + machine.count.unit);
+        return validCount && validDept && validModel;
+      }),
+    ]);
+    // eslint-disable-next-line
+  }, [model, department, count, parameters]);
 
   // console.log(result);
   const printPdf = () => {
@@ -118,7 +140,7 @@ export default function BasicTable(props) {
             />
           </div>
         </div>
-        <Table parameters={parameters} result={result} />
+        <Table parameters={parameters} result={rows} />
       </TableContainer>
     </Paper>
   );

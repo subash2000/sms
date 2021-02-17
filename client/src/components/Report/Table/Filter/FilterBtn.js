@@ -42,7 +42,7 @@ export default function ToolBar(props) {
       })
     );
     setModal(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   const closeHandler = () => {

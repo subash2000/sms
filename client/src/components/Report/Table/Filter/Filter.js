@@ -29,6 +29,7 @@ export default function CustomizedBreadcrumbs(props) {
       setDepartment={props.setDepartment}
       setCount={props.setCount}
       setModel={props.setModel}
+      setMachines={props.setMachines}
     />
   );
   const options = {
@@ -38,6 +39,7 @@ export default function CustomizedBreadcrumbs(props) {
         setParameters={props.setParameters}
         selected={props.selected}
         setSelected={props.setSelected}
+        setMachines={props.setMachines}
       />
     ),
     options: (
@@ -48,6 +50,7 @@ export default function CustomizedBreadcrumbs(props) {
         setDepartment={props.setDepartment}
         setCount={props.setCount}
         setModel={props.setModel}
+        setMachines={props.setMachines}
       />
     ),
   };

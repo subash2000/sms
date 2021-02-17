@@ -30,6 +30,7 @@ export default function Report() {
   const [machines, setMachines] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
   const [selected, setSelected] = React.useState({});
+  const [filtered, setFiltered] = React.useState([]);
 
   const classes = useStyles();
 
@@ -65,6 +66,7 @@ export default function Report() {
 
   React.useEffect(() => {
     if (machines.length > 0) {
+      setFiltered(machines);
       setContent(
         <div>
           <Divider />
@@ -75,7 +77,7 @@ export default function Report() {
             machines={machines}
             setParameters={setParameters}
             setSelected={setSelected}
-            setMachines={setMachines}
+            setMachines={setFiltered}
             cacheParam="liveParameters"
             cacheOpt="dashboardFilterOptions"
             shift={shift}
@@ -83,7 +85,7 @@ export default function Report() {
           <div className="section-to-print">
             <Print
               parameters={parameters}
-              machines={machines}
+              machines={filtered}
               shift={shift}
               date={date}
             />
