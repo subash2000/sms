@@ -93,6 +93,13 @@ export default function FormText(props) {
           required={true}
           disabled={props.disabled ? props.disabled : false}
           defaultValue=""
+          MenuProps={{
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left",
+            },
+            getContentAnchorEl: null,
+          }}
         >
           <MenuItem value="">
             <i>None</i>

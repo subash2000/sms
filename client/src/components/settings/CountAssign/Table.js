@@ -14,13 +14,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import Modal from "./Modal";
 import { Button } from "@material-ui/core";
 import SetCount from "./SetCount";
 import SnackBar from "../../utilities/SnackBar";
+import Filter from "../../Filter/Filter";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -264,13 +263,7 @@ const EnhancedTableToolbar = (props) => {
             Set Count
           </Button>
         </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list" onClick={props.filterHandler}>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      ) : undefined}
     </Toolbar>
   );
 };
@@ -291,7 +284,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem",
   },
   table: {
-    minWidth: 750,
+    width: "80vw",
   },
   visuallyHidden: {
     border: 0,
@@ -303,6 +296,9 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
+  },
+  filter: {
+    width: "100%",
   },
 }));
 
@@ -317,23 +313,26 @@ export default function EnhancedTable(props) {
   const [snack, setSnack] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState("");
 
-  const [department, setDepartment] = React.useState("All");
-  const [count, setCount] = React.useState("All");
-  const [model, setModel] = React.useState("All");
-  let rows = props.machineData;
-  console.log(rows);
+  const [rows, setRows] = React.useState([...props.machineData]);
+  const [filtered, setFiltered] = React.useState([...props.machineData]);
+
+  // React.useEffect(() => {
+  //   let cache = localStorage.getItem("countFilter");
+  //   if (cache) {
+  //     let filters = JSON.parse(cache);
+  //     setDepartment(filters.department);
+  //     setCount(filters.count);
+  //     setModel(filters.model);
+  //   }
+  // }, []);
+  // if (rows.length < 1) {
+  //   return <h2>No Machines found</h2>;
+  // }
   React.useEffect(() => {
-    let cache = localStorage.getItem("countFilter");
-    if (cache) {
-      let filters = JSON.parse(cache);
-      setDepartment(filters.department);
-      setCount(filters.count);
-      setModel(filters.model);
-    }
-  }, []);
-  if (rows.length < 1) {
-    return <h2>No Machines found</h2>;
-  }
+    setRows([...props.machineData]);
+    setFiltered([...props.machineData]);
+    console.log([...props.machineData]);
+  }, [props.machineData]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -343,7 +342,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) =>
+      const newSelecteds = filtered.map((n) =>
         JSON.stringify({ machine: n.machine, department: n.department })
       );
       setSelected(newSelecteds);
@@ -387,25 +386,20 @@ export default function EnhancedTable(props) {
     selected.indexOf(JSON.stringify({ machine, department: dept })) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, filtered.length - page * rowsPerPage);
 
-  rows = rows.filter((machine) => {
-    let validModel = model === "All" || model === machine.model;
-    let validDept = department === "All" || department === machine.department;
-    let validCount =
-      count === "All" || count === machine.currcount + machine.unit;
-    return validCount && validDept && validModel;
-  });
   return (
     <div className={classes.root}>
       {alert}
       <SnackBar open={snack} setOpen={setSnack} msg={snackMsg} />
+      <div className={classes.filter}>
+        <Filter machines={rows} setMachines={setFiltered} cache="countAssign" />
+      </div>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar
-          machineData={rows}
+          machineData={filtered}
           numSelected={selected.length}
           selected={selected}
-          filterHandler={props.filterHandler}
           alert={alert}
           setAlert={setAlert}
           updateMachines={props.updateMachines}
@@ -413,6 +407,8 @@ export default function EnhancedTable(props) {
           setSnack={setSnack}
           snackMsg={snackMsg}
           setSnackMsg={setSnackMsg}
+          machines={rows}
+          setMachines={setFiltered}
         />
         <TableContainer>
           <Table
@@ -422,17 +418,17 @@ export default function EnhancedTable(props) {
             aria-label="enhanced table"
           >
             <EnhancedTableHead
-              machineData={rows}
+              machineData={filtered}
               classes={classes}
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={filtered.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(filtered, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(
@@ -476,10 +472,12 @@ export default function EnhancedTable(props) {
                         {row.department}
                       </StyledTableCell>
                       <StyledTableCell align="center">
-                        {row.currcount === "Not assingned" ? (
-                          <i>{row.currcount}</i>
+                        {row.count &&
+                        row.count.value !== undefined &&
+                        row.count.unit !== undefined ? (
+                          row.count.value + " " + row.count.unit
                         ) : (
-                          row.currcount + " " + row.unit
+                          <i>Not Assigned</i>
                         )}
                       </StyledTableCell>
                     </StyledTableRow>
@@ -496,7 +494,7 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filtered.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}

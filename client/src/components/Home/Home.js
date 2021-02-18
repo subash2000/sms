@@ -23,5 +23,5 @@ export default function Home() {
   React.useEffect(() => {
     console.log(filtered);
   }, [filtered]);
-  return <Filter machines={machines} setMachines={setFiltered} />;
+  return <Filter machines={machines} cache="home" setMachines={setFiltered} />;
 }

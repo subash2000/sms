@@ -1,26 +1,53 @@
 import React from "react";
-import Modal from "../utilities/Modal";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import { IconButton } from "@material-ui/core";
-import TextSelct from "../utilities/TextSelect";
-import CountSelect from "../utilities/CountSelect";
+import { makeStyles, Paper } from "@material-ui/core";
 import axios from "axios";
 import propTypes from "prop-types";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: "100%",
+    padding: "1rem",
+    margin: "1rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  options: {
+    width: "90%",
+    display: "flex",
+    justifyContent: "space-around",
+  },
+
+  formControl: {
+    minWidth: "150px",
+  },
+}));
 export default function Filter(props) {
-  const [open, setOpen] = React.useState(false);
   const [department, setDepartment] = React.useState("All");
   const [count, setCount] = React.useState("All");
   const [model, setModel] = React.useState("All");
-  const [departments, setDepartments] = React.useState([]);
-  const [counts, setCounts] = React.useState([]);
-  const [models, setModels] = React.useState([]);
+  const [departments, setDepartments] = React.useState(["All"]);
+  const [counts, setCounts] = React.useState([{ value: "All", unit: "" }]);
+  const [models, setModels] = React.useState(["All"]);
+  const classes = useStyles();
+  const { cache } = props;
 
   React.useEffect(() => {
+    let cacheValue = localStorage.getItem(cache);
+    if (cacheValue) {
+      let obj = JSON.parse(cacheValue);
+      setCount(obj.count);
+      setDepartment(obj.department);
+      setModel(obj.model);
+    }
     axios
       .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/departments")
       .then((res) => {
-        setDepartments([...res.data.data]);
+        setDepartments(["All", ...res.data.data]);
       })
       .catch((err) => {
         if (err.response) console.log(err.response.data);
@@ -28,7 +55,7 @@ export default function Filter(props) {
     axios
       .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/models")
       .then((res) => {
-        setModels([...res.data.data]);
+        setModels(["All", ...res.data.data]);
       })
       .catch((err) => {
         if (err.response) console.log(err.response.data);
@@ -36,7 +63,7 @@ export default function Filter(props) {
     axios
       .get(process.env.REACT_APP_BACKEND + "/api/settings/mill/count")
       .then((res) => {
-        setCounts([...res.data.data]);
+        setCounts([{ value: "All", unit: "" }, ...res.data.data]);
       })
       .catch((err) => {
         if (err.response) console.log(err.response.data);
@@ -44,15 +71,7 @@ export default function Filter(props) {
     // eslint-disable-next-line
   }, []);
 
-  const btnHandler = () => {
-    setOpen(true);
-  };
-  const failureHandler = () => {
-    setOpen(false);
-  };
-  const successHandler = () => {
-    setOpen(false);
-
+  React.useEffect(() => {
     props.setMachines([
       ...props.machines.filter((item) => {
         let dep = department === "All" || item.department === department;
@@ -60,61 +79,91 @@ export default function Filter(props) {
         let c =
           count === "All" ||
           (item.count && count === item.count.value + item.count.unit);
-        console.log(department, model, count);
         return dep && mod && c;
       }),
     ]);
-  };
+    localStorage.setItem(cache, JSON.stringify({ model, count, department }));
+    // eslint-disable-next-line
+  }, [model, department, count, props.machines]);
+
   return (
-    <div>
-      <IconButton onClick={btnHandler}>
-        <FilterListIcon />
-      </IconButton>
-      <Modal
-        open={open}
-        failureHandler={failureHandler}
-        successHandler={successHandler}
-        title="Filter"
-        success="Apply"
-        failure="Cancel"
-      >
-        <div>
-          <TextSelct
-            label="Department"
-            variant="outlined"
-            required={true}
+    <Paper elevation={3} className={classes.container}>
+      <div className={classes.options}>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="department-label">Department</InputLabel>
+          <Select
+            labelId="department-label"
             value={department}
-            onChange={(e) => {
-              setDepartment(e.target.value);
+            onChange={(e) => setDepartment(e.target.value)}
+            MenuProps={{
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
             }}
-            menuItems={departments}
-          />
-          <TextSelct
-            label="Model"
-            variant="outlined"
-            required={true}
+          >
+            {departments.map((item, i) => {
+              return (
+                <MenuItem key={i} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="model-label">model</InputLabel>
+          <Select
+            labelId="model-label"
             value={model}
-            onChange={(e) => {
-              setModel(e.target.value);
+            onChange={(e) => setModel(e.target.value)}
+            MenuProps={{
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
             }}
-            menuItems={models}
-          />
-          <CountSelect
-            label="Count"
-            variant="outlined"
-            required={true}
+          >
+            {models.map((item, i) => {
+              return (
+                <MenuItem key={i} value={item}>
+                  {item}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel id="count-label">Count</InputLabel>
+          <Select
+            labelId="count-label"
             value={count}
-            onChange={(e) => {
-              setCount(e.target.value);
+            onChange={(e) => setCount(e.target.value)}
+            MenuProps={{
+              anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "left",
+              },
+              getContentAnchorEl: null,
             }}
-            menuItems={counts}
-          />
-        </div>
-      </Modal>
-    </div>
+          >
+            {counts.map((item, i) => {
+              return (
+                <MenuItem key={i} value={item.value + item.unit}>
+                  {item.value + " " + item.unit}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </div>
+    </Paper>
   );
 }
 Filter.propTypes = {
   machines: propTypes.array.isRequired,
   setMachines: propTypes.func.isRequired,
+  cache: propTypes.string.isRequired,
 };

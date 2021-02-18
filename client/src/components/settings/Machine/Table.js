@@ -86,7 +86,11 @@ const EnhancedTableToolbar = (props) => {
 
   return (
     <Toolbar className={classes.root}>
-      <Filter machines={props.machines} setMachines={props.setMachines} />
+      <Filter
+        machines={props.machines}
+        setMachines={props.setMachines}
+        cache="machineSettings"
+      />
       {/* <Tool onClick={props.onClick} /> */}
     </Toolbar>
   );
@@ -125,8 +129,9 @@ const useStyles = makeStyles((theme) => ({
   },
   tool: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
+    marginBottom: "1rem",
   },
   btn: {
     margin: "0 2px",
@@ -150,7 +155,6 @@ export default function EnhancedTable(props) {
   const [snack, setSnack] = React.useState(false);
   const [snackMsg, setSnackMsg] = React.useState("Updated Sucessfully");
   const [deleteModal, setDelete] = React.useState(false);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -167,12 +171,12 @@ export default function EnhancedTable(props) {
     ).then((res) => {
       if (res.data && res.data.machines) {
         setMachines([...res.data.machines]);
+        setFiltered([...res.data.machines]);
       }
     });
   }, []);
 
   React.useEffect(() => {
-    setFiltered(machines);
     setLoad(false);
     setSelected({});
   }, [machines]);
@@ -264,12 +268,13 @@ export default function EnhancedTable(props) {
               </React.Fragment>
             }
           />
+          <EnhancedTableToolbar
+            onClick={props.onClick}
+            machines={machines}
+            setMachines={setFiltered}
+          />
+
           <div className={classes.tool}>
-            <EnhancedTableToolbar
-              onClick={props.onClick}
-              machines={machines}
-              setMachines={setFiltered}
-            />
             <Button
               variant="contained"
               color="primary"
@@ -376,7 +381,7 @@ export default function EnhancedTable(props) {
                         </TableCell>
                         <TableCell align="center">{row.tinRollerRpm}</TableCell>
                         <TableCell align="center">
-                          {row.count
+                          {row.count && row.count.value && row.count.unit
                             ? row.count.value + " " + row.count.unit
                             : "Not Assigned"}
                         </TableCell>

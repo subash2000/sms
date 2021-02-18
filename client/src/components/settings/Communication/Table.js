@@ -66,7 +66,11 @@ const EnhancedTableToolbar = (props) => {
 
   return (
     <Toolbar className={classes.root}>
-      <Filter machines={props.machines} setMachines={props.setMachines} />
+      <Filter
+        machines={props.machines}
+        setMachines={props.setMachines}
+        cache="communicationSettings"
+      />
     </Toolbar>
   );
 };
@@ -146,12 +150,13 @@ export default function EnhancedTable(props) {
     ).then((res) => {
       if (res.data && res.data.machines) {
         setMachines([...res.data.machines]);
+        setFiltered(machines);
       }
     });
+    // eslint-disable-next-line
   }, []);
 
   React.useEffect(() => {
-    setFiltered(machines);
     setLoad(false);
     setSelected({});
   }, [machines]);

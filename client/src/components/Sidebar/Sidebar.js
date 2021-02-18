@@ -194,12 +194,12 @@ export default function PersistentDrawerLeft() {
             title="Settings"
             content={[
               "Mill settings",
-              "Machine Modals",
-              "Departments",
-              "Count Settings",
               "Machine Settings",
               "Communication Settings",
               "Count Assignment",
+              "Count Settings",
+              "Machine Modals",
+              "Departments",
             ]}
           />
         </List>
