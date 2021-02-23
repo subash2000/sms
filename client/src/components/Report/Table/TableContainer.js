@@ -64,48 +64,6 @@ export default function BasicTable(props) {
   const [model, setModel] = React.useState("All");
   const [department, setDepartment] = React.useState("All");
   const [count, setCount] = React.useState("All");
-  const [rows, setRows] = React.useState([]);
-
-  React.useState(() => {
-    setRows(machines);
-  }, [machines]);
-
-  React.useEffect(() => {
-    let cache = localStorage.getItem(cacheOpt);
-    if (cache) {
-      let filters = JSON.parse(cache);
-      setModel(filters.model);
-      setDepartment(filters.department);
-      setCount(filters.count);
-    }
-    // eslint-disable-next-line
-  }, []);
-
-  React.useEffect(() => {
-    setRows([
-      ...machines.filter((machine) => {
-        let validModel = model === "All" || model === machine.model;
-        let validDept =
-          department === "All" || department === machine.department;
-        let validCount =
-          count === "All" ||
-          (machine.count && count === machine.count.value + machine.count.unit);
-        return validCount && validDept && validModel;
-      }),
-    ]);
-    setMachines([
-      ...machines.filter((machine) => {
-        let validModel = model === "All" || model === machine.model;
-        let validDept =
-          department === "All" || department === machine.department;
-        let validCount =
-          count === "All" ||
-          (machine.count && count === machine.count.value + machine.count.unit);
-        return validCount && validDept && validModel;
-      }),
-    ]);
-    // eslint-disable-next-line
-  }, [model, department, count, parameters]);
 
   // console.log(result);
   const printPdf = () => {
@@ -140,7 +98,7 @@ export default function BasicTable(props) {
             />
           </div>
         </div>
-        <Table parameters={parameters} result={rows} />
+        <Table parameters={parameters} result={machines} />
       </TableContainer>
     </Paper>
   );

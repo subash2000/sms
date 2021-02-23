@@ -58,25 +58,9 @@ export default function BasicTable(props) {
     machines,
     setParameters,
     setSelected,
-    setMachines,
     cacheParam,
-    cacheOpt,
   } = props;
-  const [model, setModel] = React.useState("All");
-  const [department, setDepartment] = React.useState("All");
-  const [count, setCount] = React.useState("All");
   const [shift, setShift] = React.useState("");
-
-  React.useEffect(() => {
-    let cache = localStorage.getItem(cacheOpt);
-    if (cache) {
-      let filters = JSON.parse(cache);
-      setModel(filters.model);
-      setDepartment(filters.department);
-      setCount(filters.count);
-    }
-    // eslint-disable-next-line
-  }, []);
 
   React.useEffect(() => {
     getCurrShift((err, res) => {
@@ -91,15 +75,6 @@ export default function BasicTable(props) {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
-  let result = machines.filter((machine) => {
-    let validModel = model === "All" || model === machine.model;
-    let validDept = department === "All" || department === machine.department;
-    let validCount =
-      count === "All" ||
-      (machine.count && count === machine.count.value + machine.count.unit);
-    return validCount && validDept && validModel;
-  });
 
   // console.log(result);
   const printPdf = () => {
@@ -153,19 +128,11 @@ export default function BasicTable(props) {
               setParameters={setParameters}
               selected={selected}
               setSelected={setSelected}
-              setMachines={setMachines}
-              department={department}
-              model={model}
-              count={count}
-              setDepartment={setDepartment}
-              setCount={setCount}
-              setModel={setModel}
               cacheParam={cacheParam}
-              cacheOpt={cacheOpt}
             />
           </div>
         </div>
-        <Table parameters={parameters} result={result} />
+        <Table parameters={parameters} result={machines} />
       </TableContainer>
     </Paper>
   );

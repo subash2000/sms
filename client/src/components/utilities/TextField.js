@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
-
+import propTypes from "prop-types";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -88,7 +88,7 @@ export default function FormText(props) {
           type="number"
           value={props.hr}
           onChange={(e) => props.setHr(e.target.value)}
-          variant={props.variant}
+          variant="outlined"
           required={props.required ? props.required : false}
           disabled={props.disabled ? props.disabled : false}
           helperText="HH(hours)"
@@ -102,7 +102,7 @@ export default function FormText(props) {
           type="number"
           value={props.min}
           onChange={(e) => props.setMin(e.target.value)}
-          variant={props.variant}
+          variant="outlined"
           required={props.required ? props.required : false}
           disabled={props.disabled ? props.disabled : false}
           helperText="MM(Minutes)"
@@ -125,7 +125,7 @@ export default function FormText(props) {
               ? props.onChange
               : (e) => props.setVal(e.target.value)
           }
-          variant={props.variant}
+          variant="outlined"
           required={props.required}
           disabled={props.disabled ? props.disabled : false}
           inputProps={props.inputProps ? props.inputProps : {}}
@@ -145,3 +145,10 @@ export default function FormText(props) {
     </div>
   );
 }
+
+FormText.propTypes = {
+  type: propTypes.string.isRequired,
+  required: propTypes.bool.isRequired,
+  value: propTypes.any.isRequired,
+  onChange: propTypes.func.isRequired,
+};

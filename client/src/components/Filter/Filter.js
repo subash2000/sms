@@ -9,7 +9,7 @@ import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: "100%",
+    // width: "100%",
     padding: "1rem",
     margin: "1rem",
     display: "flex",
@@ -68,6 +68,7 @@ export default function Filter(props) {
       .catch((err) => {
         if (err.response) console.log(err.response.data);
       });
+
     // eslint-disable-next-line
   }, []);
 

@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import propTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textField: {
-    // width: "50%",
+    width: "100%",
     minWidth: "100px",
     [theme.breakpoints.down("xs")]: {
       width: "100%",
@@ -116,3 +117,10 @@ export default function FormText(props) {
     </div>
   );
 }
+
+FormText.propTypes = {
+  label: propTypes.string.isRequired,
+  value: propTypes.any.isRequired,
+  onChange: propTypes.func.isRequired,
+  menuItems: propTypes.array.isRequired,
+};

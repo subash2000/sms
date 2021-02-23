@@ -1,5 +1,5 @@
 import React from "react";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,7 +7,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Toolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import Axios from "axios";
 import Filter from "../../Filter/Filter";
@@ -40,38 +39,38 @@ function EnhancedTableHead(props) {
   );
 }
 
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    width: "100%",
-  },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
+// const useToolbarStyles = makeStyles((theme) => ({
+//   root: {
+//     paddingLeft: theme.spacing(2),
+//     paddingRight: theme.spacing(1),
+//     width: "100%",
+//   },
+//   highlight:
+//     theme.palette.type === "light"
+//       ? {
+//           color: theme.palette.secondary.main,
+//           backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+//         }
+//       : {
+//           color: theme.palette.text.primary,
+//           backgroundColor: theme.palette.secondary.dark,
+//         },
+//   title: {
+//     flex: "1 1 100%",
+//   },
+// }));
 
 const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
+  // const classes = useToolbarStyles();
 
   return (
-    <Toolbar className={classes.root}>
-      <Filter
-        machines={props.machines}
-        setMachines={props.setMachines}
-        cache="communicationSettings"
-      />
-    </Toolbar>
+    // <Toolbar className={classes.root}>
+    <Filter
+      machines={props.machines}
+      setMachines={props.setMachines}
+      cache="communicationSettings"
+    />
+    // </Toolbar>
   );
 };
 
@@ -108,8 +107,9 @@ const useStyles = makeStyles((theme) => ({
   },
   tool: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
+    marginBottom: "1rem",
   },
   btn: {
     margin: "0 2px",
@@ -221,12 +221,12 @@ export default function EnhancedTable(props) {
               </React.Fragment>
             }
           />
+          <EnhancedTableToolbar
+            onClick={props.onClick}
+            machines={machines}
+            setMachines={setFiltered}
+          />
           <div className={classes.tool}>
-            <EnhancedTableToolbar
-              onClick={props.onClick}
-              machines={machines}
-              setMachines={setFiltered}
-            />
             {Object.keys(selected).length ? undefined : (
               <Button
                 variant="contained"

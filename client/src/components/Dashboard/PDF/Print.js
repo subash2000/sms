@@ -37,7 +37,6 @@ export default function Print(props) {
   const classes = useStyles();
 
   React.useEffect(() => {
-    document.title = "Dashboard";
     let cache = localStorage.getItem("dashboardFilterOptions");
     if (cache) {
       let filters = JSON.parse(cache);

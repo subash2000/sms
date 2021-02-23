@@ -7,6 +7,8 @@ import { Divider, CircularProgress } from "@material-ui/core";
 import Print from "./PDF/Print";
 import func from "../../common/functions";
 import "./styles.css";
+import FilterOPt from "../Filter/Filter";
+// import FilterParam from "../Filter/FilterParam";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -19,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Live() {
   const [noMachines, setNoMachines] = React.useState(undefined);
   const [machines, setMachines] = React.useState([]);
+  const [filtered, setFiltered] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
+  // const [headCells, setHeadCells] = React.useState([...func.parameters]);
   const [selected, setSelected] = React.useState({});
   const classes = useStyles();
   React.useState(() => {
@@ -42,7 +46,6 @@ export default function Live() {
       setNoMachines(
         <div style={{ textAlign: "center" }}>
           <CircularProgress />
-          <h3>Make sure you updated the settings</h3>
         </div>
       );
     axios
@@ -56,6 +59,7 @@ export default function Live() {
                 if (isMounted) {
                   console.log(res.data);
                   setMachines([...res.data.machines]);
+                  setFiltered([...res.data.machines]);
                 }
               })
               .catch((err) => {
@@ -79,11 +83,23 @@ export default function Live() {
   const content = (
     <div>
       <Divider />
-      <ToolBar machines={machines} />
+      <ToolBar machines={filtered} />
+      <div>
+        <FilterOPt
+          machines={machines}
+          setMachines={setFiltered}
+          cache="dashboardOpt"
+        />
+        {/* <FilterParam
+          cache="dashboardParam"
+          parameters={parameters}
+          setParameters={setHeadCells}
+        /> */}
+      </div>
       <TableContainer
         selected={selected}
         parameters={parameters}
-        machines={machines}
+        machines={filtered}
         setParameters={setParameters}
         setSelected={setSelected}
         setMachines={setMachines}
@@ -91,7 +107,7 @@ export default function Live() {
         cacheOpt="dashboardFilterOptions"
       />
       <div className="section-to-print">
-        <Print parameters={parameters} machines={machines} />
+        <Print parameters={parameters} machines={filtered} />
       </div>
     </div>
   );

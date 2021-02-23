@@ -1,9 +1,13 @@
 import React from "react";
 import Filter from "../Filter/Filter";
+import FilterParam from "../Filter/FilterParam";
 import axios from "axios";
+import func from "../../common/functions";
+const { parameters } = func;
 export default function Home() {
   const [machines, setMachines] = React.useState([]);
   const [filtered, setFiltered] = React.useState([]);
+  const [headCells, setHeadCells] = React.useState([...parameters]);
 
   React.useEffect(() => {
     axios
@@ -16,12 +20,25 @@ export default function Home() {
       });
   }, []);
 
-  React.useEffect(() => {
-    setFiltered(machines);
-  }, [machines]);
+  // React.useEffect(() => {
+  //   setFiltered(machines);
+  // }, [machines]);
 
   React.useEffect(() => {
     console.log(filtered);
   }, [filtered]);
-  return <Filter machines={machines} cache="home" setMachines={setFiltered} />;
+
+  React.useEffect(() => {
+    console.log(headCells);
+  }, [headCells]);
+  return (
+    <>
+      <Filter machines={machines} cache="home" setMachines={setFiltered} />
+      <FilterParam
+        cache="homeParam"
+        parameters={parameters}
+        setParameters={setHeadCells}
+      />
+    </>
+  );
 }
