@@ -56,14 +56,9 @@ export default function BasicTable(props) {
     machines,
     setParameters,
     setSelected,
-    setMachines,
     cacheParam,
-    cacheOpt,
     shift,
   } = props;
-  const [model, setModel] = React.useState("All");
-  const [department, setDepartment] = React.useState("All");
-  const [count, setCount] = React.useState("All");
 
   // console.log(result);
   const printPdf = () => {
@@ -86,18 +81,11 @@ export default function BasicTable(props) {
               setParameters={setParameters}
               selected={selected}
               setSelected={setSelected}
-              setMachines={setMachines}
-              department={department}
-              model={model}
-              count={count}
-              setDepartment={setDepartment}
-              setCount={setCount}
-              setModel={setModel}
               cacheParam={cacheParam}
-              cacheOpt={cacheOpt}
             />
           </div>
         </div>
+
         <Table parameters={parameters} result={machines} />
       </TableContainer>
     </Paper>

@@ -104,7 +104,6 @@ export default function Live() {
         setSelected={setSelected}
         setMachines={setMachines}
         cacheParam="liveParameters"
-        cacheOpt="dashboardFilterOptions"
       />
       <div className="section-to-print">
         <Print parameters={parameters} machines={filtered} />

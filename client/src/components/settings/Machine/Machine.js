@@ -6,6 +6,7 @@ import Breadcrumb from "../../utilities/Breadcrumb";
 import PageTitle from "../../utilities/PageTitle";
 import Modal from "../../utilities/Modal";
 import Table from "./Table";
+
 const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",

@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import Checkbox from "../../utilities/CheckBox";
+import func from "../../../../common/functions";
+const { parameters } = func;
 const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: "1rem",
@@ -13,21 +15,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: "180px",
   },
 }));
-const paramArr = [
-  "Model",
-  "Count",
-  "Kg",
-  "m/min",
-  "tpi",
-  "spindle rpm",
-  "AEF %",
-  "PEF %",
-  "Stops",
-  "Stop min",
-  "Doffs",
-  "Doff min",
-  "Ukg",
-];
+
 export default function FilterParameter(props) {
   const classes = useStyles();
   const [selected, setSelected] = React.useState({
@@ -44,7 +32,7 @@ export default function FilterParameter(props) {
 
   return (
     <div className={classes.container}>
-      {paramArr.map((item, i) => {
+      {parameters.map((item, i) => {
         return (
           <div key={i} className={classes.content}>
             <Checkbox

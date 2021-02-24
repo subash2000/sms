@@ -83,6 +83,7 @@ export default function Filter(props) {
         return dep && mod && c;
       }),
     ]);
+
     localStorage.setItem(cache, JSON.stringify({ model, count, department }));
     // eslint-disable-next-line
   }, [model, department, count, props.machines]);

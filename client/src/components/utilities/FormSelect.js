@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textField: {
-    width: "100%",
     minWidth: "100px",
     [theme.breakpoints.down("xs")]: {
       width: "100%",

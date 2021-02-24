@@ -414,7 +414,7 @@ export default function EnhancedTable(props) {
                             classes[Decode.status(row.data, row.recieved)]
                           }
                         >
-                          {"Dont know"}
+                          -
                         </StyledTableCell>
                       ) : undefined}
                     </StyledTableRow>

@@ -23,7 +23,6 @@ export default function ToolBar(props) {
     props.setParameters(paramArr);
     localStorage.setItem(cacheParam, JSON.stringify(selected));
     setModal(false);
-    window.location.reload();
   };
 
   const closeHandler = () => {

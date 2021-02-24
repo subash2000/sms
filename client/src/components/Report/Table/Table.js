@@ -199,6 +199,7 @@ export default function EnhancedTable(props) {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, result.length - page * rowsPerPage);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
@@ -372,7 +373,7 @@ export default function EnhancedTable(props) {
                             classes[Decode.status(row.data, row.recieved)]
                           }
                         >
-                          {"Dont know"}
+                          -
                         </StyledTableCell>
                       ) : undefined}
                     </StyledTableRow>
