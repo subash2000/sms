@@ -29,23 +29,9 @@ export default function Report() {
   const [content, setContent] = React.useState(undefined);
   const [machines, setMachines] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
-  const [selected, setSelected] = React.useState({});
   const [filtered, setFiltered] = React.useState([]);
 
   const classes = useStyles();
-
-  React.useState(() => {
-    let isMounted = true;
-    let resObj = {};
-    let p = parameters.map((val) => (resObj[val] = true));
-    Promise.all([p]).then(() => {
-      if (isMounted) setSelected(resObj);
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   React.useEffect(() => {
     let cachedSelected = localStorage.getItem("reportParam");
@@ -58,13 +44,6 @@ export default function Report() {
 
     // eslint-disable-next-line
   }, []);
-
-  React.useEffect(() => {
-    console.log(selected);
-  }, [selected]);
-  React.useEffect(() => {
-    console.log(parameters);
-  }, [parameters]);
 
   React.useEffect(() => {
     if (machines.length > 0) {
@@ -81,11 +60,9 @@ export default function Report() {
             />
           </div>
           <TableContainer
-            selected={selected}
             parameters={parameters}
             machines={filtered}
             setParameters={setParameters}
-            setSelected={setSelected}
             setMachines={setMachines}
             cacheParam="reportParam"
             shift={shift}

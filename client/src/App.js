@@ -1,6 +1,6 @@
 import React from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
 import theme from "./Theme";
 const App = () => {

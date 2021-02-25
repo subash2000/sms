@@ -15,14 +15,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ToolBar(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState(false);
-  const { selected, setSelected, cacheParam } = props;
+  const { cacheParam } = props;
   const applyHandler = () => {
     // let paramArr = Object.keys(selected).filter(
-    //   (item) => selected[item] === true
-    // );
-    // console.log(selected);
-    // props.setParameters(paramArr);
-    // localStorage.setItem(cacheParam, JSON.stringify(selected));
+
     setModal(false);
   };
 
@@ -33,20 +29,7 @@ export default function ToolBar(props) {
   const filterBtnHandler = () => {
     setModal(true);
   };
-  // React.useEffect(() => {
-  //   let cachedSelected = localStorage.getItem(cacheParam);
-  //   if (cachedSelected) {
-  //     setSelected(JSON.parse(cachedSelected));
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
-  // React.useEffect(() => {
-  // let paramArr = Object.keys(selected).filter(
-  //   (item) => selected[item] === true
-  // );
-  // props.setParameters(paramArr);
-  //   // eslint-disable-next-line
-  // }, [selected]);
+
   return (
     <div className={classes.container}>
       <div className={classes.filter}>
@@ -54,7 +37,6 @@ export default function ToolBar(props) {
           title="Filter Machines"
           open={modal}
           setOpen={setModal}
-          success="Apply"
           failure="Cancel"
           successHandler={applyHandler}
           failureHandler={closeHandler}
@@ -62,8 +44,6 @@ export default function ToolBar(props) {
           <Filter
             parameters={props.parameters}
             setParameters={props.setParameters}
-            selected={selected}
-            setSelected={setSelected}
             cacheParam={cacheParam}
           />
         </Modal>

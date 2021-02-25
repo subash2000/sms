@@ -52,10 +52,8 @@ export default function BasicTable(props) {
   const classes = useStyles();
   const {
     parameters,
-    selected,
     machines,
     setParameters,
-    setSelected,
     cacheParam,
     shift,
   } = props;
@@ -79,8 +77,6 @@ export default function BasicTable(props) {
             <FilterBtn
               parameters={parameters}
               setParameters={setParameters}
-              selected={selected}
-              setSelected={setSelected}
               cacheParam={cacheParam}
             />
           </div>
