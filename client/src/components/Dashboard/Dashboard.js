@@ -115,7 +115,8 @@ export default function Live() {
       <h2 align="center" style={{ marginBottom: "2rem" }}>
         Dashboard
       </h2>
-      {machines.length > 1 ? <div>{content}</div> : noMachines}
+
+      {machines.length > 0 ? <div>{content}</div> : noMachines}
     </div>
   );
 }

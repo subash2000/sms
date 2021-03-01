@@ -1,7 +1,7 @@
 import React from "react";
 import { Paper } from "@material-ui/core";
 import { Route, Switch, Link } from "react-router-dom";
-import Home from "../../components/Home/Home";
+// import Home from "../../components/Home/Home";
 import MachineSettings from "../settings/Machine/Machine";
 import MillSettings from "../../components/settings/Mill/Mill";
 import Communication from "../settings/Communication/Communication";
@@ -120,8 +120,8 @@ export default function PersistentDrawerLeft() {
 
   const routes = (
     <Switch>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/home" component={Home} />
+      <Route exact path="/" component={Dashboard} />
+      {/* <Route exact path="/home" component={Home} /> */}
       <Route exact path="/millsettings">
         <MillSettings />
       </Route>
@@ -178,9 +178,9 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          <Link className={classes.link} to="/">
+          {/* <Link className={classes.link} to="/">
             <Typography variant="body1">Home</Typography>
-          </Link>
+          </Link> */}
           <Link className={classes.link} to="/dashboard">
             <Typography variant="body1">Dashboard</Typography>
           </Link>
