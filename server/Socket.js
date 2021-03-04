@@ -36,8 +36,7 @@ const socketFunc = (socket, address, packet) => {
     console.log("Error occured =>", address);
   });
   socket.on("data", (d) => {
-    // console.log("Recieved =>" + address);
-    
+    console.log("Recieved =>" + address);
     let data = d.toJSON(),
       mode = data.data[3].toString(16);
     if (mode == "22") {
@@ -56,52 +55,50 @@ const socketFunc = (socket, address, packet) => {
       );
     }
     if (mode == "23" && check_recieved_crc(d.toString("hex"))) {
-      if(Date.now() - currValues[address].recieved > 3000)
-      {
+
         currValues[address].data = d;
         currValues[address].recieved = Date.now();
-      let shift = data.data[9];
-      let dateOnly = new Date().toDateString();
-      Log.updateOne(
-        {
-          ip: address,
-          date: dateOnly,
-          shift,
-        },
-        {
-          $set: {
+        let shift = data.data[9];
+        let dateOnly = new Date().toDateString();
+        Log.updateOne(
+          {
+            ip: address,
             date: dateOnly,
-            data: data.data,
             shift,
           },
-        },
-        {
-          upsert: true,
-        }
-      )
-        .then(() => {
-          Machine.updateOne(
-            {
+          {
+            $set: {
+              date: dateOnly,
+              data: data.data,
               ip: address,
+              shift,
             },
-            {
-              $set: {
-                recieved: Date.now(),
-                data: data.data,
-                shift,
+          },
+          {
+            upsert: true,
+          }
+        )
+          .then(() => {
+            Machine.updateOne(
+              {
+                ip: address,
               },
-            }
-          )
-            .then(() => {
-              console.log("updated");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => console.log(err));
-
-      }
+              {
+                $set: {
+                  recieved: Date.now(),
+                  data: data.data,
+                  shift,
+                },
+              }
+            )
+              .then(() => {
+                console.log("updated");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => console.log(err));
       
     } else if (!check_recieved_crc(d.toString("hex"))) {
       console.log("CRC not matching");

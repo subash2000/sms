@@ -2,6 +2,16 @@ const findIndexOfStop = (data, doffIndex) => {
   return doffIndex + data[doffIndex] * 6 + 1;
 };
 
+const findIndexOfPowerFailure = (data, doffIndex) => {
+  let stopIndex = findIndexOfStop(data,doffIndex)
+  return stopIndex + data[stopIndex] * 6 + 1;
+};
+
+const findActiveEnergyIndex = (data,doffIndex) => {
+  let energyIndex = findIndexOfPowerFailure(data,doffIndex)
+  return 30+(energyIndex + data[energyIndex] * 6 + 1);
+}
+
 const calcTime = (arr, n, i) => {
   let diff = 0;
 
@@ -126,5 +136,15 @@ export default {
     } else if (packetData[13] === 0) return "running";
     else if (packetData[13] === 1) return "stop";
     else return "doff";
+  },
+  ukg:(packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      if (packetData.length > index+4) {
+       return( (256*256*256*packetData[index+3])+(256*256*packetData[index+2])+(256*packetData[index+1])+packetData[index])/100
+      } else return "No Data Found";
+    }
+
+    return "No Data Found";
   },
 };

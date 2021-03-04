@@ -3,53 +3,85 @@ var router = express.Router();
 const Log = require("../models/LogModel");
 const Machines = require("../models/MachinesModel");
 
-router.post("/", (req, res) => {
-  Log.find({
-    shift: req.body.shift,
-    date: req.body.date,
+
+router.post("/production", (req, res) => {
+
+//   Log.find({
+//     date: { $in: req.body.dates },
+//     shift: { $in: req.body.shifts }
+//   }).then((data) => {
+//     res.send({
+//       data
+//     })
+//   })
+//     .catch(err => {
+//       if (err.response)
+//         console.log(err.response.data)
+//       res.status(400).send({
+//         err
+//       })
+
+//     })
+// });
+Log
+.aggregate(
+[
+    {
+        $match:
+        {
+            date:{$in:req.body.dates},
+            shift:{$in:req.body.shifts}
+        }
+    },
+    {
+        $group:
+        {
+            _id:{date:"$date",shift:"$shift"},
+            machines:{$push:{ip:"$ip",data:"$data"}}
+        }
+        
+    },
+    {
+        $project:
+        {
+            _id:0,
+            date:"$_id.date",
+            shift:"$_id.shift",
+            machines:1
+        }
+    }
+]
+)
+.then((result) => {
+  console.log(result);
+  res.send({
+    result
   })
-    .then((resArr) => {
-      if (resArr && resArr.length) {
-        let ipData = {};
-        let ipArr = resArr.map((item) => {
-          ipData[item.ip] = item.data;
-          return item.ip;
-        });
-        Machines.find({
-          ip: { $in: [...ipArr] },
-        })
-          .sort({ machine: 1 })
-          .then((machinesArr) => {
-            if (!machinesArr || !machinesArr.length)
-              res.status(400).send({
-                msg: "No data found",
-              });
-            else {
-              let machines = machinesArr.map((item) => {
-                return { ...item._doc, data: ipData[item._doc.ip] };
-              });
-              Promise.all([machines]).then(() => {
-                res.send({
-                  machines,
-                });
-              });
-            }
-          })
-          .catch((error) => {
-            res.status(400).send({ error });
-          });
-      } else {
-        res.status(400).send({
-          msg: "No data found",
-        });
+})
+.catch(err => {
+  console.log(err)
+  res.status(400).send({err})
+})
+})
+
+
+router.get("/details", (req, res) => {
+  Machines.find({}).then(docArr => {
+    let result = {}
+    docArr.map(item => {
+      result[item.ip] = {
+        ...item,
       }
     })
-    .catch((err) => {
-      res.status(400).send({
-        msg: "error",
-        err,
-      });
-    });
-});
+
+    res.send({
+      result
+    })
+  }).catch(err => {
+    res.status(400).send({
+      err
+    })
+  })
+})
 
 module.exports = router;

@@ -3,6 +3,7 @@ var router = express.Router();
 const Machines = require("../models/MachinesModel");
 const { getIp, getIps } = require("../common/findIp");
 const { route } = require("./liveRoute");
+const {restart,restartAll} = require("../Socket")
 
 router.post("/single", (req, res) => {
   getIp(req.body.id, (err, ip) => {

@@ -24,7 +24,7 @@ import Count from "../settings/Count/Count";
 import CountAssign from "../settings/CountAssign/CountAssign";
 import Department from "../settings/Department/Department";
 import Modal from "../settings/Modal/Modal";
-import Report from "../Report/Report";
+import Report from "../Report/Report2";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
