@@ -47,3 +47,4 @@ app.use("/api/report", require("./routes/reportRoute"));
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+

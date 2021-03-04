@@ -39,38 +39,14 @@ function EnhancedTableHead(props) {
   );
 }
 
-// const useToolbarStyles = makeStyles((theme) => ({
-//   root: {
-//     paddingLeft: theme.spacing(2),
-//     paddingRight: theme.spacing(1),
-//     width: "100%",
-//   },
-//   highlight:
-//     theme.palette.type === "light"
-//       ? {
-//           color: theme.palette.secondary.main,
-//           backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-//         }
-//       : {
-//           color: theme.palette.text.primary,
-//           backgroundColor: theme.palette.secondary.dark,
-//         },
-//   title: {
-//     flex: "1 1 100%",
-//   },
-// }));
-
 const EnhancedTableToolbar = (props) => {
-  // const classes = useToolbarStyles();
 
   return (
-    // <Toolbar className={classes.root}>
     <Filter
       machines={props.machines}
       setMachines={props.setMachines}
       cache="communicationSettings"
     />
-    // </Toolbar>
   );
 };
 
@@ -150,7 +126,7 @@ export default function EnhancedTable(props) {
     ).then((res) => {
       if (res.data && res.data.machines) {
         setMachines([...res.data.machines]);
-        setFiltered(machines);
+        setFiltered([...res.data.machines]);
       }
     });
     // eslint-disable-next-line
@@ -291,7 +267,7 @@ export default function EnhancedTable(props) {
                           {row.id ? row.id : "Not Assigned"}
                         </TableCell>
                         <TableCell align="center">
-                          {" "}
+                        
                           {row.ip ? row.ip : "Not Assigned"}
                         </TableCell>
                       </TableRow>

@@ -121,7 +121,7 @@ export default {
   status: (packetData, date) => {
     if (!packetData || !packetData.length || !packetData.length > 12 || !date) {
       return "powerFailure";
-    } else if (new Date() - new Date(parseInt(date)) > 3000) {
+    } else if (new Date() - new Date(parseInt(date)) > 20000) {
       return "powerFailure";
     } else if (packetData[13] === 0) return "running";
     else if (packetData[13] === 1) return "stop";

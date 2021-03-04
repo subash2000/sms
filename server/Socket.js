@@ -6,7 +6,7 @@ const {
   settingsPacket,
   dataRequestProtocol,
 } = require("./common/requestFunctions");
-const connectionCheckInterval = 5000;
+const connectionCheckInterval = 10000;
 const Machine = require("./models/MachinesModel");
 const Log = require("./models/LogModel");
 
@@ -23,7 +23,7 @@ const socketFunc = (socket, address, packet) => {
   };
   let interval = setInterval(() => {
     console.log(currValues[address].connection);
-    if (Date.now() - currValues[address].recieved > 3000) {
+    if (Date.now() - currValues[address].recieved > 10000) {
       currValues[address].socket.destroy();
     }
   }, connectionCheckInterval);
@@ -36,8 +36,8 @@ const socketFunc = (socket, address, packet) => {
     console.log("Error occured =>", address);
   });
   socket.on("data", (d) => {
-    console.log("Recieved =>" + address);
-    currValues[address].recieved = Date.now();
+    // console.log("Recieved =>" + address);
+    
     let data = d.toJSON(),
       mode = data.data[3].toString(16);
     if (mode == "22") {
@@ -56,7 +56,10 @@ const socketFunc = (socket, address, packet) => {
       );
     }
     if (mode == "23" && check_recieved_crc(d.toString("hex"))) {
-      currValues[address].data = d;
+      if(Date.now() - currValues[address].recieved > 3000)
+      {
+        currValues[address].data = d;
+        currValues[address].recieved = Date.now();
       let shift = data.data[9];
       let dateOnly = new Date().toDateString();
       Log.updateOne(
@@ -97,6 +100,9 @@ const socketFunc = (socket, address, packet) => {
             });
         })
         .catch((err) => console.log(err));
+
+      }
+      
     } else if (!check_recieved_crc(d.toString("hex"))) {
       console.log("CRC not matching");
     }

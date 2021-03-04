@@ -58,8 +58,18 @@ export default function Live() {
               .then((res) => {
                 if (isMounted) {
                   console.log(res.data);
-                  setMachines([...res.data.machines]);
-                  setFiltered([...res.data.machines]);
+                  if(res.data.machines.length)
+                  {
+                    setMachines([...res.data.machines]);
+                    setFiltered([...res.data.machines]);
+
+                  }
+                  else
+                  {
+                    setNoMachines(<h2>No Machines Found</h2>);
+
+                  }
+                  
                 }
               })
               .catch((err) => {
@@ -68,7 +78,7 @@ export default function Live() {
                   if (isMounted) setNoMachines(<h2>No Machines Found</h2>);
                 }
               });
-          }, 1000);
+          }, 3000);
         }
       })
       .catch((err) => {
@@ -90,11 +100,7 @@ export default function Live() {
           setMachines={setFiltered}
           cache="dashboardOpt"
         />
-        {/* <FilterParam
-          cache="dashboardParam"
-          parameters={parameters}
-          setParameters={setHeadCells}
-        /> */}
+      
       </div>
       <TableContainer
         selected={selected}
