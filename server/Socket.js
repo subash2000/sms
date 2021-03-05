@@ -6,12 +6,15 @@ const {
   settingsPacket,
   dataRequestProtocol,
 } = require("./common/requestFunctions");
-const connectionCheckInterval = 10000;
 const Machine = require("./models/MachinesModel");
 const Log = require("./models/LogModel");
+const dataRequestInterval = 2000;
+const connectionCheckInterval = 10000;
+
 
 //Socket Functions to handle induvidual machines
 const socketFunc = (socket, address, packet) => {
+  let dataInterval;
   let obj = {
     socket,
     recieved: Date.now(),
@@ -25,12 +28,16 @@ const socketFunc = (socket, address, packet) => {
     console.log(currValues[address].connection);
     if (Date.now() - currValues[address].recieved > 10000) {
       currValues[address].socket.destroy();
+      if(dataInterval)
+        clearInterval(dataInterval)
     }
   }, connectionCheckInterval);
   socket.write(Buffer.from(packet, "hex"), (err) => {
     if (err) {
       console.log("Error at sending settings packet => " + address + " " + err);
-    } else console.log("settngs sent", packet);
+    } else {
+      console.log("settngs sent", packet)
+    };
   });
   socket.on("error", () => {
     console.log("Error occured =>", address);
@@ -43,16 +50,20 @@ const socketFunc = (socket, address, packet) => {
       console.log("Settings set successfully =>" + address);
     }
     if (mode == "22" || mode == "23") {
-      socket.write(
-        Buffer.from(dataRequestProtocol(currValues[address].id), "hex"),
-        (err) => {
-          if (err) {
-            console.log(
-              "Error at sending data packet => " + address + " " + err
-            );
+      setTimeout(() => {
+        socket.write(
+          Buffer.from(dataRequestProtocol(currValues[address].id), "hex"),
+          (err) => {
+            if (err) {
+              console.log(
+                "Error at sending data packet => " + address + " " + err
+              );
+            }
           }
-        }
-      );
+        );
+      }, dataRequestInterval);
+       
+     
     }
     if (mode == "23" && check_recieved_crc(d.toString("hex"))) {
 

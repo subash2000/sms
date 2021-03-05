@@ -1,0 +1,22 @@
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .reportPrint,
+  .reportPrint * {
+    visibility: visible;
+  }
+  .reportPrint {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  @page {
+    size: landscape;
+  }
+}
+
+@media screen {
+  .reportPrint {
+  }
+}

@@ -3,8 +3,13 @@ import PageTitle from "../utilities/PageTitle";
 import DateField from "../utilities/DateField";
 import SelectMultiple from "../utilities/SelectMultiple";
 import axios from "axios";
-import { Button, makeStyles } from "@material-ui/core";
-
+import { Button, makeStyles, Tooltip,IconButton } from "@material-ui/core";
+import PrintIcon from '@material-ui/icons/Print';
+import funct from "../../common/functions"
+import FilterOpt from "./Filter/Filter"
+import FilterParam from "./Filter/FilterParam"
+import Result from "./Result"
+const {parameters} = funct
 const useStyles = makeStyles((theme) => ({
   fields: {
     display: "flex",
@@ -15,12 +20,21 @@ const useStyles = makeStyles((theme) => ({
       gap: "0",
     },
   },
+  toolbar:{
+    width:"100%",
+    display:"flex",
+    justifyContent:"flex-end"
+  }
 }));
 export default function Report() {
   const [from, setFrom] = React.useState(Date.now());
   const [to, setTo] = React.useState(Date.now());
   const [shifts, setShifts] = React.useState(["1", "2", "3"]);
   const [log, setLog] = React.useState([])
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
+  const [model, setModel] = React.useState("All");
+  const [headCells,setheadCells] = React.useState([])
 
   const classes = useStyles();
   var getDates = function (start, end, cb) {
@@ -46,7 +60,26 @@ export default function Report() {
       return 1;
     return 0;
   }
+  React.useEffect(() => {
+    console.log(headCells)
 
+  },[headCells])
+  React.useEffect(() => {
+    let str = localStorage.getItem("reportParam");
+    if (str) {
+      let obj = JSON.parse(str);
+    
+      setheadCells([...obj.right]);
+    }
+    else if(!str)
+    {
+      setheadCells([...parameters.sort()])
+    }
+
+    // eslint-disable-next-line
+  }, []);
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,7 +87,6 @@ export default function Report() {
       dates: getDates(from, to),
       shifts: shifts.map(item => (parseInt(item))),
     }).then(response => {
-     
      if(response.data.result && response.data.result.length)
      {
        let result = [...response.data.result];
@@ -69,6 +101,12 @@ export default function Report() {
         if (error.response)
           console.log(error.response.data);
       })
+  
+    
+  }
+
+  const printPdf = () => {
+    window.print()
   }
 
   return (
@@ -102,7 +140,36 @@ export default function Report() {
           </Button>
         </div>
       </form>
-      {log.length?<h2>Boom u see that</h2>:undefined}
+      {log.length?(
+        <>
+         
+           <FilterOpt 
+            setDepartment={setDepartment} 
+            setModel={setModel} 
+            setCount={setCount} 
+            count={count} 
+            department={department}
+            model={model}
+        />
+        <div className={classes.toolbar}> 
+          <Tooltip title="Print" placement="top">
+              <IconButton color="primary" component="span" onClick={printPdf}>
+                <PrintIcon />
+              </IconButton>
+          </Tooltip>
+          <FilterParam parameters={headCells} setParameters={setheadCells} cache="reportParam"/>
+        </div>
+       
+        <Result 
+        logs={log}
+        count={count} 
+        department={department}
+        model={model}
+        parameters={headCells}
+        />
+        </>
+
+      ):undefined}
     </div>
   );
 }
