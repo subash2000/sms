@@ -64,12 +64,12 @@ export default function TransferList({ setParameters, parameters, cache }) {
   React.useEffect(() => {
     let obj = {
       left,
-      right,
+      right
     };
     if(right.length)
     {
        localStorage.setItem(cache, JSON.stringify(obj));
-      setParameters([...right.sort()]);
+      setParameters([...right]);
 
     }
      

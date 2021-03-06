@@ -1,141 +1,186 @@
-import { Button, makeStyles, CircularProgress } from "@material-ui/core";
-import Axios from "axios";
 import React from "react";
+import PageTitle from "../utilities/PageTitle";
 import DateField from "../utilities/DateField";
+import SelectMultiple from "../utilities/SelectMultiple";
+import axios from "axios";
+import { Button, makeStyles, Tooltip,IconButton } from "@material-ui/core";
+import PrintIcon from '@material-ui/icons/Print';
+import funct from "../../common/functions"
+import FilterOpt from "./Filter/Filter"
+import FilterParam from "./Filter/FilterParam"
+import Result from "./Result"
 import Alert from "../utilities/Alert";
-import FormSelect from "../utilities/FormSelect";
-import ToolBar from "./ToolBar";
-import TableContainer from "./Table/TableContainer";
-import { Divider } from "@material-ui/core";
-import func from "../../common/functions";
-import Print from "./PDF/Print";
-import FilterOPt from "../Filter/Filter";
-const useStyles = makeStyles((theme) => ({
-  btn: {
-    textAlign: "center",
-    margin: "auto",
-  },
-  load: {
-    width: "100%",
-    textAlign: "center",
-    margin: "5rem 0 0 0",
-  },
-}));
 
+const {parameters} = funct
+const useStyles = makeStyles((theme) => ({
+  fields: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "8rem",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+      gap: "0",
+    },
+  },
+  toolbar:{
+    width:"100%",
+    display:"flex",
+    justifyContent:"flex-end"
+  }
+}));
 export default function Report() {
-  const [date, setDate] = React.useState(Date.now());
-  const [shift, setShift] = React.useState("3");
-  const [load, setLoad] = React.useState(false);
-  const [content, setContent] = React.useState(undefined);
-  const [machines, setMachines] = React.useState([]);
-  const [parameters, setParameters] = React.useState([...func.parameters]);
-  const [filtered, setFiltered] = React.useState([]);
+  const [from, setFrom] = React.useState(Date.now());
+  const [to, setTo] = React.useState(Date.now());
+  const [shifts, setShifts] = React.useState(["1", "2", "3"]);
+  const [log, setLog] = React.useState([])
+  const [department, setDepartment] = React.useState("All");
+  const [count, setCount] = React.useState("All");
+  const [model, setModel] = React.useState("All");
+  const [headCells,setheadCells] = React.useState([])
+  const [err,setErr] = React.useState(undefined)
 
   const classes = useStyles();
-
+  var getDates = function (start, end, cb) {
+    for (var arr = [], dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+      arr.push(new Date(dt).toDateString());
+    }
+    return arr;
+  };
+  const compareDate = (a,b) => {
+    let date1 = Date.parse(a.date)
+    let date2 =Date.parse(b.date)
+    if(date1 < date2)
+      return -1;
+    else if(date1>date2)
+      return 1;
+    return 0;
+  }
+  const compareShift = (a,b) => {
+    
+    if(a.shift < b.shift)
+      return -1;
+    else if(a.shift>b.shift)
+      return 1;
+    return 0;
+  }
   React.useEffect(() => {
-    let cachedSelected = localStorage.getItem("reportParam");
+    console.log(headCells)
 
-    if (cachedSelected) {
-      let obj = JSON.parse(cachedSelected);
-      let paramArr = Object.keys(obj).filter((item) => obj[item] === true);
-      setParameters(paramArr);
+  },[headCells])
+  React.useEffect(() => {
+    let str = localStorage.getItem("reportParam");
+    if (str) {
+      let obj = JSON.parse(str);
+    
+      setheadCells([...obj.right]);
+    }
+    else if(!str)
+    {
+      setheadCells([...parameters])
     }
 
     // eslint-disable-next-line
   }, []);
 
-  React.useEffect(() => {
-    if (machines.length > 0) {
-      setContent(
-        <div>
-          <Divider />
-          <ToolBar machines={filtered} />
+  
 
-          <div>
-            <FilterOPt
-              machines={machines}
-              setMachines={setFiltered}
-              cache="reportOpt"
-            />
-          </div>
-          <TableContainer
-            parameters={parameters}
-            machines={filtered}
-            setParameters={setParameters}
-            setMachines={setMachines}
-            cacheParam="reportParam"
-            shift={shift}
-          />
-
-          <div className="section-to-print">
-            {/* <div> */}
-            <Print
-              parameters={parameters}
-              machines={filtered}
-              shift={shift}
-              date={date}
-            />
-          </div>
-        </div>
-      );
-    }
-    // eslint-disable-next-line
-  }, [filtered, parameters]);
-  const viewHandler = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setContent(undefined);
-    setLoad(true);
-    Axios.post(process.env.REACT_APP_BACKEND + "/api/report", {
-      date: new Date(date).toDateString(),
-      shift: parseInt(shift),
+    axios.post(process.env.REACT_APP_BACKEND + "/api/report/production", {
+      dates: getDates(from, to),
+      shifts: shifts.map(item => (parseInt(item))),
+    }).then(response => {
+     if(response.data.result && response.data.result.length)
+     {
+       let result = [...response.data.result];
+       result.sort(compareShift)
+       result.sort(compareDate)
+       console.log(result)
+       setLog(result)
+       setErr(undefined)
+
+     }
+     else
+     {
+       setErr(<Alert type="warning" msg="No Data Found" />)
+
+     }
     })
-      .then((res) => {
-        setLoad(false);
-        if (res.data.machines && res.data.machines.length) {
-          setMachines([...res.data.machines]);
-          setFiltered([...res.data.machines]);
-        }
+      .catch(error => {
+        if (error.response)
+          console.log(error.response.data);
+        setErr(<Alert type="warning" msg="No Data Found" />)
+
       })
-      .catch((err) => {
-        if (err.response) {
-          setContent(<Alert type="warning" msg={err.response.data.msg} />);
-          setLoad(false);
-        }
-      });
-  };
+  
+    
+  }
+
+  const printPdf = () => {
+    window.print()
+  }
 
   return (
-    <div className={classes.container}>
-      <h2 style={{ textAlign: "center" }}>Report</h2>
-      <form className={classes.form} onSubmit={viewHandler}>
+    <div>
+      <PageTitle text="Production Report" />
+      <form onSubmit={handleSubmit} className={classes.form}>
         <DateField
-          value={date}
-          setDate={setDate}
+          value={from}
+          setDate={setFrom}
           variant="outlined"
           required={true}
-          label="Date"
+          label="From "
         />
-        <FormSelect
-          value={shift}
-          onChange={(e) => setShift(e.target.value)}
+        <DateField
+          value={to}
+          setDate={setTo}
           variant="outlined"
-          label="Shift"
-          menuItems={["1", "2", "3"]}
+          required={true}
+          label="To"
         />
-        <div className={classes.btn}>
-          <Button type="submit" variant="contained" color="primary">
+
+        <SelectMultiple
+          selected={shifts}
+          setSelected={setShifts}
+          menuItems={["1", "2", "3"]}
+          label="Shifts"
+        />
+        <div style={{ width: "100%", textAlign: "center" }}>
+          <Button color="primary" variant="contained" type="submit">
             View
           </Button>
         </div>
       </form>
-      {load ? (
-        <div className={classes.load}>
-          <CircularProgress />
+      {log.length?(
+        <>
+         
+           <FilterOpt 
+            setDepartment={setDepartment} 
+            setModel={setModel} 
+            setCount={setCount} 
+            count={count} 
+            department={department}
+            model={model}
+        />
+        <div className={classes.toolbar}> 
+          <Tooltip title="Print" placement="top">
+              <IconButton color="primary" component="span" onClick={printPdf}>
+                <PrintIcon />
+              </IconButton>
+          </Tooltip>
+          <FilterParam parameters={headCells} setParameters={setheadCells} cache="reportParam"/>
         </div>
-      ) : (
-        content
-      )}
+       
+        <Result 
+        logs={log}
+        count={count} 
+        department={department}
+        model={model}
+        parameters={headCells}
+        />
+        </>
+
+      ):err}
     </div>
   );
 }

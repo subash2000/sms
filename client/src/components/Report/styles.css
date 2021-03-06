@@ -1,4 +1,11 @@
 @media print {
+  html,
+  body {
+    border: 1px solid white;
+    height: 99%;
+    page-break-after: avoid;
+    page-break-before: avoid;
+  }
   body * {
     visibility: hidden;
   }
@@ -7,9 +14,10 @@
     visibility: visible;
   }
   .reportPrint {
+    width: 99%;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 100px;
   }
   @page {
     size: landscape;
