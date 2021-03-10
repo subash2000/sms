@@ -1,6 +1,7 @@
 import React from 'react'
 import Table from "./Table"
 import "./styles.css"
+
 export default function Result(props) {
     const {count,department,model,parameters} = props
     return (

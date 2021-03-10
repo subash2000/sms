@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
-const { restartAll } = require("../Socket");
+const { restartAll,restart } = require("../Socket");
 const { shift } = require("../common/getShift");
 router.get("/all", (req, res) => {
   Machines.find({})
@@ -61,6 +61,7 @@ router.post("/setcount", (req, res) => {
     }
   )
     .then((result) => {
+      restartAll()
       res.send({
         result,
       });
@@ -82,6 +83,7 @@ router.post("/single/update", (req, res) => {
     }
   )
     .then(() => {
+      restart(req.body.department,req.body.machine)
       res.send({
         msg: "updated",
       });
@@ -104,6 +106,7 @@ router.post("/single/delete", (req, res) => {
           result,
         });
       } else {
+        restart(req.body.department,req.body.machine)
         res.send({
           msg: "deleted",
         });
@@ -133,6 +136,7 @@ router.post("/single/insert", (req, res) => {
     }
   )
     .then(() => {
+      restart(req.body.department,req.body.machine)
       res.send({
         msg: "inserted",
       });

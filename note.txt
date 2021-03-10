@@ -3,3 +3,6 @@ pm2 startup
 copy paste cmd
 pm2 start index.js
 pm2 save
+
+
+ukg = Activity energy/kg

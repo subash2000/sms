@@ -44,6 +44,9 @@ const useStyles = makeStyles({
   },
   summary:{
     fontWeight:"900"
+  },
+  container:{
+    margin:"50px 0"
   }
 });
 
@@ -55,10 +58,29 @@ export default function CustomizedTables(props) {
    const [kg, setKg] = React.useState(0);
    const [eff, setEff] = React.useState(0);
    const [doff, setDoff] = React.useState(0);
-   const sumArray = (arr) => {
+   const [mmin, setMmin] = React.useState(0);
+   const [tpi, setTpi] = React.useState(0);
+   const [spindle, setSpindle] = React.useState(0);
+   const [stops, setStops] = React.useState(0);
+   const [pef, setPef] = React.useState(0);
+  //  const [stopMin, setStopMin] = React.useState(0);
+  //  const [doffMin, setDoffMin] = React.useState(0);
+
+
+
+  const sumArray = (arr) => {
     let sum = arr.reduce((acc, val) => acc + val);
     return sum;
   };
+
+  const avgArray = (arr) => {
+    let sum = arr.reduce((acc, val) => acc + val);
+    let avg = sum/(arr.length)
+    
+    return (Math.round(avg * 100) / 100).toFixed(2);;
+  };
+
+
   React.useEffect(() => {
      axios.get(process.env.REACT_APP_BACKEND + "/api/report/details").then(response => {
      if(Object.keys(response.data.result))
@@ -86,17 +108,38 @@ export default function CustomizedTables(props) {
       let effArr = machines.map((item) => {
         return Decode.aef(item.data);
       });
-      setEff(sumArray(effArr) / props.machines.length);
+      setEff(avgArray(effArr));
+      let mMinArr = machines.map((item) => {
+        return Decode.mMin(item.data);
+      });
+      setMmin(avgArray(mMinArr));
+      let tpiArr = machines.map((item) => {
+        return Decode.tpi(item.data);
+      });
+      setTpi(avgArray(tpiArr));
+      let spindleArr = machines.map((item) => {
+        return Decode.spindleRpm(item.data);
+      });
+      setSpindle(avgArray(spindleArr));
+      let stopArr = machines.map((item) => {
+        return Decode.stops(item.data);
+      });
+      setStops(sumArray(stopArr));
+      let pefArr = machines.map((item) => {
+        return Decode.pef(item.data);
+      });
+      setPef(avgArray(pefArr));
+
     }
     // eslint-disable-next-line
   },[machines])
 
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className={classes.container}>
         <div className={classes.details}>
-            <h3>Shift : {props.shift}</h3>
             <h3>Date : {props.date}</h3>
+            <h3>Shift : {props.shift}</h3>
         </div>
       
       <Table className={classes.table} aria-label="customized table">
@@ -158,15 +201,15 @@ export default function CustomizedTables(props) {
               {parameters.includes("Model")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
               {parameters.includes("Count")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
               {parameters.includes("Kg")?<StyledTableCell className={classes.summary} align="center">{kg}</StyledTableCell>:undefined}
-              {parameters.includes("m/min")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("tpi")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("spindle rpm")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
+              {parameters.includes("m/min")?<StyledTableCell className={classes.summary} align="center">{mmin}</StyledTableCell>:undefined}
+              {parameters.includes("tpi")?<StyledTableCell className={classes.summary} align="center">{tpi}</StyledTableCell>:undefined}
+              {parameters.includes("spindle rpm")?<StyledTableCell className={classes.summary} align="center">{spindle}</StyledTableCell>:undefined}
               {parameters.includes("Doffs")?<StyledTableCell className={classes.summary} align="center">{doff}</StyledTableCell>:undefined}
               {parameters.includes("Doff min")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("Stops")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
+              {parameters.includes("Stops")?<StyledTableCell className={classes.summary} align="center">{stops}</StyledTableCell>:undefined}
               {parameters.includes("Stop min")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
               {parameters.includes("AEF %")?<StyledTableCell className={classes.summary} align="center">{eff}</StyledTableCell>:undefined}
-              {parameters.includes("PEF %")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
+              {parameters.includes("PEF %")?<StyledTableCell className={classes.summary} align="center">{pef}</StyledTableCell>:undefined}
               {parameters.includes("Ukg")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
           </StyledTableRow>
         </TableBody>

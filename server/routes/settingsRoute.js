@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Mill = require("../models/MillModel");
 const Machine = require("../models/MachinesModel");
-const { restart } = require("../Socket");
+const { restart,restartAll } = require("../Socket");
 
 router.post("/mill", (req, res) => {
   const filter = {};
@@ -16,7 +16,7 @@ router.post("/mill", (req, res) => {
   };
   Mill.updateOne(filter, updateDoc, options)
     .then(() => {
-      restart();
+      restartAll();
       res.send({ msg: "Mill Details updated successfully" });
     })
     .catch((err) =>
@@ -40,7 +40,7 @@ router.post("/communication", (req, res) => {
     }
   )
     .then(() => {
-      restart();
+      restartAll();
       res.send({
         msg: "Updated Successfully",
       });

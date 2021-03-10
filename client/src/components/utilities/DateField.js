@@ -83,7 +83,7 @@ export default function FormText(props) {
         inputVariant={props.variant}
         required={props.required}
         disabled={props.disabled ? props.disabled : false}
-        maxDate={Date.now()}
+        maxDate={props.maxDate}
         maxDateMessage="Invalid Date"
       />
     </div>

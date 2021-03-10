@@ -9,6 +9,7 @@ import func from "../../common/functions";
 import "./styles.css";
 import FilterOPt from "../Filter/Filter";
 // import FilterParam from "../Filter/FilterParam";
+let timeout;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -39,55 +40,54 @@ export default function Live() {
     };
   }, []);
 
+
+  const updateMachines = () => {
+    
+    axios
+    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
+    .then((res) => {
+        console.log(res.data);
+        if(res.data.machines.length)
+        {
+          setMachines([...res.data.machines]);
+          setFiltered([...res.data.machines]);
+
+        }
+        else
+        {
+          setNoMachines(<h2>No Machines Found</h2>);
+
+        }
+    })
+    .catch((err) => {
+      if (err.response) {
+        console.log(err.response.data);
+        
+      }
+      setNoMachines(<h2>No Machines Found</h2>);
+    })
+    timeout = setTimeout(updateMachines, 2000);
+
+  }
+
   React.useEffect(() => {
-    let interval;
     let isMounted = true;
     if (isMounted)
+    {
       setNoMachines(
         <div style={{ textAlign: "center" }}>
           <CircularProgress />
         </div>
       );
-    axios
-      .get(process.env.REACT_APP_BACKEND)
-      .then((response) => {
-        if (response.data.msg === "pong") {
-          interval = setInterval(() => {
-            axios
-              .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
-              .then((res) => {
-                if (isMounted) {
-                  console.log(res.data);
-                  if(res.data.machines.length)
-                  {
-                    setMachines([...res.data.machines]);
-                    setFiltered([...res.data.machines]);
-
-                  }
-                  else
-                  {
-                    setNoMachines(<h2>No Machines Found</h2>);
-
-                  }
-                  
-                }
-              })
-              .catch((err) => {
-                if (err.response) {
-                  console.log(err.response.data);
-                  if (isMounted) setNoMachines(<h2>No Machines Found</h2>);
-                }
-              });
-          }, 3000);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) setNoMachines(<h2>Can't Connect to server</h2>);
-      });
+      updateMachines();
+        
+    }
     return () => {
-      if (interval) clearInterval(interval);
       isMounted = false;
+      if(timeout)
+        clearTimeout(timeout)
     };
+    // eslint-disable-next-line
   }, []);
 
   const content = (

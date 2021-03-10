@@ -45,8 +45,8 @@ function union(a, b) {
 export default function TransferList({ setParameters, parameters, cache }) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([...parameters.sort()]);
-  const [right, setRight] = React.useState([]);
+  const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([...parameters.sort()]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);

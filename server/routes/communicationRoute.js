@@ -2,9 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
 const { getIp, getIps } = require("../common/findIp");
-const { route } = require("./liveRoute");
-const {restart,restartAll} = require("../Socket")
-
+const {restartAll} = require("../Socket")
 router.post("/single", (req, res) => {
   getIp(req.body.id, (err, ip) => {
     Machines.findOne({
@@ -25,6 +23,7 @@ router.post("/single", (req, res) => {
             }
           )
             .then((response) => {
+              restartAll()
               res.send({
                 msg: "Communication Details Updated",
                 response,
@@ -72,6 +71,7 @@ router.post("/multiple", (req, res) => {
         })
       )
         .then((response) => {
+          restartAll()
           res.send({
             response,
           });

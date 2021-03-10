@@ -10,7 +10,8 @@ import FilterOpt from "./Filter/Filter"
 import FilterParam from "./Filter/FilterParam"
 import Result from "./Result"
 import Alert from "../utilities/Alert";
-
+// import pdf from "../../common/generateReport"
+// const {reportPdf} = pdf
 const {parameters} = funct
 const useStyles = makeStyles((theme) => ({
   fields: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     width:"100%",
     display:"flex",
     justifyContent:"flex-end"
-  }
+  },
 }));
 export default function Report() {
   const [from, setFrom] = React.useState(Date.now());
@@ -64,10 +65,6 @@ export default function Report() {
     return 0;
   }
   React.useEffect(() => {
-    console.log(headCells)
-
-  },[headCells])
-  React.useEffect(() => {
     let str = localStorage.getItem("reportParam");
     if (str) {
       let obj = JSON.parse(str);
@@ -78,7 +75,6 @@ export default function Report() {
     {
       setheadCells([...parameters])
     }
-
     // eslint-disable-next-line
   }, []);
 
@@ -130,6 +126,8 @@ export default function Report() {
           variant="outlined"
           required={true}
           label="From "
+          maxDate={to}
+
         />
         <DateField
           value={to}
@@ -137,6 +135,8 @@ export default function Report() {
           variant="outlined"
           required={true}
           label="To"
+          maxDate={new Date()}
+
         />
 
         <SelectMultiple
@@ -170,7 +170,8 @@ export default function Report() {
           </Tooltip>
           <FilterParam parameters={headCells} setParameters={setheadCells} cache="reportParam"/>
         </div>
-       
+    
+       <div className="report">
         <Result 
         logs={log}
         count={count} 
@@ -178,6 +179,7 @@ export default function Report() {
         model={model}
         parameters={headCells}
         />
+        </div>
         </>
 
       ):err}

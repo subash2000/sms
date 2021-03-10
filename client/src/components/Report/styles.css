@@ -14,7 +14,6 @@
     visibility: visible;
   }
   .reportPrint {
-    width: 99%;
     position: absolute;
     left: 0;
     top: 100px;
@@ -26,5 +25,6 @@
 
 @media screen {
   .reportPrint {
+    max-width: 80vw;
   }
 }

@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const Mill = require("../models/MillModel");
-const { restart } = require("../Socket");
 
 router.post("/count", (req, res) => {
   const filter = {};
@@ -16,7 +15,6 @@ router.post("/count", (req, res) => {
 
   Mill.updateOne(filter, updateDoc, options)
     .then((result) => {
-      restart();
       res.send({
         response: result,
         msg: "Count addes Successfully",

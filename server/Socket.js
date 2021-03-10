@@ -170,10 +170,21 @@ const restartAll = () => {
   });
 };
 
-const restart = (ip) => {
-  if (currValues[ip] && currValues[ip].socket) {
-    currValues[ip].socket.destroy();
-  }
+const restart = (department,machine) => {
+  Machine.findOne({
+    department,
+    machine
+
+  })
+  .then(res => {
+    if (res && res.ip && currValues[res.ip] && currValues[res.ip].socket) {
+      currValues[res.ip].socket.destroy();
+    }
+
+  })
+  .catch(err => {
+    console.log(err)
+  })
 };
 
 module.exports = {
