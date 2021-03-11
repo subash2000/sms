@@ -82,6 +82,8 @@ export default function Report() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLog([])
+  
     axios.post(process.env.REACT_APP_BACKEND + "/api/report/production", {
       dates: getDates(from, to),
       shifts: shifts.map(item => (parseInt(item))),

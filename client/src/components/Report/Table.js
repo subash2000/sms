@@ -23,11 +23,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
-  // root: {
-  //   '&:nth-of-type(odd)': {
-  //     backgroundColor: theme.palette.action.hover,
-  //   },
-  // },
+
 }))(TableRow);
 
 const sumTime = (timeArr) => {
@@ -65,15 +61,9 @@ export default function CustomizedTables(props) {
   const classes = useStyles();
    const {count,department,model,machines,parameters} = props
    const [details,setDetails] = React.useState({})
-   
    const [summary,setSummary] = React.useState({})
    const [filtered,setFiltered] = React.useState([])
    
-  //  const [stopMin, setStopMin] = React.useState(0);
-  //  const [doffMin, setDoffMin] = React.useState(0);
-
-
-
   const sumArray = (arr) => {
     let sum = arr.reduce((acc, val) => acc + val);
     return sum;
@@ -198,16 +188,7 @@ export default function CustomizedTables(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {
-          // machines.filter(row => {
-          //     let dep = department === "All" || (details[row.ip] && details[row.ip].department && details[row.ip].department === department);
-          //     let mod = model === "All" || (details[row.ip] && details[row.ip].model && details[row.ip].model === model);
-          //     let c =
-          //       count === "All" ||
-          //       (details[row.ip] && details[row.ip].count && details[row.ip].count.value && details[row.ip].count.value+details[row.ip].count.unit===count)
-          //       return dep && mod && c; 
-          // })
-          filtered
+          {filtered
           .map((row,i) => (
             <StyledTableRow key={i}>
               <StyledTableCell align="center" component="th" scope="row">
