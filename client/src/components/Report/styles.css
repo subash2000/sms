@@ -16,7 +16,7 @@
   .reportPrint {
     position: absolute;
     left: 0;
-    top: 100px;
+    top: 0px;
   }
   @page {
     size: landscape;

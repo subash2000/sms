@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Decode from "../../common/packetDecode";
 import axios from "axios"
-
+import moment from "moment"
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -29,6 +29,16 @@ const StyledTableRow = withStyles((theme) => ({
   //   },
   // },
 }))(TableRow);
+
+const sumTime = (timeArr) => {
+  var duration  = timeArr.map(t => moment.duration(t))
+  .reduce((sum, current) => sum.add(current), moment.duration());
+  let hr = duration._data.hours.toString().padStart(2,0);
+  let min = duration._data.minutes.toString().padStart(2,0);
+  let sec = duration._data.seconds.toString().padStart(2,0);
+  return hr+":"+min+":"+sec
+
+}
 
 
 
@@ -55,14 +65,10 @@ export default function CustomizedTables(props) {
   const classes = useStyles();
    const {count,department,model,machines,parameters} = props
    const [details,setDetails] = React.useState({})
-   const [kg, setKg] = React.useState(0);
-   const [eff, setEff] = React.useState(0);
-   const [doff, setDoff] = React.useState(0);
-   const [mmin, setMmin] = React.useState(0);
-   const [tpi, setTpi] = React.useState(0);
-   const [spindle, setSpindle] = React.useState(0);
-   const [stops, setStops] = React.useState(0);
-   const [pef, setPef] = React.useState(0);
+   
+   const [summary,setSummary] = React.useState({})
+   const [filtered,setFiltered] = React.useState([])
+   
   //  const [stopMin, setStopMin] = React.useState(0);
   //  const [doffMin, setDoffMin] = React.useState(0);
 
@@ -93,48 +99,76 @@ export default function CustomizedTables(props) {
           console.log(error.response.data);
       })
   },[])
-
   React.useEffect(() => {
-    if(machines && machines.length) {
-      let kgArr = machines.map((item) => {
+
+    setFiltered([...machines.filter(row => {
+    let dep = department === "All" || (details[row.ip] && details[row.ip].department && details[row.ip].department === department);
+    let mod = model === "All" || (details[row.ip] && details[row.ip].model && details[row.ip].model === model);
+    let c =
+      count === "All" ||
+      (details[row.ip] && details[row.ip].count && details[row.ip].count.value && details[row.ip].count.value+details[row.ip].count.unit===count)
+      return dep && mod && c; 
+     })])
+     // eslint-disable-next-line
+  },[count,department,model])
+  React.useEffect(() => {
+    setSummary({})
+    if(filtered && filtered.length) {
+      let kgArr = filtered.map((item) => {
         return Decode.kg(item.data);
       });
-      console.log(kgArr)
-      setKg(sumArray(kgArr));
-      let doffArr = machines.map((item) => {
+      let doffArr = filtered.map((item) => {
         return Decode.doffs(item.data);
       });
-      setDoff(sumArray(doffArr));
-      let effArr = machines.map((item) => {
+      let effArr = filtered.map((item) => {
         return Decode.aef(item.data);
       });
-      setEff(avgArray(effArr));
-      let mMinArr = machines.map((item) => {
+      let mMinArr = filtered.map((item) => {
         return Decode.mMin(item.data);
       });
-      setMmin(avgArray(mMinArr));
-      let tpiArr = machines.map((item) => {
+      let tpiArr = filtered.map((item) => {
         return Decode.tpi(item.data);
       });
-      setTpi(avgArray(tpiArr));
-      let spindleArr = machines.map((item) => {
+      let spindleArr = filtered.map((item) => {
         return Decode.spindleRpm(item.data);
       });
-      setSpindle(avgArray(spindleArr));
-      let stopArr = machines.map((item) => {
+      let stopArr = filtered.map((item) => {
         return Decode.stops(item.data);
       });
-      setStops(sumArray(stopArr));
-      let pefArr = machines.map((item) => {
+      let pefArr = filtered.map((item) => {
         return Decode.pef(item.data);
       });
-      setPef(avgArray(pefArr));
+      let doffTimeArr = filtered.map((item) => {
+        return Decode.doffMin(item.data);
+      }).filter(item => item !== "No Data Found")
+
+      let stopTimeArr = filtered.map((item) => {
+        return Decode.stoppMin(item.data);
+      }).filter(item => item !== "No Data Found")
+
+      console.log(stopTimeArr)
+
+      Promise.all([kgArr,mMinArr,tpiArr,doffArr,stopArr,spindleArr,effArr,pefArr,stopTimeArr,doffTimeArr]).then(() => {
+        setSummary(
+        {
+        ...summary,
+        kg:sumArray(kgArr),
+        mmin:avgArray(mMinArr),
+        tpi:avgArray(tpiArr),
+        doffs:sumArray(doffArr),
+        stops:sumArray(stopArr),
+        spindle:avgArray(spindleArr),
+        aef:avgArray(effArr),
+        pef:avgArray(pefArr),
+        stopMin:sumTime(stopTimeArr),
+        doffMin:sumTime(doffTimeArr)
+      }
+      )
+      })
 
     }
     // eslint-disable-next-line
-  },[machines])
-
-
+  },[filtered])
   return (
     <TableContainer component={Paper} className={classes.container}>
         <div className={classes.details}>
@@ -164,14 +198,17 @@ export default function CustomizedTables(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {machines.filter(row => {
-              let dep = department === "All" || (details[row.ip] && details[row.ip].department && details[row.ip].department === department);
-              let mod = model === "All" || (details[row.ip] && details[row.ip].model && details[row.ip].model === model);
-              let c =
-                count === "All" ||
-                (details[row.ip] && details[row.ip].count && details[row.ip].count.value && details[row.ip].count.value+details[row.ip].count.unit===count)
-                return dep && mod && c; 
-          }).map((row,i) => (
+          {
+          // machines.filter(row => {
+          //     let dep = department === "All" || (details[row.ip] && details[row.ip].department && details[row.ip].department === department);
+          //     let mod = model === "All" || (details[row.ip] && details[row.ip].model && details[row.ip].model === model);
+          //     let c =
+          //       count === "All" ||
+          //       (details[row.ip] && details[row.ip].count && details[row.ip].count.value && details[row.ip].count.value+details[row.ip].count.unit===count)
+          //       return dep && mod && c; 
+          // })
+          filtered
+          .map((row,i) => (
             <StyledTableRow key={i}>
               <StyledTableCell align="center" component="th" scope="row">
                 {details[row.ip]?details[row.ip].machine:""}
@@ -200,16 +237,16 @@ export default function CustomizedTables(props) {
               <StyledTableCell className={classes.summary} align="center">-</StyledTableCell>
               {parameters.includes("Model")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
               {parameters.includes("Count")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("Kg")?<StyledTableCell className={classes.summary} align="center">{kg}</StyledTableCell>:undefined}
-              {parameters.includes("m/min")?<StyledTableCell className={classes.summary} align="center">{mmin}</StyledTableCell>:undefined}
-              {parameters.includes("tpi")?<StyledTableCell className={classes.summary} align="center">{tpi}</StyledTableCell>:undefined}
-              {parameters.includes("spindle rpm")?<StyledTableCell className={classes.summary} align="center">{spindle}</StyledTableCell>:undefined}
-              {parameters.includes("Doffs")?<StyledTableCell className={classes.summary} align="center">{doff}</StyledTableCell>:undefined}
-              {parameters.includes("Doff min")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("Stops")?<StyledTableCell className={classes.summary} align="center">{stops}</StyledTableCell>:undefined}
-              {parameters.includes("Stop min")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
-              {parameters.includes("AEF %")?<StyledTableCell className={classes.summary} align="center">{eff}</StyledTableCell>:undefined}
-              {parameters.includes("PEF %")?<StyledTableCell className={classes.summary} align="center">{pef}</StyledTableCell>:undefined}
+              {parameters.includes("Kg")?<StyledTableCell className={classes.summary} align="center">{summary.kg?summary.kg:0}</StyledTableCell>:undefined}
+              {parameters.includes("m/min")?<StyledTableCell className={classes.summary} align="center">{summary.mmin?summary.mmin:0}</StyledTableCell>:undefined}
+              {parameters.includes("tpi")?<StyledTableCell className={classes.summary} align="center">{summary.tpi?summary.tpi:0}</StyledTableCell>:undefined}
+              {parameters.includes("spindle rpm")?<StyledTableCell className={classes.summary} align="center">{summary.spindle?summary.spindle:0}</StyledTableCell>:undefined}
+              {parameters.includes("Doffs")?<StyledTableCell className={classes.summary} align="center">{summary.doffs?summary.doffs:0}</StyledTableCell>:undefined}
+              {parameters.includes("Doff min")?<StyledTableCell className={classes.summary} align="center">{summary.doffMin?summary.doffMin:0}</StyledTableCell>:undefined}
+              {parameters.includes("Stops")?<StyledTableCell className={classes.summary} align="center">{summary.stops?summary.stops:0}</StyledTableCell>:undefined}
+              {parameters.includes("Stop min")?<StyledTableCell className={classes.summary} align="center">{summary.stopMin?summary.stopMin:0}</StyledTableCell>:undefined}
+              {parameters.includes("AEF %")?<StyledTableCell className={classes.summary} align="center">{summary.aef?summary.aef:0}</StyledTableCell>:undefined}
+              {parameters.includes("PEF %")?<StyledTableCell className={classes.summary} align="center">{summary.pef?summary.pef:0}</StyledTableCell>:undefined}
               {parameters.includes("Ukg")?<StyledTableCell className={classes.summary} align="center">-</StyledTableCell>:undefined}
           </StyledTableRow>
         </TableBody>

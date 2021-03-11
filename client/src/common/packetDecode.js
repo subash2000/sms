@@ -57,9 +57,9 @@ const doffMin = (arr, n, i) => {
 
     return (
       hr.toString().padStart(2, "0") +
-      " : " +
+      ":" +
       min.toString().padStart(2, "0") +
-      " : " +
+      ":" +
       sec.toString().padStart(2, "0")
     );
   }
