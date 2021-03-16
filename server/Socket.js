@@ -11,7 +11,6 @@ const Log = require("./models/LogModel");
 const dataRequestInterval = 2000;
 const connectionCheckInterval = 10000;
 
-
 //Socket Functions to handle induvidual machines
 const socketFunc = (socket, address, packet) => {
   let dataInterval;
@@ -28,16 +27,15 @@ const socketFunc = (socket, address, packet) => {
     console.log(currValues[address].connection);
     if (Date.now() - currValues[address].recieved > 10000) {
       currValues[address].socket.destroy();
-      if(dataInterval)
-        clearInterval(dataInterval)
+      if (dataInterval) clearInterval(dataInterval);
     }
   }, connectionCheckInterval);
   socket.write(Buffer.from(packet, "hex"), (err) => {
     if (err) {
       console.log("Error at sending settings packet => " + address + " " + err);
     } else {
-      console.log("settngs sent", packet)
-    };
+      console.log("settngs sent", packet);
+    }
   });
   socket.on("error", () => {
     console.log("Error occured =>", address);
@@ -62,55 +60,52 @@ const socketFunc = (socket, address, packet) => {
           }
         );
       }, dataRequestInterval);
-       
-     
     }
     if (mode == "23" && check_recieved_crc(d.toString("hex"))) {
+      currValues[address].data = d;
+      currValues[address].recieved = Date.now();
+      let shift = data.data[9];
+      let dateOnly = new Date().toDateString();
 
-        currValues[address].data = d;
-        currValues[address].recieved = Date.now();
-        let shift = data.data[9];
-        let dateOnly = new Date().toDateString();
-        Log.updateOne(
-          {
-            ip: address,
+      Log.updateOne(
+        {
+          ip: address,
+          date: dateOnly,
+          shift,
+        },
+        {
+          $set: {
             date: dateOnly,
+            data: data.data,
+            ip: address,
             shift,
           },
-          {
-            $set: {
-              date: dateOnly,
-              data: data.data,
+        },
+        {
+          upsert: true,
+        }
+      )
+        .then(() => {
+          Machine.updateOne(
+            {
               ip: address,
-              shift,
             },
-          },
-          {
-            upsert: true,
-          }
-        )
-          .then(() => {
-            Machine.updateOne(
-              {
-                ip: address,
+            {
+              $set: {
+                recieved: Date.now(),
+                data: data.data,
+                shift,
               },
-              {
-                $set: {
-                  recieved: Date.now(),
-                  data: data.data,
-                  shift,
-                },
-              }
-            )
-              .then(() => {
-                console.log("updated");
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => console.log(err));
-      
+            }
+          )
+            .then(() => {
+              console.log("updated");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => console.log(err));
     } else if (!check_recieved_crc(d.toString("hex"))) {
       console.log("CRC not matching");
     }
@@ -170,21 +165,19 @@ const restartAll = () => {
   });
 };
 
-const restart = (department,machine) => {
+const restart = (department, machine) => {
   Machine.findOne({
     department,
-    machine
-
+    machine,
   })
-  .then(res => {
-    if (res && res.ip && currValues[res.ip] && currValues[res.ip].socket) {
-      currValues[res.ip].socket.destroy();
-    }
-
-  })
-  .catch(err => {
-    console.log(err)
-  })
+    .then((res) => {
+      if (res && res.ip && currValues[res.ip] && currValues[res.ip].socket) {
+        currValues[res.ip].socket.destroy();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports = {

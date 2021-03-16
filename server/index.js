@@ -5,6 +5,7 @@ const cors = require("cors");
 const port = 5000;
 const { start } = require("./Socket");
 const mongoose = require("mongoose");
+const { job } = require("./common/schedule");
 
 mongoose
   .connect("mongodb://localhost:27017/spindleMonitoring", {
@@ -15,6 +16,7 @@ mongoose
   .then(() => {
     console.log("DB connected(mongoose)");
     start();
+    job();
   })
   .catch((err) => {
     console.log(err);
@@ -46,4 +48,3 @@ app.use("/api/report", require("./routes/reportRoute"));
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
