@@ -408,6 +408,24 @@ export default function EnhancedTable(props) {
                           {Decode.doffMin(row.data)}
                         </StyledTableCell>
                       ) : undefined}
+                      {parameters.includes("Power Failure") ? (
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
+                          {Decode.powerFailure(row.data)}
+                        </StyledTableCell>
+                      ) : undefined}
+                      {parameters.includes("Power Failure min") ? (
+                        <StyledTableCell
+                          className={
+                            classes[Decode.status(row.data, row.recieved)]
+                          }
+                        >
+                          {Decode.powerFailureMin(row.data)}
+                        </StyledTableCell>
+                      ) : undefined}
                       {parameters.includes("Ukg") ? (
                         <StyledTableCell
                           className={

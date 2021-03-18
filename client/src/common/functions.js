@@ -24,6 +24,8 @@ const parameters = [
   "Stop min",
   "Doffs",
   "Doff min",
+  "Power Failure",
+  "Power Failure min",
   "Ukg",
 ];
 

@@ -3,28 +3,28 @@ const findIndexOfStop = (data, doffIndex) => {
 };
 
 const findIndexOfPowerFailure = (data, doffIndex) => {
-  let stopIndex = findIndexOfStop(data,doffIndex)
+  let stopIndex = findIndexOfStop(data, doffIndex);
   return stopIndex + data[stopIndex] * 6 + 1;
 };
 
-const findActiveEnergyIndex = (data,doffIndex) => {
-  let energyIndex = findIndexOfPowerFailure(data,doffIndex)
-  return 30+(energyIndex + data[energyIndex] * 6 + 1);
-}
+const findActiveEnergyIndex = (data, doffIndex) => {
+  let energyIndex = findIndexOfPowerFailure(data, doffIndex);
+  return 30 + (energyIndex + data[energyIndex] * 6 + 1);
+};
 
 const calcTime = (arr, n, i) => {
   let diff = 0;
 
   for (let j = i; j < i + n * 6; j += 6) {
-    let hr1 = arr[i + 1] * 3600,
+    let hr1 = arr[j + 1] * 3600,
       hr2 = 0;
-    if (arr[i + 1] > arr[i + 4]) {
-      hr2 = (24 + arr[i + 4]) * 3600;
-    } else hr2 = arr[i + 4] * 3600;
-    let min1 = hr1 + arr[i + 2] * 60;
-    let min2 = hr2 + arr[i + 5] * 60;
-    let sec1 = hr1 + min1 + arr[i + 3];
-    let sec2 = hr1 + min2 + arr[i + 6];
+    if (arr[j + 1] > arr[j + 4]) {
+      hr2 = (24 + arr[j + 4]) * 3600;
+    } else hr2 = arr[j + 4] * 3600;
+    let min1 = hr1 + arr[j + 2] * 60;
+    let min2 = hr2 + arr[j + 5] * 60;
+    let sec1 = hr1 + min1 + arr[j + 3];
+    let sec2 = hr1 + min2 + arr[j + 6];
 
     diff = diff + (sec2 - sec1);
   }
@@ -127,7 +127,25 @@ export default {
 
     return "No Data Found";
   },
-
+  powerFailure: (packetData) => {
+    if (
+      packetData &&
+      packetData.length &&
+      packetData.length > 48 &&
+      packetData.length > findIndexOfPowerFailure(packetData, 48)
+    )
+      return packetData[findIndexOfPowerFailure(packetData, 48)];
+    return 0;
+  },
+  powerFailureMin: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findIndexOfPowerFailure(packetData, 48);
+      if (packetData.length > index) {
+        return doffMin(packetData, packetData[index], index);
+      } else return "No Data Found";
+    }
+    return "No Data Found";
+  },
   status: (packetData, date) => {
     if (!packetData || !packetData.length || !packetData.length > 12 || !date) {
       return "powerFailure";
@@ -137,11 +155,17 @@ export default {
     else if (packetData[13] === 1) return "stop";
     else return "doff";
   },
-  ukg:(packetData) => {
+  ukg: (packetData) => {
     if (packetData && packetData.length && packetData.length > 48) {
       let index = findActiveEnergyIndex(packetData, 48);
-      if (packetData.length > index+4) {
-       return( (256*256*256*packetData[index+3])+(256*256*packetData[index+2])+(256*packetData[index+1])+packetData[index])/100
+      if (packetData.length > index + 4) {
+        return (
+          (256 * 256 * 256 * packetData[index + 3] +
+            256 * 256 * packetData[index + 2] +
+            256 * packetData[index + 1] +
+            packetData[index]) /
+          100
+        );
       } else return "No Data Found";
     }
 
