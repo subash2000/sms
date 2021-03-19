@@ -10,12 +10,12 @@ const getShift = (cb) => {
         let hr = date.getHours();
         let min = date.getMinutes();
         if (
-          (mill.shift1Hr == hr && mill.shift1Min == min) ||
+          (mill.shift1Hr == hr && mill.shift1Min <= min) ||
           (mill.shift1Hr <= hr && mill.shift2Hr > hr)
         ) {
           cb(null, 1);
         } else if (
-          (mill.shift2Hr == hr && mill.shift2Min == min) ||
+          (mill.shift2Hr == hr && mill.shift2Min <= min) ||
           (mill.shift2Hr <= hr && mill.shift3Hr > hr)
         ) {
           cb(null, 2);

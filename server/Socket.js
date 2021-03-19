@@ -30,6 +30,7 @@ const socketFunc = (socket, address, packet) => {
       if (dataInterval) clearInterval(dataInterval);
     }
   }, connectionCheckInterval);
+  
   socket.write(Buffer.from(packet, "hex"), (err) => {
     if (err) {
       console.log("Error at sending settings packet => " + address + " " + err);
