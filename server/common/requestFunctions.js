@@ -36,7 +36,7 @@ const calcMin = (min, millMin) => {
 
 //data request protocol for the specified id of the module
 const dataRequestProtocol = (id) => {
-  return full_packet("c33c" + pad(id.toString(16), 2) + "23000604");
+  return full_packet("c33c" + pad(id.toString(16), 2) + "23000004");
 };
 
 const settingsPacket = (ip, cb) => {
