@@ -52,6 +52,7 @@ const socketFunc = (socket, address, packet) => {
       setTimeout(
         () => {
           dataRequestProtocol(currValues[address].id, (error, dataPacket) => {
+            console.log(dataPacket);
             if (!error) {
               socket.write(Buffer.from(dataPacket, "hex"), (err) => {
                 if (err) {
