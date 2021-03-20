@@ -49,6 +49,9 @@ const dataRequestProtocol = (id, cb) => {
             pad(settingsDate(res.shift1Hr, res.shift1Min), 2) +
             pad(date.getMonth() + 1, 2) +
             pad(date.getFullYear().toString().substr(-2), 2) +
+            pad(calcHr(date.getHours(), milldetails[0].shift1Hr), 2) +
+            pad(calcMin(date.getMinutes(), milldetails[0].shift1Min), 2) +
+            pad(date.getSeconds(), 2) +
             "04"
         )
       );
