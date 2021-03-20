@@ -114,7 +114,7 @@ const socketFunc = (socket, address, packet) => {
         })
         .catch((err) => console.log(err));
     } else if (!check_recieved_crc(d.toString("hex"))) {
-      console.log("CRC not matching");
+      console.log("CRC not matching ", d.toString("hex"));
     }
   });
   socket.on("end", () => {
