@@ -35,8 +35,27 @@ const calcMin = (min, millMin) => {
 };
 
 //data request protocol for the specified id of the module
-const dataRequestProtocol = (id) => {
-  return full_packet("c33c" + pad(id.toString(16), 2) + "23000004");
+const dataRequestProtocol = (id, cb) => {
+  Mill.findOne({})
+    .then((res) => {
+      let date = new Date();
+
+      cb(
+        null,
+        full_packet(
+          "c33c" +
+            pad(id.toString(16), 2) +
+            "230006" +
+            pad(settingsDate(res.shift1Hr, res.shift1Min), 2) +
+            pad(date.getMonth() + 1, 2) +
+            pad(date.getFullYear().toString().substr(-2), 2) +
+            "04"
+        )
+      );
+    })
+    .catch((err) => {
+      cb(err, null);
+    });
 };
 
 const settingsPacket = (ip, cb) => {

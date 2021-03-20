@@ -30,7 +30,7 @@ const socketFunc = (socket, address, packet) => {
       if (dataInterval) clearInterval(dataInterval);
     }
   }, connectionCheckInterval);
-  
+
   socket.write(Buffer.from(packet, "hex"), (err) => {
     if (err) {
       console.log("Error at sending settings packet => " + address + " " + err);
@@ -49,24 +49,30 @@ const socketFunc = (socket, address, packet) => {
       console.log("Settings set successfully =>" + address);
     }
     if (mode == "22" || mode == "23") {
-      setTimeout(() => {
-        socket.write(
-          Buffer.from(dataRequestProtocol(currValues[address].id), "hex"),
-          (err) => {
-            if (err) {
-              console.log(
-                "Error at sending data packet => " + address + " " + err
-              );
+      setTimeout(
+        () => {
+          dataRequestProtocol(currValues[address].id, (error, dataPacket) => {
+            if (!error) {
+              socket.write(Buffer.from(dataPacket, "hex"), (err) => {
+                if (err) {
+                  console.log(
+                    "Error at sending data packet => " + address + " " + err
+                  );
+                }
+              });
             }
-          }
-        );
-      }, dataRequestInterval);
+          });
+        },
+        mode === "22" ? 5000 : dataRequestInterval
+      );
     }
     if (mode == "23" && check_recieved_crc(d.toString("hex"))) {
       currValues[address].data = d;
       currValues[address].recieved = Date.now();
       let shift = data.data[9];
-      let dateOnly = new Date().toDateString();
+      let currDate = new Date();
+      currDate.setDate(data.data[6]);
+      let dateOnly = currDate.toDateString();
 
       Log.updateOne(
         {
@@ -121,38 +127,41 @@ const socketFunc = (socket, address, packet) => {
   });
 };
 
+const handleConnection = (socket) => {
+  let address;
+  if (net.isIPv6(socket.remoteAddress))
+    address = socket.remoteAddress.substr(7);
+  else address = socket.remoteAddress;
+  console.log("Connected to =>", address);
+  let id = address.substr(address.lastIndexOf(".") + 1);
+  currValues[address] = {
+    ...currValues[address],
+    ip: address,
+    id: id,
+  };
+
+  settingsPacket(address, (packet, err) => {
+    if (err) {
+      console.log("Error in settings  packet " + err.msg + " " + address);
+      socket.destroy();
+      return;
+    } else {
+      socketFunc(socket, address, packet);
+    }
+  });
+};
+
 //Start Server
 const start = () => {
   let server = net.createServer((socket) => {
-    let address;
-    if (net.isIPv6(socket.remoteAddress))
-      address = socket.remoteAddress.substr(7);
-    else address = socket.remoteAddress;
-    console.log("Connected to =>", address);
-    let id =
-      address.substr(address.lastIndexOf(".") + 1) == "253"
-        ? "1"
-        : address.substr(address.lastIndexOf(".") + 1);
-    currValues[address] = {
-      ...currValues[address],
-      ip: address,
-      id: id,
-    };
-
-    settingsPacket(address, (packet, err) => {
-      if (err) {
-        console.log("Error in settings  packet " + err.msg + " " + address);
-        socket.destroy();
-        return;
-      } else {
-        socketFunc(socket, address, packet);
-      }
-    });
+    handleConnection(socket);
   });
   server.listen(6000, () => console.log("Server started and listening"));
+
   server.on("error", () => {
     console.log("Error at server");
   });
+
   server.on("close", () => {
     console.log("Server Closed");
   });
