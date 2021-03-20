@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const Machines = require("../models/MachinesModel");
-const { restartAll,restart } = require("../Socket");
+const { restartAll, restart } = require("../Socket");
 const { shift } = require("../common/getShift");
 router.get("/all", (req, res) => {
   Machines.find({})
@@ -16,9 +16,9 @@ router.get("/all", (req, res) => {
               machine._doc.data &&
               machine._doc.data.length &&
               machine._doc.data.length > 9 &&
-              machine._doc.data[6] === date.getDate() &&
-              machine._doc.data[7] === date.getMonth() + 1 &&
-              machine._doc.data[8] === date.getFullYear() - 2000 &&
+              // machine._doc.data[6] === date.getDate() &&
+              // machine._doc.data[7] === date.getMonth() + 1 &&
+              // machine._doc.data[8] === date.getFullYear() - 2000 &&
               machine._doc.data[9] === currshift
             )
               return machine._doc;
@@ -61,7 +61,7 @@ router.post("/setcount", (req, res) => {
     }
   )
     .then((result) => {
-      restartAll()
+      restartAll();
       res.send({
         result,
       });
@@ -83,7 +83,7 @@ router.post("/single/update", (req, res) => {
     }
   )
     .then(() => {
-      restart(req.body.department,req.body.machine)
+      restart(req.body.department, req.body.machine);
       res.send({
         msg: "updated",
       });
@@ -106,7 +106,7 @@ router.post("/single/delete", (req, res) => {
           result,
         });
       } else {
-        restart(req.body.department,req.body.machine)
+        restart(req.body.department, req.body.machine);
         res.send({
           msg: "deleted",
         });
@@ -136,7 +136,7 @@ router.post("/single/insert", (req, res) => {
     }
   )
     .then(() => {
-      restart(req.body.department,req.body.machine)
+      restart(req.body.department, req.body.machine);
       res.send({
         msg: "inserted",
       });

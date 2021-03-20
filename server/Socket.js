@@ -43,6 +43,7 @@ const socketFunc = (socket, address, packet) => {
   });
   socket.on("data", (d) => {
     console.log("Recieved =>" + address);
+    console.log("Packet recieved : ", d.toJSON());
     let data = d.toJSON(),
       mode = data.data[3].toString(16);
     if (mode == "22") {
@@ -53,6 +54,7 @@ const socketFunc = (socket, address, packet) => {
         () => {
           dataRequestProtocol(currValues[address].id, (error, dataPacket) => {
             if (!error) {
+              console.log("Data packet Sent : ", dataPacket);
               socket.write(Buffer.from(dataPacket, "hex"), (err) => {
                 if (err) {
                   console.log(
