@@ -3,7 +3,6 @@ var router = express.Router();
 let currVal = require("../common/currVal");
 const Mill = require("../models/MillModel");
 const Machine = require("../models/MachinesModel");
-const Log = require("../models/LogModel");
 
 router.get("/", (req, res) => {
   Mill.findOne({})
@@ -50,15 +49,17 @@ router.get("/currshift", (req, res) => {
       let hr = date.getHours();
       let min = date.getMinutes();
       if (
-        (mill.shift1Hr == hr && mill.shift1Min == min) ||
-        (mill.shift1Hr <= hr && mill.shift2Hr > hr)
+        (mill.shift1Hr == hr && mill.shift1Min <= min) ||
+        (mill.shift1Hr < hr &&
+          (mill.shift2Hr > hr || (mill.shift2Hr == hr && mill.shift2Min > min)))
       ) {
         res.send({
           shift: 1,
         });
       } else if (
-        (mill.shift2Hr == hr && mill.shift2Min == min) ||
-        (mill.shift2Hr <= hr && mill.shift3Hr > hr)
+        (mill.shift2Hr == hr && mill.shift2Min <= min) ||
+        (mill.shift2Hr < hr &&
+          (mill.shift3Hr > hr || (mill.shift3Hr == hr && mill.shift3Min > min)))
       ) {
         res.send({
           shift: 2,
