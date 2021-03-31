@@ -14,7 +14,7 @@ const writeLog = (data) => {
   var h = today.getHours();
   var m = today.getMinutes();
   var s = today.getSeconds();
-  let write = "[" + h + ":" + m + ":" + s + "]\t\t" + data;
+  let write = "[" + h + ":" + m + ":" + s + "]\t\t" + data + "\n";
   fs.appendFileSync(
     "../log/" + weekday[new Date().getDay()] + ".txt",
     write,
