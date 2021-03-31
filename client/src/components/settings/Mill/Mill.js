@@ -29,6 +29,7 @@ export default function Mill(props) {
     axios
       .get(process.env.REACT_APP_BACKEND + "/api/settings/mill")
       .then((res) => {
+        setLoad(false);
         setInputs({
           ...res.data.result,
         });
@@ -38,7 +39,6 @@ export default function Mill(props) {
         setShift2Min(res.data.result.shift2Min.toString());
         setShift3Hr(res.data.result.shift3Hr.toString());
         setShift3Min(res.data.result.shift3Min.toString());
-        setLoad(false);
       })
       .catch((err) => {
         console.log(err);

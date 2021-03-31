@@ -24,7 +24,6 @@ export default function Live() {
   const [machines, setMachines] = React.useState([]);
   const [filtered, setFiltered] = React.useState([]);
   const [parameters, setParameters] = React.useState([...func.parameters]);
-  // const [headCells, setHeadCells] = React.useState([...func.parameters]);
   const [selected, setSelected] = React.useState({});
   const classes = useStyles();
   React.useState(() => {
@@ -40,52 +39,40 @@ export default function Live() {
     };
   }, []);
 
-
   const updateMachines = () => {
-    
     axios
-    .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
-    .then((res) => {
+      .get(process.env.REACT_APP_BACKEND + "/api/settings/machines/all")
+      .then((res) => {
         console.log(res.data);
-        if(res.data.machines.length)
-        {
+        if (res.data.machines.length) {
           setMachines([...res.data.machines]);
           setFiltered([...res.data.machines]);
-
-        }
-        else
-        {
+        } else {
           setNoMachines(<h2>No Machines Found</h2>);
-
         }
-    })
-    .catch((err) => {
-      if (err.response) {
-        console.log(err.response.data);
-        
-      }
-      setNoMachines(<h2>No Machines Found</h2>);
-    })
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data);
+        }
+        setNoMachines(<h2>No Machines Found</h2>);
+      });
     timeout = setTimeout(updateMachines, 2000);
-
-  }
+  };
 
   React.useEffect(() => {
     let isMounted = true;
-    if (isMounted)
-    {
+    if (isMounted) {
       setNoMachines(
         <div style={{ textAlign: "center" }}>
           <CircularProgress />
         </div>
       );
       updateMachines();
-        
     }
     return () => {
       isMounted = false;
-      if(timeout)
-        clearTimeout(timeout)
+      if (timeout) clearTimeout(timeout);
     };
     // eslint-disable-next-line
   }, []);
@@ -100,7 +87,6 @@ export default function Live() {
           setMachines={setFiltered}
           cache="dashboardOpt"
         />
-      
       </div>
       <TableContainer
         selected={selected}

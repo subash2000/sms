@@ -8,6 +8,7 @@ import { Paper } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
 import PrintIcon from "@material-ui/icons/Print";
 import Tooltip from "@material-ui/core/Tooltip";
+import Axios from "axios";
 
 const { getCurrShift } = func;
 const useStyles = makeStyles((theme) => ({
@@ -61,20 +62,43 @@ export default function BasicTable(props) {
     cacheParam,
   } = props;
   const [shift, setShift] = React.useState("");
+  const [shiftTime, setShiftTime] = React.useState("");
+  let timeout;
 
-  React.useEffect(() => {
+  const updateShift = () => {
     getCurrShift((err, res) => {
       if (err) setShift("Error Connecting to server");
       else setShift(res);
     });
-    let interval = setInterval(() => {
-      getCurrShift((err, res) => {
-        if (err) setShift("Error Connecting to server");
-        else setShift(res);
-      });
-    }, 5000);
-    return () => clearInterval(interval);
+    timeout = setTimeout(updateShift, 5000);
+  };
+
+  React.useEffect(() => {
+    updateShift();
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+    // eslint-disable-next-line
   }, []);
+
+  React.useEffect(() => {
+    if (shift === "1" || shift === "2" || shift === "3") {
+      Axios.post(
+        process.env.REACT_APP_BACKEND + "/api/settings/mill/shiftdiff",
+        {
+          shift,
+        }
+      )
+        .then((res) => {
+          setShiftTime(res.data.start + "-" + res.data.end);
+        })
+        .catch((err) => {
+          setShiftTime("");
+        });
+    } else {
+      setShiftTime("");
+    }
+  }, [shift]);
 
   // console.log(result);
   const printPdf = () => {
@@ -85,7 +109,10 @@ export default function BasicTable(props) {
     <Paper elevation={3} style={{ padding: "1rem" }}>
       <TableContainer>
         <div className={classes.toolbar}>
-          <h3 className={classes.shift}>Shift No : {shift}</h3>
+          <h3 className={classes.shift}>
+            Shift No : {shift}
+            {" (" + shiftTime + ")"}
+          </h3>
           <div className={classes.statusContainer}>
             <div className={classes.status}>
               <span

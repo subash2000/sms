@@ -260,4 +260,52 @@ router.get("/", (req, res) => {
     });
 });
 
+router.post("/shiftdiff", (req, res) => {
+  Mill.findOne({})
+    .then((mill) => {
+      if (!mill || !req.body.shift) {
+        res.status(400).send({ msg: "No mill data" });
+      } else {
+        let shift = parseInt(req.body.shift);
+        if (shift === 1) {
+          res.send({
+            start:
+              mill.shift1Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift1Min.toString().padStart(2, 0),
+            end:
+              mill.shift2Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift2Min.toString().padStart(2, 0),
+          });
+        } else if (shift === 2) {
+          res.send({
+            start:
+              mill.shift2Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift2Min.toString().padStart(2, 0),
+            end:
+              mill.shift3Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift3Min.toString().padStart(2, 0),
+          });
+        } else {
+          res.send({
+            start:
+              mill.shift3Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift3Min.toString().padStart(2, 0),
+            end:
+              mill.shift1Hr.toString().padStart(2, 0) +
+              ":" +
+              mill.shift1Min.toString().padStart(2, 0),
+          });
+        }
+      }
+    })
+    .catch((err) => {
+      res.status(400).send({ err });
+    });
+});
+
 module.exports = router;
