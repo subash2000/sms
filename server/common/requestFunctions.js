@@ -135,4 +135,4 @@ const settingsPacket = (ip, cb) => {
   }
 };
 
-module.exports = { dataRequestProtocol, settingsPacket };
+module.exports = { dataRequestProtocol, settingsPacket, settingsDate };

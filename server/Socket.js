@@ -169,6 +169,9 @@ const handleConnection = (socket) => {
 
 //Start Server
 const start = () => {
+  // settingsPacket("192.168.43.2", (p, e) => {
+  //   console.log(p);
+  // });
   let server = net.createServer((socket) => {
     handleConnection(socket);
   });

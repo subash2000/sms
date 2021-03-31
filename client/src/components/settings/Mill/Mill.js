@@ -48,16 +48,16 @@ export default function Mill(props) {
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setAlert(undefined);
     setSubmitProgress(true);
     axios
       .post(process.env.REACT_APP_BACKEND + "/api/settings/mill", {
         ...inputs,
-        shift1Hr,
+        shift1Hr: shift1Hr === "0" ? 24 : shift1Hr,
         shift1Min,
-        shift2Hr,
+        shift2Hr: shift2Hr === "0" ? 24 : shift2Hr,
         shift2Min,
-        shift3Hr,
+        shift3Hr: shift3Hr === "0" ? 24 : shift3Hr,
         shift3Min,
       })
       .then((res) => {

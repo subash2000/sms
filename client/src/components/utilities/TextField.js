@@ -92,6 +92,7 @@ export default function FormText(props) {
           required={props.required ? props.required : false}
           disabled={props.disabled ? props.disabled : false}
           helperText="HH(hours)"
+          inputProps={{ min: 0, max: 23 }}
         />
         <div className={classes.gap}></div>
         <p>:</p>
@@ -106,6 +107,7 @@ export default function FormText(props) {
           required={props.required ? props.required : false}
           disabled={props.disabled ? props.disabled : false}
           helperText="MM(Minutes)"
+          inputProps={{ min: 0, max: 59 }}
         />
       </div>
     );

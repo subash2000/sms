@@ -12,21 +12,25 @@ router.get("/all", (req, res) => {
         let filtered = data.map((machine) => {
           if (!machine.data) return machine._doc;
           else {
+            console.log(currshift, machine._doc.data[9]);
             if (
               machine._doc.data &&
               machine._doc.data.length &&
               machine._doc.data.length > 9 &&
-              // machine._doc.data[6] === date.getDate() &&
+              // (machine._doc.data[6] === date.getDate() ||
+              //   (machine._doc.data[6] === date.getDate() - 1 &&
+              //     currshift === 3)) &&
               // machine._doc.data[7] === date.getMonth() + 1 &&
               // machine._doc.data[8] === date.getFullYear() - 2000 &&
               machine._doc.data[9] === currshift
-            )
+            ) {
               return machine._doc;
-            else
+            } else {
               return {
                 ...machine._doc,
                 data: undefined,
               };
+            }
           }
         });
         Promise.all([filtered]).then(() => {
@@ -35,9 +39,6 @@ router.get("/all", (req, res) => {
           });
         });
       });
-      // res.send({
-      //   machines: data,
-      // });
     })
     .catch((err) => {
       console.log(err);
