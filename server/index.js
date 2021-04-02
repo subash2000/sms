@@ -30,8 +30,7 @@ app.use(
     extended: false,
   })
 );
-//app.use("/api/settings", require("./routes/settingsRoute"));
-//app.use("/api/settings", require("./routes/countSettings.js"));
+
 app.get("/", (req, res) => {
   res.send({
     msg: "pong",

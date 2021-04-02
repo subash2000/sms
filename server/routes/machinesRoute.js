@@ -12,7 +12,6 @@ router.get("/all", (req, res) => {
         let filtered = data.map((machine) => {
           if (!machine.data) return machine._doc;
           else {
-            console.log(currshift, machine._doc.data[9]);
             if (
               machine._doc.data &&
               machine._doc.data.length &&

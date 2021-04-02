@@ -9,19 +9,16 @@ weekday[4] = "Thursday";
 weekday[5] = "Friday";
 weekday[6] = "Saturday";
 
-const writeLog = (data) => {
+const writeLog = (data, ip) => {
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
   var s = today.getSeconds();
-  let write = "[" + h + ":" + m + ":" + s + "]\t\t" + data + "\n";
-  fs.appendFileSync(
-    "../log/" + weekday[new Date().getDay()] + ".txt",
-    write,
-    (err) => {
-      if (err) console.log(err);
-    }
-  );
+  let write = `[${h}:${m}:${s}]\t\t${data}\n`;
+  let path = `../log/${weekday[new Date().getDay()]}/${ip}.txt`;
+  fs.appendFileSync(path, write, (err) => {
+    if (err) console.log(err);
+  });
 };
 
 module.exports = {

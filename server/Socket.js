@@ -35,10 +35,10 @@ const socketFunc = (socket, address, packet) => {
   socket.write(Buffer.from(packet, "hex"), (err) => {
     if (err) {
       console.log("Error at sending settings packet => " + address + " " + err);
-      log("Error at sending settings packet => " + address + " " + err);
+      log("Error at sending settings packet", address);
     } else {
       console.log("settngs sent", packet);
-      log("settngs sent", packet);
+      log("Settngs sent \t" + JSON.stringify(packet.toJSON().data));
     }
   });
   socket.on("error", () => {
@@ -46,30 +46,36 @@ const socketFunc = (socket, address, packet) => {
   });
   socket.on("data", (d) => {
     console.log("Recieved =>" + address);
-    log(
-      `Packet recieved from [${address}]: => ${JSON.stringify(d.toJSON().data)}`
-    );
+    log(`Packet recieved \t${JSON.stringify(d.toJSON().data)}`, address);
+
     console.log("Packet recieved : ", d.toJSON());
 
     let data = d.toJSON(),
       mode = data.data[3].toString(16);
     if (mode == "22") {
       console.log("Settings set successfully =>" + address);
-      log(`Settings set for [${address}]`);
+      log(`Settings set \t `, address);
     }
     if (mode == "22" || mode == "23") {
       setTimeout(
         () => {
           dataRequestProtocol(currValues[address].id, (error, dataPacket) => {
             if (!error) {
-              console.log("Data packet Sent : ", dataPacket);
-              log("Data packet Sent : ", dataPacket);
+              console.log(
+                "Data packet Sent : ",
+                JSON.stringify(dataPacket.toJSON().data)
+              );
+              log(
+                "Data Request packet sent \t" +
+                  JSON.stringify(dataPacket.toJSON().data),
+                address
+              );
               socket.write(Buffer.from(dataPacket, "hex"), (err) => {
                 if (err) {
                   console.log(
                     "Error at sending data packet => " + address + " " + err
                   );
-                  log(`Error Sending  data packet for [${address}]`);
+                  log(`Error Sending  data packet`, address);
                 }
               });
             }
@@ -119,7 +125,7 @@ const socketFunc = (socket, address, packet) => {
           )
             .then(() => {
               console.log("updated");
-              log(`DB updated [${address}]`);
+              log(`DB updated`, address);
             })
             .catch((err) => {
               console.log(err);
@@ -128,7 +134,7 @@ const socketFunc = (socket, address, packet) => {
         .catch((err) => console.log(err));
     } else if (!check_recieved_crc(d.toString("hex"))) {
       console.log("CRC not matching ", d.toString("hex"));
-      log("CRC not matching " + d.toString("hex"));
+      log("CRC not matching " + JSON.stringify(d.toJSON().data), address);
     }
   });
   socket.on("end", () => {
@@ -147,7 +153,7 @@ const handleConnection = (socket) => {
     address = socket.remoteAddress.substr(7);
   else address = socket.remoteAddress;
   console.log("Connected to =>", address);
-  log("Connected To " + address);
+  log("Module Connected", address);
   let id = address.substr(address.lastIndexOf(".") + 1);
   currValues[address] = {
     ...currValues[address],
@@ -158,7 +164,7 @@ const handleConnection = (socket) => {
   settingsPacket(address, (packet, err) => {
     if (err) {
       console.log("Error in settings  packet " + err.msg + " " + address);
-      log("Error in settings  packet " + err.msg + " " + address);
+      log("Error in settings  packet " + err.msg, address);
       socket.destroy();
       return;
     } else {
@@ -169,14 +175,10 @@ const handleConnection = (socket) => {
 
 //Start Server
 const start = () => {
-  // settingsPacket("192.168.43.2", (p, e) => {
-  //   console.log(p);
-  // });
   let server = net.createServer((socket) => {
     handleConnection(socket);
   });
   server.listen(6000, () => console.log("Server started and listening"));
-  log("Server Created Waiting for connections");
 
   server.on("error", () => {
     console.log("Error at server");
@@ -188,7 +190,6 @@ const start = () => {
 };
 
 const restartAll = () => {
-  log("Restarting machines ");
   Object.keys(currValues).map((ip) => {
     if (currValues[ip] && currValues[ip].socket) {
       currValues[ip].socket.destroy();
@@ -197,7 +198,6 @@ const restartAll = () => {
 };
 
 const restart = (department, machine) => {
-  log("Restarting machines ");
   Machine.findOne({
     department,
     machine,
