@@ -22,8 +22,10 @@ const useStyles = makeStyles((theme) => ({
   stop: {},
   toolbar: {
     display: "flex",
-
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
   toolBarContent: {},
   tableCell: {},
@@ -31,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     gap: "2rem",
+    flexWrap: "wrap",
+    [theme.breakpoints.down("sm")]: {
+      // justifyContent: "center",
+      gap: "2px",
+    },
   },
   status: {
     display: "flex",

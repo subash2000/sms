@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    [theme.breakpoints.down("sm")]: {
+      background: theme.palette.primary.dark,
+    },
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -47,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      color: theme.palette.secondary.main,
+    },
   },
   hide: {
     display: "none",
@@ -77,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
-
   },
   contentShift: {
     transition: theme.transitions.create("margin", {

@@ -5,9 +5,12 @@ import func from "../../common/functions";
 const { getCurrShift } = func;
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: "100%",
+    // width: "100%",
     marginTop: "1rem",
     display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   overall: {
     width: "100%",

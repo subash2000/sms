@@ -81,13 +81,12 @@ export default function Live() {
     <div>
       <Divider />
       <ToolBar machines={filtered} />
-      <div>
-        <FilterOPt
-          machines={machines}
-          setMachines={setFiltered}
-          cache="dashboardOpt"
-        />
-      </div>
+
+      <FilterOPt
+        machines={machines}
+        setMachines={setFiltered}
+        cache="dashboardOpt"
+      />
       <TableContainer
         selected={selected}
         parameters={parameters}

@@ -15,15 +15,28 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "flex-start",
+      width: "90vw",
+      display: "block",
+    },
   },
   options: {
     width: "90%",
     display: "flex",
     justifyContent: "space-around",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      width: "auto",
+      justifyContent: "flex-start",
+    },
   },
 
   formControl: {
     minWidth: "150px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "5px",
+    },
   },
 }));
 export default function Filter(props) {

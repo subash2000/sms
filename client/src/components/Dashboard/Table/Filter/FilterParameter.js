@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     justifyContent: "space-between",
     minWidth: "400px",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
   content: {
     minWidth: "180px",

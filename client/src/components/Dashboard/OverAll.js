@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     gap: "2rem",
     padding: "1rem",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
   content: {
     background: "#8db596",

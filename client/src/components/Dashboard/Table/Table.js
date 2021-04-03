@@ -109,6 +109,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     // width: "100%",
     maxWidth: "80vw",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "90vw",
+    },
   },
   paper: {
     width: "100%",
