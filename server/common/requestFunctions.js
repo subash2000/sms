@@ -14,6 +14,19 @@ const settingsDate = (shift1Hr, shift1Min) => {
   return date.getDate();
 };
 
+const calcTimeDiff = (shift1Hr, shift1Min, shift2Hr, shift2Min) => {
+  let min1 = 0,
+    min2 = 0;
+  if (shift1Hr > shift2Hr) shift2Hr += 24;
+  min1 += shift1Hr * 60 + shift1Min;
+  min2 += shift2Hr * 60 + shift2Min;
+  let diff = min2 - min1;
+  return {
+    hr: Math.floor(diff / 60),
+    min: diff % 60,
+  };
+};
+
 const pad = (num, size) => {
   if (num == null || num == undefined) {
     num = 0;
@@ -96,10 +109,42 @@ const settingsPacket = (ip, cb) => {
               pad(date.getSeconds(), 2) +
               pad("00", 2) +
               pad("00", 2) +
-              pad(milldetails[0].shift2Hr - milldetails[0].shift1Hr, 2) +
-              pad(milldetails[0].shift2Min - milldetails[0].shift1Min, 2) +
-              pad(milldetails[0].shift3Hr - milldetails[0].shift1Hr, 2) +
-              pad(milldetails[0].shift3Min - milldetails[0].shift1Min, 2) +
+              pad(
+                calcTimeDiff(
+                  milldetails[0].shift1Hr,
+                  milldetails[0].shift1Min,
+                  milldetails[0].shift2Hr,
+                  milldetails[0].shift2Min
+                ).hr,
+                2
+              ) +
+              pad(
+                calcTimeDiff(
+                  milldetails[0].shift1Hr,
+                  milldetails[0].shift1Min,
+                  milldetails[0].shift2Hr,
+                  milldetails[0].shift2Min
+                ).min,
+                2
+              ) +
+              pad(
+                calcTimeDiff(
+                  milldetails[0].shift2Hr,
+                  milldetails[0].shift2Min,
+                  milldetails[0].shift3Hr,
+                  milldetails[0].shift3Min
+                ).hr,
+                2
+              ) +
+              pad(
+                calcTimeDiff(
+                  milldetails[0].shift2Hr,
+                  milldetails[0].shift2Min,
+                  milldetails[0].shift3Hr,
+                  milldetails[0].shift3Min
+                ).hr,
+                2
+              ) +
               pad(milldetails[1].spindles, 4) +
               pad(milldetails[1].deliveryRollerDia, 2) +
               pad(milldetails[1].middleRollerDia, 2) +

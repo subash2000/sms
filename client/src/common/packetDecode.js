@@ -9,7 +9,7 @@ const findIndexOfPowerFailure = (data, doffIndex) => {
 
 const findActiveEnergyIndex = (data, doffIndex) => {
   let energyIndex = findIndexOfPowerFailure(data, doffIndex);
-  return 30 + (energyIndex + data[energyIndex] * 6 + 1);
+  return 32 + (energyIndex + data[energyIndex] * 6);
 };
 
 const calcTime = (arr, n, i) => {
@@ -158,12 +158,13 @@ export default {
   ukg: (packetData) => {
     if (packetData && packetData.length && packetData.length > 48) {
       let index = findActiveEnergyIndex(packetData, 48);
+      console.log(index);
       if (packetData.length > index + 4) {
         return (
-          (256 * 256 * 256 * packetData[index + 3] +
-            256 * 256 * packetData[index + 2] +
-            256 * packetData[index + 1] +
-            packetData[index]) /
+          (packetData[index + 3] +
+            256 * packetData[index + 2] +
+            256 * 256 * packetData[index + 1] +
+            256 * 256 * 256 * packetData[index]) /
           100
         );
       } else return "No Data Found";
