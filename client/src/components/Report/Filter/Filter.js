@@ -14,19 +14,32 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      margin: "1rem 0",
+      padding: "1rem 0",
+    },
   },
   options: {
     width: "90%",
     display: "flex",
     justifyContent: "space-around",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      width: "auto",
+      justifyContent: "flex-start",
+    },
   },
 
   formControl: {
     minWidth: "150px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "5px",
+    },
   },
 }));
 export default function Filter(props) {
-  const {department,setDepartment,model,setModel,count,setCount} = props
+  const { department, setDepartment, model, setModel, count, setCount } = props;
   const [departments, setDepartments] = React.useState(["All"]);
   const [counts, setCounts] = React.useState([{ value: "All", unit: "" }]);
   const [models, setModels] = React.useState(["All"]);
@@ -69,7 +82,10 @@ export default function Filter(props) {
   }, []);
 
   React.useEffect(() => {
-    localStorage.setItem("reportFilterOpt", JSON.stringify({ model, count, department }));
+    localStorage.setItem(
+      "reportFilterOpt",
+      JSON.stringify({ model, count, department })
+    );
     // eslint-disable-next-line
   }, [model, department, count]);
 

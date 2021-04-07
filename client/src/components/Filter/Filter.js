@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     [theme.breakpoints.down("sm")]: {
       justifyContent: "flex-start",
-      width: "90vw",
+      maxWidth: "90vw",
       display: "block",
     },
   },

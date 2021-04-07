@@ -3,7 +3,7 @@ var router = express.Router();
 let currVal = require("../common/currVal");
 const Mill = require("../models/MillModel");
 const Machine = require("../models/MachinesModel");
-
+const { shift, getShiftWithDate } = require("../common/getShift");
 router.get("/", (req, res) => {
   Mill.findOne({})
     .then((result) => {
@@ -39,36 +39,30 @@ router.get("/", (req, res) => {
 });
 
 router.get("/currshift", (req, res) => {
-  Mill.findOne({}).then((mill) => {
-    if (!mill) {
+  shift((err, currShift) => {
+    if (err) {
       res.status(400).send({
-        msg: "Mill Details not found",
+        msg: "No Mill data",
       });
     } else {
-      let date = new Date();
-      let hr = date.getHours();
-      let min = date.getMinutes();
-      if (
-        (mill.shift1Hr == hr && mill.shift1Min <= min) ||
-        (mill.shift1Hr < hr &&
-          (mill.shift2Hr > hr || (mill.shift2Hr == hr && mill.shift2Min > min)))
-      ) {
-        res.send({
-          shift: 1,
-        });
-      } else if (
-        (mill.shift2Hr == hr && mill.shift2Min <= min) ||
-        (mill.shift2Hr < hr &&
-          (mill.shift3Hr > hr || (mill.shift3Hr == hr && mill.shift3Min > min)))
-      ) {
-        res.send({
-          shift: 2,
-        });
-      } else {
-        res.send({
-          shift: 3,
-        });
-      }
+      res.send({
+        shift: currShift,
+      });
+    }
+  });
+});
+
+router.get("/currshiftdate", (req, res) => {
+  getShiftWithDate((err, result) => {
+    if (err) {
+      res.status(400).send({
+        msg: err.msg,
+      });
+    } else {
+      res.send({
+        shift: result.shift,
+        date: result.date,
+      });
     }
   });
 });

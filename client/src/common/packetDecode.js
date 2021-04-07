@@ -158,7 +158,6 @@ export default {
   ukg: (packetData) => {
     if (packetData && packetData.length && packetData.length > 48) {
       let index = findActiveEnergyIndex(packetData, 48);
-      console.log(index);
       if (packetData.length > index + 4) {
         return (
           (packetData[index + 3] +

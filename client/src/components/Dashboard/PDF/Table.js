@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,398 +6,379 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import Decode from "../../../common/packetDecode";
+import moment from "moment";
+import axios from "axios";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    border: "1px solid #dcdede",
-    padding: "10px",
-
-    color: "black",
-    fontSize: "15px",
-    fontWeight: "550",
-    //background: "black",
+    backgroundColor: theme.palette.action.hover,
+    color: theme.palette.common.black,
+    fontWeight: "900",
   },
   body: {
     fontSize: 14,
-    border: "1px solid #dcdede",
   },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    whiteSpace: "break-spaces",
-    wordWrap: "break-word",
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-    "&:nth-of-type(even)": {},
-  },
-}))(TableRow);
+const StyledTableRow = withStyles((theme) => ({}))(TableRow);
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-function EnhancedTableHead(props) {
-  const { headCells } = props;
-
-  return (
-    <TableHead>
-      <StyledTableRow>
-        {headCells.map((headCell) => (
-          <StyledTableCell
-            key={headCell.id}
-            align="center"
-            padding={headCell.disablePadding ? "none" : "default"}
-          >
-            <TableSortLabel>{headCell.label}</TableSortLabel>
-          </StyledTableCell>
-        ))}
-      </StyledTableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+const sumTime = (timeArr) => {
+  var duration = timeArr
+    .map((t) => moment.duration(t))
+    .reduce((sum, current) => sum.add(current), moment.duration());
+  let hr = duration._data.hours.toString().padStart(2, 0);
+  let min = duration._data.minutes.toString().padStart(2, 0);
+  let sec = duration._data.seconds.toString().padStart(2, 0);
+  return hr + ":" + min + ":" + sec;
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    // width: "100%",
-    // maxWidth: "90vw",
-    // marginTop: "5rem",
-  },
-  paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
-  },
+const useStyles = makeStyles({
   table: {
-    //maxWidth: "500px",
-    //borderCollapse: "collapse",
+    minWidth: 700,
   },
-  visuallyHidden: {
-    border: 0,
-    clip: "rect(0 0 0 0)",
-    height: 1,
-    margin: -1,
-    overflow: "hidden",
-    padding: 0,
-    position: "absolute",
-    top: 20,
-    width: 1,
-    color: "white",
-    "&:hover": {
-      color: "white",
-    },
+  details: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "5px",
   },
-  tbody: {
-    // overflowY: "auto",
-    // overflowX: "auto",
+  summary: {
+    fontWeight: "900",
   },
-  tableContainer: {
-    // maxHeight: "70vh",
-    //maxWidth: "650",
-    //border: "1px solid " + theme.palette.primary.main,
+  container: {
+    margin: "50px 0",
   },
+});
 
-  running: {
-    // border: "2px solid green",
-    color: "green",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
-  doff: {
-    // border: "5px solid blue",
-    color: "blue",
-    fontSize: "15px",
-    fontWeight: "550",
-  },
-  powerFailure: {
-    // border: "2px solid red",
-    color: "brown",
-    //fontWeight: "700",
-    fontSize: "15px",
-    fontWeight: "550",
-    whiteSpace: "nowrap",
-  },
-  comm: {
-    // border: "2px solid orange",
-    color: "brown",
-    fontWeight: "550",
-    fontSize: "15px",
-    whiteSpace: "nowrap",
-  },
-  stop: {
-    // border: "2px solid red",
-    color: "red",
-    //fontWeight: "700",
-    fontSize: "15px",
-    fontWeight: "550",
-    whiteSpace: "nowrap",
-  },
-}));
-
-export default function EnhancedTable(props) {
+export default function CustomizedTables(props) {
   const classes = useStyles();
-  const { parameters, result } = props;
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const headCells = [
-    {
-      id: "machine",
-      numeric: true,
-      disablePadding: true,
-      label: "Machine",
-    },
-    {
-      id: "department",
-      numeric: false,
-      disablePadding: true,
-      label: "Department",
-    },
-    ...parameters.map((item) => ({
-      id: item,
-      numeric: false,
-      disablePadding: true,
-      label: item.charAt(0).toUpperCase() + item.slice(1),
-    })),
-  ];
+  const { count, department, model, machines, parameters } = props;
+  const [summary, setSummary] = React.useState({});
+  const [filtered, setFiltered] = React.useState([]);
+  const [shift, setShift] = React.useState("");
+  const [date, setDate] = React.useState(new Date());
 
-  const rows = [...result];
-  // console.log(result);
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  const sumArray = (arr) => {
+    let sum = arr.reduce((acc, val) => acc + val);
+    return sum;
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
+  const avgArray = (arr) => {
+    let sum = arr.reduce((acc, val) => acc + val);
+    let avg = sum / arr.length;
+
+    return (Math.round(avg * 100) / 100).toFixed(2);
+  };
+  React.useEffect(() => {
+    setFiltered([
+      ...machines.filter((row) => {
+        let dep =
+          department === "All" ||
+          (row.ip && row.ip.department && row.ip.department === department);
+        let mod =
+          model === "All" || (row.ip && row.ip.model && row.ip.model === model);
+        let c =
+          count === "All" ||
+          (row.ip &&
+            row.ip.count &&
+            row.ip.count.value &&
+            row.ip.count.value + row.ip.count.unit === count);
+        return dep && mod && c;
+      }),
+    ]);
+    // eslint-disable-next-line
+  }, [count, department, model, machines]);
+
+  React.useEffect(() => {
+    setSummary({});
+    if (filtered && filtered.length) {
+      let kgArr = filtered.map((item) => {
+        return Decode.kg(item.data);
+      });
+      let doffArr = filtered.map((item) => {
+        return Decode.doffs(item.data);
+      });
+      let effArr = filtered.map((item) => {
+        return Decode.aef(item.data);
+      });
+      let mMinArr = filtered.map((item) => {
+        return Decode.mMin(item.data);
+      });
+      let tpiArr = filtered.map((item) => {
+        return Decode.tpi(item.data);
+      });
+      let spindleArr = filtered.map((item) => {
+        return Decode.spindleRpm(item.data);
+      });
+      let stopArr = filtered.map((item) => {
+        return Decode.stops(item.data);
+      });
+      let pefArr = filtered.map((item) => {
+        return Decode.pef(item.data);
+      });
+      let doffTimeArr = filtered
+        .map((item) => {
+          return Decode.doffMin(item.data);
+        })
+        .filter((item) => item !== "No Data Found");
+
+      let stopTimeArr = filtered
+        .map((item) => {
+          return Decode.stoppMin(item.data);
+        })
+        .filter((item) => item !== "No Data Found");
+
+      Promise.all([
+        kgArr,
+        mMinArr,
+        tpiArr,
+        doffArr,
+        stopArr,
+        spindleArr,
+        effArr,
+        pefArr,
+        stopTimeArr,
+        doffTimeArr,
+      ]).then(() => {
+        setSummary({
+          ...summary,
+          kg: sumArray(kgArr),
+          mmin: avgArray(mMinArr),
+          tpi: avgArray(tpiArr),
+          doffs: sumArray(doffArr),
+          stops: sumArray(stopArr),
+          spindle: avgArray(spindleArr),
+          aef: avgArray(effArr),
+          pef: avgArray(pefArr),
+          stopMin: sumTime(stopTimeArr),
+          doffMin: sumTime(doffTimeArr),
+        });
+      });
     }
-    setSelected([]);
-  };
+    // eslint-disable-next-line
+  }, [filtered]);
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  React.useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_BACKEND + "/api/live/currshiftdate")
+      .then((res) => {
+        setDate(new Date(Date.parse(res.data.date)));
+        setShift(res.data.shift);
+      });
+  });
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} elevation={0}>
-        <TableContainer className={classes.tableContainer}>
-          <Table
-            stickyHeader
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size="medium"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headCells={headCells}
-            />
-            <TableBody className={classes.tbody}>
-              {stableSort(rows, getComparator(order, orderBy)).map(
-                (row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    <TableContainer component={Paper} className={classes.container}>
+      <div className={classes.details}>
+        <h3>Date : {date.toDateString()}</h3>
+        <h3>Shift : {shift}</h3>
+      </div>
 
-                  return (
-                    <StyledTableRow
-                      //hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row._id}
-                      selected={isItemSelected}
-                      className={classes[Decode.status(row.data, row.recieved)]}
-                    >
-                      <StyledTableCell
-                        className={
-                          classes[Decode.status(row.data, row.recieved)]
-                        }
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align="center"
-                      >
-                        <p>{row.machine}</p>
-                      </StyledTableCell>
-                      <StyledTableCell
-                        className={
-                          classes[Decode.status(row.data, row.recieved)]
-                        }
-                      >
-                        {row.department}
-                      </StyledTableCell>
-                      {parameters.includes("Model") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {row.model}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Count") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {row.count && row.count.value && row.count.unit
-                            ? row.count.value + " " + row.count.unit
-                            : "Not assigned"}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Kg") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.kg(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("m/min") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.mMin(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("tpi") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.tpi(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("spindle rpm") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.spindleRpm(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("AEF %") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.aef(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("PEF %") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.pef(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Stops") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.stops(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Stop min") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.stoppMin(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Doffs") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.doffs(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Doff min") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {Decode.doffMin(row.data)}
-                        </StyledTableCell>
-                      ) : undefined}
-                      {parameters.includes("Ukg") ? (
-                        <StyledTableCell
-                          className={
-                            classes[Decode.status(row.data, row.recieved)]
-                          }
-                        >
-                          {"Dont know"}
-                        </StyledTableCell>
-                      ) : undefined}
-                    </StyledTableRow>
-                  );
-                }
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </div>
+      <Table className={classes.table} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Machine</StyledTableCell>
+            <StyledTableCell align="center">Department</StyledTableCell>
+            {parameters.includes("Model") ? (
+              <StyledTableCell align="center">Model</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Count") ? (
+              <StyledTableCell align="center">Count</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Kg") ? (
+              <StyledTableCell align="center">Kg</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("m/min") ? (
+              <StyledTableCell align="center">m/min</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("tpi") ? (
+              <StyledTableCell align="center">TPI</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("spindle rpm") ? (
+              <StyledTableCell align="center">Spindle RPM</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Doffs") ? (
+              <StyledTableCell align="center">Doffs</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Doff min") ? (
+              <StyledTableCell align="center">Doff min</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Stops") ? (
+              <StyledTableCell align="center">Stops</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Stop min") ? (
+              <StyledTableCell align="center">Stop min</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("AEF %") ? (
+              <StyledTableCell align="center">AEF%</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("PEF %") ? (
+              <StyledTableCell align="center">PEF%</StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Ukg") ? (
+              <StyledTableCell align="center">UKG</StyledTableCell>
+            ) : undefined}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {filtered.map((row, i) => (
+            <StyledTableRow key={i}>
+              <StyledTableCell align="center" component="th" scope="row">
+                {row.machine ? row.machine : ""}
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                {row.department ? row.department : ""}
+              </StyledTableCell>
+              {parameters.includes("Model") ? (
+                <StyledTableCell align="center">
+                  {row.model ? row.model : ""}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Count") ? (
+                <StyledTableCell align="center">
+                  {row.count && row.count.value
+                    ? row.count.value + row.count.unit
+                    : "Not Assigned"}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Kg") ? (
+                <StyledTableCell align="center">
+                  {Decode.kg(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("m/min") ? (
+                <StyledTableCell align="center">
+                  {Decode.mMin(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("tpi") ? (
+                <StyledTableCell align="center">
+                  {Decode.tpi(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("spindle rpm") ? (
+                <StyledTableCell align="center">
+                  {Decode.spindleRpm(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Doffs") ? (
+                <StyledTableCell align="center">
+                  {Decode.doffs(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Doff min") ? (
+                <StyledTableCell align="center">
+                  {Decode.doffMin(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Stops") ? (
+                <StyledTableCell align="center">
+                  {Decode.stops(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Stop min") ? (
+                <StyledTableCell align="center">
+                  {Decode.stoppMin(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("AEF %") ? (
+                <StyledTableCell align="center">
+                  {Decode.aef(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("PEF %") ? (
+                <StyledTableCell align="center">
+                  {Decode.pef(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+              {parameters.includes("Ukg") ? (
+                <StyledTableCell align="center">
+                  {Decode.ukg(row.data)}
+                </StyledTableCell>
+              ) : undefined}
+            </StyledTableRow>
+          ))}
+          <StyledTableRow>
+            <StyledTableCell
+              className={classes.summary}
+              align="center"
+              component="th"
+              scope="row"
+            >
+              Summary
+            </StyledTableCell>
+            <StyledTableCell className={classes.summary} align="center">
+              -
+            </StyledTableCell>
+            {parameters.includes("Model") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                -
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Count") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                -
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Kg") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.kg ? summary.kg : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("m/min") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.mmin ? summary.mmin : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("tpi") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.tpi ? summary.tpi : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("spindle rpm") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.spindle ? summary.spindle : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Doffs") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.doffs ? summary.doffs : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Doff min") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.doffMin ? summary.doffMin : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Stops") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.stops ? summary.stops : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Stop min") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.stopMin ? summary.stopMin : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("AEF %") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.aef ? summary.aef : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("PEF %") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                {summary.pef ? summary.pef : 0}
+              </StyledTableCell>
+            ) : undefined}
+            {parameters.includes("Ukg") ? (
+              <StyledTableCell className={classes.summary} align="center">
+                -
+              </StyledTableCell>
+            ) : undefined}
+          </StyledTableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }

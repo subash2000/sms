@@ -243,7 +243,6 @@ export default function EnhancedTable(props) {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-  console.log(rows);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>

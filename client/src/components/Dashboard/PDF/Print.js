@@ -1,40 +1,39 @@
 import React from "react";
 import Table from "./Table";
-import Summary from "./Summary";
-import { makeStyles } from "@material-ui/core";
+// import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  summary: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-  },
-  statusContainer: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "2rem",
-  },
-  status: {
-    display: "flex",
+// const useStyles = makeStyles((theme) => ({
+//   summary: {
+//     width: "100%",
+//     display: "flex",
+//     justifyContent: "center",
+//   },
+//   statusContainer: {
+//     display: "flex",
+//     justifyContent: "space-between",
+//     gap: "2rem",
+//   },
+//   status: {
+//     display: "flex",
 
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "0.5rem",
-  },
-  dot: {
-    height: "15px",
-    width: "15px",
+//     alignItems: "center",
+//     justifyContent: "space-between",
+//     gap: "0.5rem",
+//   },
+//   dot: {
+//     height: "15px",
+//     width: "15px",
 
-    borderRadius: "50%",
-    display: "inline-block",
-  },
-}));
+//     borderRadius: "50%",
+//     display: "inline-block",
+//   },
+// }));
 
 export default function Print(props) {
   const [model, setModel] = React.useState("All");
   const [department, setDepartment] = React.useState("All");
   const [count, setCount] = React.useState("All");
-  const classes = useStyles();
+  // const classes = useStyles();
 
   React.useEffect(() => {
     let cache = localStorage.getItem("dashboardFilterOptions");
@@ -47,14 +46,6 @@ export default function Print(props) {
   }, []);
 
   const { machines, parameters } = props;
-  let result = machines.filter((machine) => {
-    let validModel = model === "All" || model === machine.model;
-    let validDept = department === "All" || department === machine.department;
-    let validCount =
-      count === "All" ||
-      (machine.count && count === machine.count.value + machine.count.unit);
-    return validCount && validDept && validModel;
-  });
 
   return (
     <div
@@ -67,10 +58,15 @@ export default function Print(props) {
       }}
       className="section-to-print"
     >
-      <Table parameters={parameters} result={result} />
-      <div className={classes.summary}>
-        <Summary machines={result} />
-      </div>
+      <Table
+        shift={1}
+        date={new Date().toDateString()}
+        machines={machines}
+        count={count}
+        department={department}
+        model={model}
+        parameters={parameters}
+      />
     </div>
   );
 }
