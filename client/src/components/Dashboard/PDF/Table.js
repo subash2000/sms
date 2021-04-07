@@ -166,7 +166,7 @@ export default function CustomizedTables(props) {
         setDate(new Date(Date.parse(res.data.date)));
         setShift(res.data.shift);
       });
-  });
+  }, [filtered]);
 
   return (
     <TableContainer component={Paper} className={classes.container}>
