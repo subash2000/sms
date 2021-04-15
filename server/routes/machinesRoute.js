@@ -16,11 +16,11 @@ router.get("/all", (req, res) => {
               machine._doc.data &&
               machine._doc.data.length &&
               machine._doc.data.length > 9 &&
-              // (machine._doc.data[6] === date.getDate() ||
-              //   (machine._doc.data[6] === date.getDate() - 1 &&
-              //     currshift === 3)) &&
-              // machine._doc.data[7] === date.getMonth() + 1 &&
-              // machine._doc.data[8] === date.getFullYear() - 2000 &&
+              (machine._doc.data[6] === date.getDate() ||
+                (machine._doc.data[6] === date.getDate() - 1 &&
+                  currshift === 3)) &&
+              machine._doc.data[7] === date.getMonth() + 1 &&
+              machine._doc.data[8] === date.getFullYear() - 2000 &&
               machine._doc.data[9] === currshift
             ) {
               return machine._doc;

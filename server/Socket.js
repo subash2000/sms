@@ -67,7 +67,7 @@ const socketFunc = (socket, address, packet) => {
               );
               log(
                 "Data Request packet sent \t" +
-                  JSON.stringify(dataPacket.toJSON().data),
+                  JSON.stringify(Buffer.from(dataPacket, "hex").toJSON().data),
                 address
               );
               socket.write(Buffer.from(dataPacket, "hex"), (err) => {
