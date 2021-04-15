@@ -38,7 +38,10 @@ const socketFunc = (socket, address, packet) => {
       log("Error at sending settings packet", address);
     } else {
       console.log("settngs sent", packet);
-      log("Settngs sent \t" + JSON.stringify(packet.toJSON().data));
+      log(
+        "Settngs sent \t" +
+          JSON.stringify(Buffer.from(packet, "hex").toJSON().data)
+      );
     }
   });
   socket.on("error", () => {
@@ -61,10 +64,6 @@ const socketFunc = (socket, address, packet) => {
         () => {
           dataRequestProtocol(currValues[address].id, (error, dataPacket) => {
             if (!error) {
-              console.log(
-                "Data packet Sent : ",
-                JSON.stringify(dataPacket.toJSON().data)
-              );
               log(
                 "Data Request packet sent \t" +
                   JSON.stringify(Buffer.from(dataPacket, "hex").toJSON().data),
