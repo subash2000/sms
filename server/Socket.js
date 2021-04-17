@@ -40,7 +40,8 @@ const socketFunc = (socket, address, packet) => {
       console.log("settngs sent", packet);
       log(
         "Settngs sent \t" +
-          JSON.stringify(Buffer.from(packet, "hex").toJSON().data)
+          JSON.stringify(Buffer.from(packet, "hex").toJSON().data),
+        address
       );
     }
   });
