@@ -142,7 +142,7 @@ const settingsPacket = (ip, cb) => {
                   milldetails[0].shift2Min,
                   milldetails[0].shift3Hr,
                   milldetails[0].shift3Min
-                ).hr,
+                ).min,
                 2
               ) +
               pad(milldetails[1].spindles, 4) +

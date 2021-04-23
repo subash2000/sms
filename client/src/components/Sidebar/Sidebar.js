@@ -25,6 +25,7 @@ import CountAssign from "../settings/CountAssign/CountAssign";
 import Department from "../settings/Department/Department";
 import Modal from "../settings/Modal/Modal";
 import Report from "../Report/Report";
+import Power from "../PowerMonitoring/PowerMonitoring";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -139,6 +140,7 @@ export default function PersistentDrawerLeft() {
       <Route exact path="/departments" component={Department} />
       <Route exact path="/machinemodals" component={Modal} />
       <Route exact path="/report" component={Report} />
+      <Route exact path="/power" component={Power} />
     </Switch>
   );
 
@@ -193,6 +195,9 @@ export default function PersistentDrawerLeft() {
 
           <Link className={classes.link} to="/report">
             <Typography variant="body1">Report</Typography>
+          </Link>
+          <Link className={classes.link} to="/power">
+            <Typography variant="body1">Power Monitoring</Typography>
           </Link>
 
           <Divider />

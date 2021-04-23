@@ -65,7 +65,7 @@ const doffMin = (arr, n, i) => {
   }
 };
 
-export default {
+const decode = {
   kg: (packetData) => {
     if (packetData && packetData.length && packetData.length > 26)
       return (packetData[28] * 256 + packetData[29]) / 10;
@@ -164,11 +164,14 @@ export default {
             256 * packetData[index + 2] +
             256 * 256 * packetData[index + 1] +
             256 * 256 * 256 * packetData[index]) /
-          100
-        );
+          100 /
+          decode.kg(packetData)
+        ).toFixed(2);
       } else return "No Data Found";
     }
 
     return "No Data Found";
   },
 };
+
+export default decode;
