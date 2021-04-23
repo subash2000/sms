@@ -129,8 +129,8 @@ const settingsPacket = (ip, cb) => {
               ) +
               pad(
                 calcTimeDiff(
-                  milldetails[0].shift2Hr,
-                  milldetails[0].shift2Min,
+                  milldetails[0].shift1Hr,
+                  milldetails[0].shift1Min,
                   milldetails[0].shift3Hr,
                   milldetails[0].shift3Min
                 ).hr,
@@ -138,8 +138,8 @@ const settingsPacket = (ip, cb) => {
               ) +
               pad(
                 calcTimeDiff(
-                  milldetails[0].shift2Hr,
-                  milldetails[0].shift2Min,
+                  milldetails[0].shift1Hr,
+                  milldetails[0].shift1Min,
                   milldetails[0].shift3Hr,
                   milldetails[0].shift3Min
                 ).min,
