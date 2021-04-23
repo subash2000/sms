@@ -140,7 +140,7 @@ export default function PersistentDrawerLeft() {
       <Route exact path="/departments" component={Department} />
       <Route exact path="/machinemodals" component={Modal} />
       <Route exact path="/report" component={Report} />
-      <Route exact path="/power" component={Power} />
+      {/* <Route exact path="/power" component={Power} /> */}
     </Switch>
   );
 
