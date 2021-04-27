@@ -172,6 +172,90 @@ const decode = {
 
     return "No Data Found";
   },
+  ry: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index && packetData[index]) {
+        return (
+          (packetData[index + 1] * 256 + packetData[index + 2]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  yb: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 4 && packetData[index]) {
+        return (
+          (packetData[index + 3] * 256 + packetData[index + 4]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  br: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 6 && packetData[index]) {
+        return (
+          (packetData[index + 5] * 256 + packetData[index + 6]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  r: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 8 && packetData[index]) {
+        return (
+          (packetData[index + 7] * 256 + packetData[index + 8]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  y: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 10 && packetData[index]) {
+        return (
+          (packetData[index + 9] * 256 + packetData[index + 10]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  b: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 12 && packetData[index]) {
+        return (
+          (packetData[index + 11] * 256 + packetData[index + 12]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
 };
 
 export default decode;

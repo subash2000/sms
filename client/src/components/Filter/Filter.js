@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   formControl: {
-    minWidth: "150px",
     [theme.breakpoints.down("sm")]: {
       padding: "5px",
     },
