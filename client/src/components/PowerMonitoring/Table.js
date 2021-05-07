@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -55,20 +54,19 @@ function EnhancedTableHead(props) {
         <TableCell>r(Ampere)</TableCell>
         <TableCell>y(Ampere)</TableCell>
         <TableCell>b(Ampere)</TableCell>
+        <TableCell>r (Power-Factor)</TableCell>
+        <TableCell>y (Power-Factor)</TableCell>
+        <TableCell>b (Power-Factor)</TableCell>
+        <TableCell>Current Avg</TableCell>
+        <TableCell>Frequency</TableCell>
+        <TableCell>Active Power</TableCell>
+        <TableCell>Reactive Power</TableCell>
+        <TableCell>Active Energy</TableCell>
+        <TableCell>Reactive Energy</TableCell>
       </TableRow>
     </TableHead>
   );
 }
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -143,6 +141,15 @@ function Row(props) {
         <TableCell>{Decode.r(row.data)}</TableCell>
         <TableCell>{Decode.y(row.data)}</TableCell>
         <TableCell>{Decode.b(row.data)}</TableCell>
+        <TableCell>{Decode.rp(row.data)}</TableCell>
+        <TableCell>{Decode.yp(row.data)}</TableCell>
+        <TableCell>{Decode.bp(row.data)}</TableCell>
+        <TableCell>{Decode.currAvg(row.data)}</TableCell>
+        <TableCell>{Decode.freq(row.data)}</TableCell>
+        <TableCell>{Decode.activePower(row.data)}</TableCell>
+        <TableCell>{Decode.reactivePower(row.data)}</TableCell>
+        <TableCell>{Decode.activeEnergy(row.data)}</TableCell>
+        <TableCell>{Decode.reactiveEnergy(row.data)}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -180,6 +187,42 @@ function Row(props) {
                 <b>b Ampere : </b>
                 {Decode.b(row.data)}
               </p>
+              <p className={classes.innerContent}>
+                <b>r power-factor : </b>
+                {Decode.rp(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>y power-factor : </b>
+                {Decode.yp(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>b power-factor : </b>
+                {Decode.bp(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Current Average : </b>
+                {Decode.currAvg(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Frequency : </b>
+                {Decode.freq(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Active Power : </b>
+                {Decode.activePower(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Reactive Power : </b>
+                {Decode.reactivePower(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Active Energy : </b>
+                {Decode.reactiveEnergy(row.data)}
+              </p>
+              <p className={classes.innerContent}>
+                <b>Reactive Energy : </b>
+                {Decode.reactiveEnergy(row.data)}
+              </p>
             </Box>
           </Collapse>
         </TableCell>
@@ -193,7 +236,7 @@ export default function EnhancedTable({ machines, setSelected, selected }) {
   const [order] = React.useState("asc");
   const [orderBy] = React.useState("machine");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

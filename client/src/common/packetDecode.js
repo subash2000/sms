@@ -256,6 +256,144 @@ const decode = {
       }
     }
   },
+  rp: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 16 && packetData[index]) {
+        return (
+          (packetData[index + 15] * 256 + packetData[index + 16]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  yp: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 18 && packetData[index]) {
+        return (
+          (packetData[index + 17] * 256 + packetData[index + 18]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  bp: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 20 && packetData[index]) {
+        return (
+          (packetData[index + 19] * 256 + packetData[index + 20]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  currAvg: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 14 && packetData[index]) {
+        return (
+          (packetData[index + 13] * 256 + packetData[index + 14]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  freq: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 22 && packetData[index]) {
+        return (
+          (packetData[index + 21] * 256 + packetData[index + 22]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  activePower: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 26 && packetData[index]) {
+        return (
+          (packetData[index + 23] * 256 * 256 * 256 +
+            packetData[index + 24] * 256 * 256 +
+            packetData[index + 25] * 256 +
+            packetData[index + 26]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  reactivePower: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 30 && packetData[index]) {
+        return (
+          (packetData[index + 27] * 256 * 256 * 256 +
+            packetData[index + 28] * 256 * 256 +
+            packetData[index + 29] * 256 +
+            packetData[index + 30]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  activeEnergy: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 34 && packetData[index]) {
+        return (
+          (packetData[index + 31] * 256 * 256 * 256 +
+            packetData[index + 32] * 256 * 256 +
+            packetData[index + 33] * 256 +
+            packetData[index + 34]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
+  reactiveEnergy: (packetData) => {
+    if (packetData && packetData.length && packetData.length > 48) {
+      let index = findActiveEnergyIndex(packetData, 48);
+      index = index - 31;
+      if (packetData.length > index + 38 && packetData[index]) {
+        return (
+          (packetData[index + 35] * 256 * 256 * 256 +
+            packetData[index + 36] * 256 * 256 +
+            packetData[index + 37] * 256 +
+            packetData[index + 38]) /
+          100
+        ).toFixed(2);
+      } else {
+        return 0;
+      }
+    }
+  },
 };
 
 export default decode;

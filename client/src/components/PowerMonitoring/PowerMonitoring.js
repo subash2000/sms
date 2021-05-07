@@ -8,28 +8,31 @@ import Decode from "../../common/packetDecode";
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
-    width: "100%",
+    width: "90vw",
     justifyContent: "space-around",
     gap: "50px",
     [theme.breakpoints.down("md")]: {
-      flexDirection: "column-reverse",
+      flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
+      width: "100vw",
     },
   },
   visual: {
-    width: "65%",
+    width: "75%",
     [theme.breakpoints.down("md")]: {
-      width: "100%",
+      width: "80%",
     },
   },
   table: {
-    width: "35%",
+    width: "25%",
+    marginLeft: "1rem",
     [theme.breakpoints.down("md")]: {
       width: "80%",
     },
     [theme.breakpoints.down("sm")]: {
-      width: "90%",
+      width: "80%",
+      margin: "0",
     },
   },
   row: {
@@ -40,6 +43,32 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     textAlign: "center",
+  },
+  valRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
+  otherVal: {
+    background: "#e0e0e0",
+    borderRadius: "5px",
+    margin: "1rem",
+    padding: "0 1rem",
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  title: {
+    fontWeight: "700",
+    fontSize: "1rem",
+    display: "inline",
+  },
+  val: {
+    textAlign: "center",
+    display: "inline",
+  },
+  currVal: {
+    margin: "1rem",
   },
 }));
 let timeout;
@@ -81,32 +110,102 @@ export default function PowerMonitoring() {
   }, []);
 
   React.useEffect(() => {
-    console.log(selected);
-  }, [selected]);
+    if (selected) {
+      if (selected) {
+        let arr = filtered.filter((machine) => {
+          return (
+            machine.department === selected.department &&
+            machine.machine === selected.machine
+          );
+        });
+
+        if (arr.length) {
+          setSelected(arr[0]);
+        }
+      } else {
+        if (filtered.length) setSelected(filtered[0]);
+      }
+    }
+    // eslint-disable-next-line
+  }, [filtered]);
 
   return (
-    <div className={classes.container}>
+    <div>
+      <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
+        Power Monitoring
+      </h2>
       {noMachines ? (
         noMachines
       ) : (
         <div className={classes.container}>
+          <div className={classes.table}>
+            <Filter
+              machines={machines}
+              setMachines={setFiltered}
+              cache="power"
+            />
+            <Table
+              machines={filtered}
+              setSelected={setSelected}
+              selected={selected}
+            />
+          </div>
           <div className={classes.visual}>
+            <div className={classes.otherVal}>
+              <div className={classes.valRow}>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Current Average : </p>
+                  <p className={classes.val}>{Decode.currAvg(selected.data)}</p>
+                </div>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Frequency : </p>
+                  <p className={classes.val}>{Decode.freq(selected.data)}</p>
+                </div>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Active Power : </p>
+                  <p className={classes.val}>
+                    {Decode.activePower(selected.data)}
+                  </p>
+                </div>
+              </div>
+              <div className={classes.valRow}>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Reactive Power : </p>
+                  <p className={classes.val}>
+                    {Decode.reactivePower(selected.data)}
+                  </p>
+                </div>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Active Energy : </p>
+                  <p className={classes.val}>
+                    {Decode.activeEnergy(selected.data)}
+                  </p>
+                </div>
+                <div className={classes.currVal}>
+                  <p className={classes.title}>Reactive Energy : </p>
+                  <p className={classes.val}>
+                    {Decode.reactiveEnergy(selected.data)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className={classes.row}>
               <Chart
                 label="ry Volt(V)"
-                minValue={200}
+                minValue={0}
                 maxValue={600}
                 value={Decode.ry(selected.data)}
               />
               <Chart
                 label="yb Volt(V)"
-                minValue={200}
+                minValue={0}
                 maxValue={600}
                 value={Decode.yb(selected.data)}
               />
               <Chart
                 label="br Volt(V)"
-                minValue={200}
+                minValue={0}
                 maxValue={600}
                 value={Decode.br(selected.data)}
               />
@@ -131,18 +230,26 @@ export default function PowerMonitoring() {
                 value={Decode.b(selected.data)}
               />
             </div>
-          </div>
-          <div className={classes.table}>
-            <Filter
-              machines={machines}
-              setMachines={setFiltered}
-              cache="power"
-            />
-            <Table
-              machines={filtered}
-              setSelected={setSelected}
-              selected={selected}
-            />
+            <div className={classes.row}>
+              <Chart
+                label="r (Power-Factor)"
+                minValue={0}
+                maxValue={90}
+                value={Decode.r(selected.data)}
+              />
+              <Chart
+                label="y (Power-Factor)"
+                minValue={0}
+                maxValue={90}
+                value={Decode.y(selected.data)}
+              />
+              <Chart
+                label="b (Power-Factor)"
+                minValue={0}
+                maxValue={90}
+                value={Decode.b(selected.data)}
+              />
+            </div>
           </div>
         </div>
       )}

@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Chart({ value, maxValue, label, minValue }) {
   const theme = useTheme();
+  value = parseInt(value);
 
   const classes = useStyles();
   return (
@@ -17,7 +18,7 @@ export default function Chart({ value, maxValue, label, minValue }) {
       <h2 className={classes.heading}>{label}</h2>
       <GaugeChart
         maxValue={maxValue}
-        value={value < minValue ? minValue : value}
+        value={value}
         needleColor="red"
         segments={5}
         endColor={theme.palette.primary.light}
